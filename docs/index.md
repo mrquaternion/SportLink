@@ -1,8 +1,8 @@
-# Projet IFT3150: Nom du projet
+# Projet IFT3150: SportLink
 
 > **Thèmes**: Science de données, Génie logiciel  
-> **Superviseur**: Nom du supervisuer  
-> **Collaborateurs:** Nom de(s) collaborateur(s) et partenaire(s)
+> **Superviseur**: Louis-Edouard Lafontant
+> **Collaborateurs:** Mathias La Rochelle, Michel Lamothe
 
 ## Informations importantes
 
@@ -14,16 +14,19 @@
 
 ## Équipe
 
-- Alice Dupont: Responsable de...
-- Bob Tremblay: Responsable de...
+- Mathias: Responsable de...
+- Michel: Responsable de...
 
 ## Description du projet
 
 ### Contexte
+SportLink est née d’un constat : trop souvent, la curiosité et l’envie d’apprendre sont freinées par les normes sociales dans le domaine du sport. Que vous soyez un sportif aguerri ou un néophile avide de découvertes, chacun trouve sa place pour explorer, apprendre ou s’améliorer.
 
 ### Problématique ou motivations
+La principale problématique que nous avons identifiée est l’absence d’une application simple, au design minimaliste, permettant de trouver facilement un ou plusieurs partenaires pour découvrir un nouveau sport, même lorsque personne dans notre entourage ne le pratique, tout en mettant l’accent sur une expérience utilisateur intuitive.
 
 ### Proposition et objectifs
+Notre ambition est de faire du sport un moment de partage, de respect et de motivation. Pour cela, nous imaginons une application avec deux volets : un côté compétitif, pour ceux qui veulent se dépasser, et un côté exploratoire, pour ceux prêt à essayer quelque chose de nouveau. L’utilisateur peut naviguer librement entre ces deux espaces selon son humeur ou ses objectifs. Les objectifs sont d'implémenter : une carte qui affiche toutes les infrastructures disponibles pour un sport X, un système de messagerie encrypté entre les utilisateurs, un calendrier interne pour éviter tout tiers parti, une interface épurée et intuitive, **[à continuer]**.
 
 
 ## Échéancier
