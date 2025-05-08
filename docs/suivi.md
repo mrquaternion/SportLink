@@ -2,23 +2,24 @@
 
 ## Semaine 1
 
-??? note "Mettre en place l'environnement"
-    - [x] Lorem ipsum dolor sit amet, consectetur adipiscing elit
-    - [ ] Vestibulum convallis sit amet nisi a tincidunt
-        * [x] In hac habitasse platea dictumst
-        * [x] In scelerisque nibh non dolor mollis congue sed et metus
-        * [ ] Praesent sed risus massa
-    - [ ] Aenean pretium efficitur erat, donec pharetra, ligula non scelerisque
+??? note "Étapes faites"
+    - [x] Création du répertoire sur GitHub
+    - [ ] Compléter les sections du site web pour la semaine 1
+        * [x] Formuler concrètement la description du projet ; le contexte, la problématique et les objectifs
+        * [ ] Développer les prochaines étapes
+        * [ ] Élaborer les difficultés rencontrées
+    - [ ] Décider le langage de programmation du développement de l'application
 
 !!! info "Notes"
     - Il est possible que nous révisions les exigences après le prototypage
 
 !!! warning "Difficultés rencontrées"
-    - Le plugin Mermaid n'était pas reconnu : confusion entre `mkdocs-mermaid2-plugin` (pip) et `mermaid2` (plugin name)
-        - Résolu après nettoyage et configuration correcte dans `mkdocs.yml`
+    - Doute sur l'étendue du projet au niveau du langage de programmation et des frameworks — entre Swift (développement natif) et Flutter/Dart (développement multiplateforme).
+        - *En cours de discussion...*
 
 !!! abstract "Prochaines étapes"
-    - Démarrer l’analyse du problème
+    - Démarrer la réalisation du diagramme de classes UML
+    - Réviser l'interface du prototype mi-design et de sa logique
     - Créer la structure de `etudes_preliminaires.md`
 
 ---
