@@ -4,11 +4,11 @@
 
 ??? note "Étapes faites"
     - [x] Création du répertoire sur GitHub
-    - [ ] Compléter les sections du site web pour la semaine 1
+    - [x] Compléter les sections du site web pour la semaine 1
         * [x] Formuler concrètement la description du projet ; le contexte, la problématique et les objectifs
-        * [ ] Développer les prochaines étapes
-        * [ ] Élaborer les difficultés rencontrées
-    - [ ] Décider le langage de programmation du développement de l'application
+        * [x] Développer les prochaines étapes
+        * [x] Élaborer les difficultés rencontrées
+    - [x] Décider le langage de programmation du développement de l'application
 
 !!! info "Notes"
     - Il est possible que nous révisions les exigences après le prototypage
@@ -25,6 +25,19 @@
 ---
 
 ## Semaine 2
+
+??? note "Étapes faites"
+    - [ ] Élaborer nos exigences fonctionnelles et non-fonctionnelles
+    - [ ] Faire l'étude préliminaire par rapport aux choix de la plateforme
+
+!!! info "Notes"
+    - Nous avons préciser notre décision sur le choix de la plateforme (Swift) par rapport à l'éllaboration et la clarifications de nos exigences.
+
+!!! abstract "Prochaines étapes"
+    - Démarrer la réalisation du diagramme de classes UML
+    - Réviser l'interface du prototype mi-design et de sa logique
+  
+---
 
 ## Semaine 3
 

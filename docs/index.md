@@ -26,7 +26,29 @@ SportLink est née d’un constat : trop souvent, la curiosité et l’envie d�
 La principale problématique que nous avons identifiée est l’absence d’une application simple, au design minimaliste, permettant de trouver facilement un ou plusieurs partenaires pour découvrir un nouveau sport, même lorsque personne dans notre entourage ne le pratique, tout en mettant l’accent sur une expérience utilisateur intuitive.
 
 ### Proposition et objectifs
-Notre ambition est de faire du sport un moment de partage, de respect et de motivation. Pour cela, nous imaginons une application avec deux volets : un côté compétitif, pour ceux qui veulent se dépasser, et un côté exploratoire, pour ceux prêt à essayer quelque chose de nouveau. L’utilisateur peut naviguer librement entre ces deux espaces selon son humeur ou ses objectifs. Les objectifs sont d'implémenter : une carte qui affiche toutes les infrastructures disponibles pour un sport X, un système de messagerie encrypté entre les utilisateurs, un calendrier interne pour éviter tout tiers parti, une interface épurée et intuitive, **[à continuer]**.
+Notre ambition est de faire du sport un moment de partage, de respect et de motivation. Pour cela, nous imaginons une application avec deux volets : un côté compétitif, pour ceux qui veulent se dépasser, et un côté exploratoire, pour ceux prêt à essayer quelque chose de nouveau. L’utilisateur peut naviguer librement entre ces deux espaces selon son humeur ou ses objectifs. En effet, un membre peut par exemple vouloir dans un certain sport une pratique plus compétitive et en parralèle une pratique plus récérative dans un autre sport. 
+
+Les objectifs sont d'implémenter : une carte qui affiche toutes les infrastructures disponibles pour un sport X, un système de messagerie encrypté entre les utilisateurs, un calendrier interne pour éviter tout tiers parti, une interface épurée et intuitive et un profil permettant à l'utilisateur de présenter ceratins aspects personnels, tel que le nom complet, l'âge, numéro de télphone, courriel, etc. Nous voulons permettre à l'utilisatuer de pouvoir faire une recherche d'activité en flitrant par le type de sport et/ou par le lieu. Un utilisateur pourra aussi créer un évènement en indiquand toutes les informations nécessaires au bon dréroulerement de l'activité.
+
+Résumé:
+
+- 🎯 **Deux volets distincts** :  
+  Mode **compétitif** pour les utilisateurs souhaitant se dépasser.  
+  Mode **récréatif** pour ceux qui veulent découvrir et s’amuser.
+
+- 🗺️ **Carte interactive** :  
+  Affiche les activités sportives disponibles.  
+  Inclut un moteur de recherche pour filtrer par sport, lieu ou niveau.
+
+- 📅 **Calendrier personnel** :  
+  Affiche les événements auxquels l’utilisateur est inscrit ou participe.
+
+- 👤 **Profil utilisateur** :  
+  Certaines informations sont publiques (ex. : nom ou moyen de contact).  
+  Facilite la communication entre membres en dehors de l’application.
+
+- ➕ **Création d’événements** :  
+  Tout utilisateur peut proposer une nouvelle activité via l’application.
 
 
 ## Échéancier
