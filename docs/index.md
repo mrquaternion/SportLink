@@ -28,7 +28,7 @@ La principale problématique que nous avons identifiée est l’absence d’une 
 ### Proposition et objectifs
 Notre ambition est de faire du sport un moment de partage, de respect et de motivation. Pour cela, nous imaginons une application avec deux volets : un côté compétitif, pour ceux qui veulent se dépasser, et un côté exploratoire, pour ceux prêt à essayer quelque chose de nouveau. L’utilisateur peut naviguer librement entre ces deux espaces selon son humeur ou ses objectifs. En effet, un membre peut par exemple vouloir dans un certain sport une pratique plus compétitive et en parralèle une pratique plus récérative dans un autre sport. 
 
-Les objectifs sont d'implémenter : une carte qui affiche toutes les infrastructures disponibles pour un sport X, un système de messagerie encrypté entre les utilisateurs, un calendrier interne pour éviter tout tiers parti, une interface épurée et intuitive et un profil permettant à l'utilisateur de présenter ceratins aspects personnels, tel que le nom complet, l'âge, numéro de télphone, courriel, etc. Nous voulons permettre à l'utilisatuer de pouvoir faire une recherche d'activité en flitrant par le type de sport et/ou par le lieu. Un utilisateur pourra aussi créer un évènement en indiquand toutes les informations nécessaires au bon dréroulerement de l'activité.
+Les objectifs sont d'implémenter : une carte qui affiche toutes les infrastructures disponibles pour un sport X, un système de messagerie encrypté entre les utilisateurs, un calendrier interne pour éviter tout tiers parti, une interface épurée et intuitive et un profil permettant à l'utilisateur de présenter ceratins aspects personnels tels que son nom complet, son âge, son numéro de téléphone, son courriel, etc. Nous voulons permettre à l'utilisateur de pouvoir faire une recherche d'activité en filtrant par le type de sport et/ou par le lieu. Un utilisateur pourra aussi créer un évènement en indiquant toutes les informations nécessaires au bon déroulement de l'activité.
 
 Résumé:
 
@@ -48,7 +48,7 @@ Résumé:
   Facilite la communication entre membres en dehors de l’application.
 
 - ➕ **Création d’événements** :  
-  Tout utilisateur peut proposer une nouvelle activité via l’application.
+  Tout utilisateur peut proposer une nouvelle activité via l’application et ce, pour n'importe quel sport d'équipe.
 
 
 ## Échéancier

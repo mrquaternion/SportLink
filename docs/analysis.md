@@ -10,24 +10,24 @@ Lors de notre étude préliminaire, une problématique importante a émergé con
 **Exigences fonctionnelles :**
 
 - L’application doit permettre à l’utilisateur de créer un compte et gérer son profil.
-- L’utilisateur peut visualiser une carte des activités sportives disponibles autour de lui.
+- L’utilisateur peut visualiser une carte des activités sportives disponibles autour de lui selon un rayon fixe qu'il peut modifier mais qui ne peut pas être plus grand que les limites de sa ville où il réside.
 - Il peut créer, rejoindre et gérer des événements sportifs.
 - Un calendrier permet à l’utilisateur de suivre ses activités prévues.
 - Un système de messagerie ou de contact entre utilisateurs est disponible.
-- L’application doit être disponible sur les appareils iOS.
+- L’application doit être disponible sur les appareils iOS. (*est-ce une exigence fonctionnelle?*)
 
 **Exigences non fonctionnelles :**
 
-- L’application doit offrir une interface utilisateur fluide, rapide et intuitive.
+- L’application doit offrir une interface utilisateur fluide, rapide, intuitive et minimaliste.
 - L’application doit tirer parti des composants natifs d’iOS (comme la localisation, le calendrier, les notifications).
 - Le code doit être écrit en Swift pour profiter des performances et de la stabilité du langage natif.
-- La compatibilité est assurée uniquement pour iOS 15 et plus, pour simplifier la gestion des versions.
+- La compatibilité est assurée uniquement pour iOS 18 et plus, pour simplifier la gestion des versions (justification ici https://developer.apple.com/support/app-store/).
 - Le développement doit respecter un échéancier serré, donc cibler une seule plateforme réduit le temps et la complexité.
-- L’application ne doit pas dépendre de bibliothèques multiplateformes tierces, afin de garder un contrôle total sur l’interface et la performance.
+- L’application ne doit pas dépendre de bibliothèques multiplateformes tierces, afin de garder un contrôle total sur l’interface et la performance (donc autre que SwiftUI, les Swift Core Libraries et les librairies de Firebase)
 
 ## Recherche de solutions
 
-Ces réflexions nous ont amenés à revoir nos exigences initiales, afin d’assurer une meilleure cohérence avec nos objectifs et nos ressources. Après discussion, nous avons conclu que l’application serait disponible uniquement sur les appareils Apple (iOS). Cette décision repose principalement sur notre volonté de livrer une application la plus riche et fluide possible, en misant pleinement sur nos compétences existantes avec le langage Swift. En nous concentrant sur une seule plateforme, nous maximisons la qualité de l’expérience utilisateur tout en optimisant le temps de développement.
+Ces réflexions nous ont amenés à revoir nos exigences initiales, afin d’assurer une meilleure cohérence avec nos objectifs et nos ressources. Après discussion, nous avons conclu que l’application serait disponible uniquement sur les appareils Apple (iOS). Cette décision repose principalement sur notre volonté de livrer une application la plus riche et fluide possible, en misant pleinement sur nos compétences existantes avec le langage Swift. En nous concentrant sur une seule plateforme, nous maximisons la qualité de l’expérience utilisateur tout en optimisant le temps de développement. Le développement sur Android pourrait éventuellement considéré mais ce n'est pas l'objectif de ce projet.
 
 ## Méthodologie
 
