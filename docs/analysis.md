@@ -37,10 +37,10 @@ Il était prévu d'intégrer un calendrier directement dans l'application. Final
 La solution proposée est la suivante. Il faudrait permettre la création automatique d'événements dans des applications existantes comme Apple Calendar ou Google Calendar. Ainsi, l'utilisateur peut facilement voir si une quelconque activité s'intègre à son emploi du temps (à condition bien sûr qu'il est l'une d'entre elles).
 
 ### Messagerie
-Suite à la rencontre numéro 2, une clarification s’impose concernant le fonctionnement de la messagerie privée. Après réflexion, nous avons conclu que puisque l’application n’est pas centrée sur la communication entre les utilisateurs, il ne sera pas possible d’envoyer des messages privés individuels, sauf dans le cas d’activités à deux personnes.
- 
+Suite à la rencontre numéro 2, une clarification s’impose concernant le fonctionnement de la messagerie privée. Après réflexion, nous avons conclu que puisque l’application n’est pas centrée sur la communication entre les utilisateurs, il ne sera pas possible d’envoyer des messages privés individuels, sauf bien sûr dans le cas d’activités à deux personnes
+
 Lorsqu’un utilisateur s’inscrit à une activité ou à un événement, il sera automatiquement ajouté à une conversation de groupe liée à cet événement. Ainsi, tous les participants d’un même événement auront accès à un espace de discussion commun.
- 
+
 Par ailleurs, une autre question s’est posée : étant donné que la messagerie n’est pas une fonctionnalité centrale de l’application, est-il pertinent d’inclure une icône "inbox" dans la barre de menu principale ? Après réflexion, nous croyons que oui. Bien que la messagerie ne soit pas au cœur de l’application, elle reste un outil fréquemment utilisé par les utilisateurs pour recevoir des informations importantes liées aux événements ou aux activités auxquels ils participent.
 
 ### Explore - Carte
@@ -51,6 +51,8 @@ Deux options concernant l'implémentation de la carte s'ouvre à nous. En fait, 
 ### Explore - Liste
 Une clarification s’imposait concernant la liste des événements. Cette liste représente une vue en format texte des événements affichés sur la carte. Elle est triée en fonction de la distance par rapport à l’adresse indiquée dans le profil de l’utilisateur. Seuls les événements situés dans la même ville que celle de l’adresse fournie y sont affichés.
 Une option de géolocalisation pourrait éventuellement être envisagée afin d’offrir plus de flexibilité dans l’affichage des événements à proximité.
+
+### Authentification
 
 
 ## Méthodologie
