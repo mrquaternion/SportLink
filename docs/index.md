@@ -41,13 +41,13 @@ Résumé:
   Inclut un moteur de recherche pour filtrer par sport, lieu ou niveau.
 
 - 📅 **Calendrier personnel** :  
-  Affiche les événements auxquels l’utilisateur est inscrit ou participe.
+  Affiche les activitées auxquelles l’utilisateur est inscrit ou participe.
 
 - 👤 **Profil utilisateur** :  
   Certaines informations sont publiques (ex. : nom ou moyen de contact).  
   Facilite la communication entre membres en dehors de l’application.
 
-- ➕ **Création d’événements** :  
+- ➕ **Création d'activités** :  
   Tout utilisateur peut proposer une nouvelle activité via l’application et ce, pour n'importe quel sport d'équipe.
 
 

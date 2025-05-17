@@ -49,11 +49,12 @@ Deux options concernant l'implémentation de la carte s'ouvre à nous. En fait, 
 - Option 2 : Dans ce scénario, des marqueurs ne seront affichés uniquement si une activité y a été crée. Il n'y aura donc pas la fonctionnalité de créer une activité directement sur la carte, en sélectionnant un marqueur. Cela impose également que l'utilisateur doit faire ses recherches à priori pour trouver quelle infrastructure peut organiser son activité.
 
 ### Explore - Liste
-Une clarification s’imposait concernant la liste des événements. Cette liste représente une vue en format texte des événements affichés sur la carte. Elle est triée en fonction de la distance par rapport à l’adresse indiquée dans le profil de l’utilisateur. Seuls les événements situés dans la même ville que celle de l’adresse fournie y sont affichés.
-Une option de géolocalisation pourrait éventuellement être envisagée afin d’offrir plus de flexibilité dans l’affichage des événements à proximité.
+Une clarification s’imposait concernant la liste des activités. Cette liste représente une vue en format texte des activités affichés sur la carte. Elle est triée en fonction de la distance par rapport à l’adresse indiquée dans le profil de l’utilisateur. Seuls les activités situés dans la même ville que celle de l’adresse fournie y sont affichés.
+
+Une option de géolocalisation pourrait éventuellement être envisagée afin d’offrir plus de flexibilité dans l’affichage des activités à proximité.
 
 ### Authentification
-
+En reconsultant la page de création d'un compte à partir du prototype Figma, nous nous sommes rendus compte qu'elle était trop longue et que cette étape diminueraient non seulement l'efficience du processus d'enregistrement mais également la satisfaction d'utilisateur. C'est pourquoi il serait préférable de déplacer toutes les spécifications, après les champs de texte sur le courriel et le mot de passe, dans la configuration du profil une fois l'utilisateur connecté.
 
 ## Méthodologie
 
