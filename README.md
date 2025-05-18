@@ -58,4 +58,4 @@ SportLink/
 
 Diagramme de classes : 
 
-![Organisation du projet Xcode](./docs/diagrams/out/SportLink.svg "Organisation du projet Xcode")
+![Organisation du projet Xcode](./diagrams/out/SportLink.svg "Organisation du projet Xcode")
