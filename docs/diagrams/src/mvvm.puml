@@ -1,0 +1,47 @@
+@startuml SportLink
+
+class Utilisateur {
+  - {field} id : UUID
+  - {field} prenom : String
+  - {field} nom : String
+  - {field} courriel : String
+  - {field} motDePasse : String
+  - {field} dateDeNaissance : String
+}
+
+class ProfilUtilisateurVueModele {
+  - {field} utilisateur : Utilisateur
+  - {field} estEnChargement : Bool
+  + {method} modifierMotDePasse(nouveauMotDePasse : String) : void
+  + {method} chargerUtilisateur() : void
+}
+
+class ProfilUtilisateurVue {
+  - vueModele : ProfilUtilisateurVueModele
+}
+
+ProfilUtilisateurVueModele "1" --* "1" Utilisateur
+ProfilUtilisateurVue ..> ProfilUtilisateurVueModele
+
+class Activite {
+  - {field} id : UUID
+  - {field} sport : Sport
+}
+
+enum Sport {
+  Basketball
+  Soccer
+  Volleyball
+  Baseball
+  Tennis
+  Badminton
+  Pickleball
+  Waterpolo
+  Football
+  Rugby
+  Ultimate
+  Hockey
+}
+
+
+@enduml
