@@ -45,7 +45,9 @@ Par ailleurs, une autre question s’est posée : étant donné que la messageri
 
 ### Explore - Carte
 Deux options concernant l'implémentation de la carte s'ouvre à nous. En fait, la 2e option sera choisite uniquement s'il est impossible de trouver une API qui nous fournit de l'information à propos des infrastructures de sports. Les deux options auraient la composante "temporal slider" par un intervalle de temps X (*à décider*)
+
 - Option 1 : L'idée principale est d'afficher tous les marqueurs qui chacun, correspond à une infrastructure du sport choisi par l'utilisateur (dans le filtre convenu), sur la carte. De ce fait, même si aucune activité n'a été créée à une infrastructure X, l'utilisateur pourrait tout de même profiter des marqueurs afin de créer une nouvelle activité, sans qu'il est besoin de chercher sur Internet quels terrains ou centres de sports s'offrent à lui (dans le rayon sélectionné).
+
 - Option 2 : Dans ce scénario, des marqueurs ne seront affichés uniquement si une activité y a été crée. Il n'y aura donc pas la fonctionnalité de créer une activité directement sur la carte, en sélectionnant un marqueur. Cela impose également que l'utilisateur doit faire ses recherches à priori pour trouver quelle infrastructure peut organiser son activité.
 
 #### Suivi (en date du 18 mai)
