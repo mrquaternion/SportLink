@@ -35,6 +35,9 @@
 !!! info "Notes"
     - Nous avons préciser notre décision sur le choix de la plateforme (Swift) par rapport à l'éllaboration et la clarifications de nos exigences. On mise sur notre habileté avec Swift afin de livrer une application plus riche en intégrant des fonctionnalités natives à cette OS.
 
+!!! warning "Difficultés rencontrées"
+    - Nous devons décidés si on part avec l'option 1 ou l'option 2 de la carte dans le menu Explore (voir Études préliminaires).
+
 !!! abstract "Prochaines étapes"
     - **[À continuer]**
 

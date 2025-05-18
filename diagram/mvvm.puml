@@ -1,0 +1,12 @@
+@startuml SportLink MVVM
+
+class Utilisateur {
+    +id: UUID
+    +prenom: String
+    +nom: String
+    +courriel: String
+    +motDePasse: String
+    +dateDeNaissance: String
+}
+
+@enduml
