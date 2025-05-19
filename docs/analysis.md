@@ -32,8 +32,11 @@ Lors de notre étude préliminaire, une problématique importante a émergé con
 ## Réflexion sur les exigences fonctionnelles (rencontre du 13 mai)
 ### Calendrier
 Il était prévu d'intégrer un calendrier directement dans l'application. Finalement, cette option a été écartée pour deux raisons principales.
+
 - Temps de développement : Intégrier un calendrier natif ralentirai considérablement le développement et ce, pour un bénéfice qui n'en vaudrait pas les efforts.
+
 - Expérience utilisateur : Lors de la première utilisation, l'utilisateur se retrouverait avec un calendrier vide, ce qui renvoie une impression de solitude. Cela va à l'encontre de l'objectif principal de l'application qui est d'aider les gens à rencontrer d'autres pratiquants un sport.
+
 La solution proposée est la suivante. Il faudrait permettre la création automatique d'événements dans des applications existantes comme Apple Calendar ou Google Calendar. Ainsi, l'utilisateur peut facilement voir si une quelconque activité s'intègre à son emploi du temps (à condition bien sûr qu'il est l'une d'entre elles).
 
 ### Messagerie
@@ -49,6 +52,8 @@ Deux options concernant l'implémentation de la carte s'ouvre à nous. En fait, 
 - Option 1 : L'idée principale est d'afficher tous les marqueurs qui chacun, correspond à une infrastructure du sport choisi par l'utilisateur (dans le filtre convenu), sur la carte. De ce fait, même si aucune activité n'a été créée à une infrastructure X, l'utilisateur pourrait tout de même profiter des marqueurs afin de créer une nouvelle activité, sans qu'il est besoin de chercher sur Internet quels terrains ou centres de sports s'offrent à lui (dans le rayon sélectionné).
 
 - Option 2 : Dans ce scénario, des marqueurs ne seront affichés uniquement si une activité y a été crée. Il n'y aura donc pas la fonctionnalité de créer une activité directement sur la carte, en sélectionnant un marqueur. Cela impose également que l'utilisateur doit faire ses recherches à priori pour trouver quelle infrastructure peut organiser son activité.
+
+Pour faciliter l'expérience utilisateur, nous ajouterons également un bouton qui permet d'afficher uniquement les marqueurs qui ont des activités d'organiser. Cela permet d'éviter que l'utilisateur entre dans le scénario suivant : je cherche des activités mais quand je clique un marqueur, rien n'y est affiché. 
 
 #### Suivi (en date du 18 mai)
 - Option 1 : Après plusieurs recherches, il est clair que se fier sur les données ouvertes des grandes villes rendrait la tâche trop complexe. Alors, le choix s'imposerait entre Google Map API ou OpenStreetMap API. L'API de Google Map est limité sur l'identification des installations sportives. Cependant, l'API de OSM est plutôt intéressante même si elle pourrait ne pas être performante pour de plus petites villes. En effet, elle propose un tag `sport=*` (voir https://wiki.openstreetmap.org/wiki/Key:sport). Une deuxième chose à considérer est que OSM recommande généralement de ne pas dépasser 10 000 requêtes/jour. Cela ne risque pas d'être un problème pour nous au départ mais dans un certain futur, il faudrait considérer la mise en cache locale avec SwiftData.
