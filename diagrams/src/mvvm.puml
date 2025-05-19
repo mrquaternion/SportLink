@@ -1,7 +1,7 @@
 @startuml SportLink
 
 class Utilisateur {
-  - {field} id : UUID
+  - {field} nomUtilisateur : String
   - {field} prenom : String
   - {field} nom : String
   - {field} courriel : String
@@ -26,7 +26,17 @@ ProfilUtilisateurVue ..> ProfilUtilisateurVueModele
 class Activite {
   - {field} id : UUID
   - {field} sport : Sport
+  - {field} dateIntervalle : DateInterval 
+  - {field} placesDisponibles : Integer
+  - {field} niveau : Niveau
+  - {field} coordonnees : CLLocationCoordinate2D
 }
+
+enum Niveau {
+  Debutant
+  Intermediaire
+  Avance
+  }
 
 enum Sport {
   Basketball
