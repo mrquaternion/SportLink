@@ -67,4 +67,4 @@ Une option de géolocalisation pourrait éventuellement être envisagée afin d�
 En reconsultant la page de création d'un compte à partir du prototype Figma, nous nous sommes rendus compte qu'elle était trop longue et que cette étape diminueraient non seulement l'efficience du processus d'enregistrement mais également la satisfaction d'utilisateur. C'est pourquoi il serait préférable de déplacer toutes les spécifications, après les champs de texte sur le courriel et le mot de passe, dans la configuration du profil une fois l'utilisateur connecté.
 
 ## Méthodologie
-
+**Besoin d'éclaircissement**

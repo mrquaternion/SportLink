@@ -28,9 +28,9 @@
 
 ??? note "Étapes faites"
     - [x] Élaborer nos exigences fonctionnelles et non-fonctionnelles
-    - [ ] Faire l'étude préliminaire par rapport aux choix de la plateforme
-    - [ ] Démarrer la réalisation du diagramme de classes UML (draw.io)
-    - [ ] Réviser l'interface du prototype mi-design et de sa logique (Figma)
+    - [x] Faire l'étude préliminaire par rapport aux choix de la plateforme
+    - [x] Démarrer la réalisation du diagramme de classes UML (draw.io) | *Update* : on utilise PlantUML maintenant
+    - [x] Réviser l'interface du prototype mi-design et de sa logique (Figma)
 
 !!! info "Notes"
     - Nous avons préciser notre décision sur le choix de la plateforme (Swift) par rapport à l'éllaboration et la clarifications de nos exigences. On mise sur notre habileté avec Swift afin de livrer une application plus riche en intégrant des fonctionnalités natives à cette OS.
@@ -39,8 +39,10 @@
     - Nous devons décidés si on part avec l'option 1 ou l'option 2 de la carte dans le menu Explore (voir Études préliminaires).
 
 !!! abstract "Prochaines étapes"
-    - **[À continuer]**
-
+    - Finaliser le diagramme de classes UML
+    - Commencer à regarder des ressources en ligne (articles, vidéos) à propos de la programmation en Swift
+    - Créer la hiérarchie des fichiers du projet à partir de l'arborescence dans le `README`
+    - Préparer le document pour la remise *Description de projet* sur StudiuM
   
 ---
 
