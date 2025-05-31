@@ -14,6 +14,9 @@ Nous avons décidé de ne pas mettre les sous vues dans le diagramme, car nous p
 
 ## Modèle de données
 
+### `utilisateurs`
+
+```json
 utilisateurs
 ├── utilisateurId (doc ID)
     ├── nomUtilisateur : "mimi123"
@@ -43,7 +46,11 @@ utilisateurs
     │       dernierResultat : "+10"
     │     }
     │   ]
+```
 
+### `evenements`
+
+```json
 evenements
 ├── evenementId (doc ID)
     ├── organisateurId : "utilisateurId"
@@ -60,7 +67,11 @@ evenements
     ├── participants : [utilisateurId1, utilisateurId2]
     ├── statut : "ouvert" | "complet" | "annulé"
     ├── discussionId : "chat123"
+```
 
+### `discussions`
+
+```json
 discussions
 ├── discussionId
     ├── evenementId : "eventId"
@@ -72,11 +83,14 @@ discussions
     │       timestamp : "2025-05-31T12:10:00"
     │     }
     │   ]
+```
 
-- Filtre par sport : index sport
-- Filtre par date : index date
-- Filtre par niveau : index niveau (mode compétitif)
-- Tri par distance : via géohash ou librairie comme geofirestore
+### 🔎 Indexation recommandée
+
+- ✅ **Filtre par sport** : `index sport`
+- ✅ **Filtre par date** : `index date`
+- ✅ **Filtre par niveau** (mode compétitif) : `index niveau`
+- ✅ **Tri par distance** : via *geohash* ou librairie comme `geofirestore`
 
 ## Prototype
 La maquette Figma se trouve [ici](https://www.figma.com/design/N0QDEh5Shuht6eS3dpvKTB/SportLink?node-id=0-1&t=CBkQlTjm84oNgfAk-1).
