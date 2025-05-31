@@ -16,7 +16,7 @@ Nous avons décidé de ne pas mettre les sous vues dans le diagramme, car nous p
 
 ### `utilisateurs`
 
-```json
+```txt
 utilisateurs
 ├── utilisateurId (doc ID)
     ├── nomUtilisateur : "mimi123"
@@ -50,7 +50,7 @@ utilisateurs
 
 ### `evenements`
 
-```json
+```txt
 evenements
 ├── evenementId (doc ID)
     ├── organisateurId : "utilisateurId"
@@ -71,7 +71,7 @@ evenements
 
 ### `discussions`
 
-```json
+```txt
 discussions
 ├── discussionId
     ├── evenementId : "eventId"
