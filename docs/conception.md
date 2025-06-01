@@ -87,7 +87,7 @@ discussions
 
 ### 🔎 Indexation recommandée
 
-- ✅ **Filtre par sport** : `index sport`
+- ✅ **Filtress par sport** : `index sport`
 - ✅ **Filtre par date** : `index date`
 - ✅ **Filtre par niveau** (mode compétitif) : `index niveau`
 - ✅ **Tri par distance** : via *geohash* ou librairie comme `geofirestore`
