@@ -1,12 +1,64 @@
 # Conception
 
 ## Architecture
-
-- Décrire l'architecture du système proposé.
+```plaintext
+SportLink/
+├── App/
+|   ├── SportLinkApp.swift
+|   └── EtatApp.swift
+|
+├── Fonctionnalitees/
+|   ├── Accueil/
+|   |   ├── Vues/
+|   |   ├── VuesModeles/
+|   |   └── Sousvues/
+│   ├── Explorer/
+|   |   ├── Vues/
+|   |   ├── VuesModeles/
+|   |   └── Sousvues/
+│   ├── Creer/
+|   |   ├── Vues/
+|   |   ├── VuesModeles/
+|   |   └── Sousvues/
+│   ├── Activites/
+|   |   ├── Vues/
+|   |   ├── VuesModeles/
+|   |   └── Sousvues/
+│   └── Profile/
+|       ├── Vues/
+|       ├── VuesModeles/
+|       └── Sousvues/
+|
+├── ModelesPartagees/
+|   ├── Utilisateur.swift
+|   ├── Activite.swift
+|   ├── Discussion.swift
+|   └── Emplacement.swift
+|
+├── ComposantesUI/
+|   ├── Boutons/
+|   ├── Icones/
+|   └── Cartes/
+|
+├── Services/
+|   ├── Geolocalisation/
+│   |   └── ServiceEmplacement.swift
+|   ├── Authentification/
+│   |   └── ServiceUtilisateur.swift
+|   └── Reseau/
+│       └── APIClient.swift
+|
+└── Ressources/
+    └── Actifs/
+```
 
 ## Choix technologiques
-
-- Justifier les technologies et outils choisis.
+Nous avons opté pour un développement **natif iOS en Swift**, pour :
+- Utilisation de `Xcode` comme IDE pour le code et la simulation en temps réelle
+    - Tirer parti des composants natifs (localisation, notifications)
+    - Cibler uniquement iOS 17+ pour simplifier les tests https://developer.apple.com/support/app-store/ [_Statistiques de répartition des versions iOS_]
+- Utilisation du framework `SwiftUI` afin de bénéficier de la stabilité et des performances natives
+- Utilisation de `Firebase` pour le backend, plus exactement `Cloud Firestore`
 
 ## Modèles et diagrammes
 Nous avons décidé de ne pas mettre les sous vues dans le diagramme, car nous pensons qu'il deviendrait trop grossier avec toutes les classes qui n'ont pas nécessairement d'attributs ou de méthodes pertinentes.

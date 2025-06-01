@@ -14,19 +14,19 @@ SportLink/
 |   |   ├── Vues/
 |   |   ├── VuesModeles/
 |   |   └── Sousvues/
-│   ├── Activites/
-|   |   ├── Vues/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
 │   ├── Explorer/
 |   |   ├── Vues/
 |   |   ├── VuesModeles/
 |   |   └── Sousvues/
-│   ├── Messagerie/
+│   ├── Creer/
 |   |   ├── Vues/
 |   |   ├── VuesModeles/
 |   |   └── Sousvues/
-│   └── Profil/
+│   ├── Activites/
+|   |   ├── Vues/
+|   |   ├── VuesModeles/
+|   |   └── Sousvues/
+│   └── Profile/
 |       ├── Vues/
 |       ├── VuesModeles/
 |       └── Sousvues/
@@ -34,7 +34,7 @@ SportLink/
 ├── ModelesPartagees/
 |   ├── Utilisateur.swift
 |   ├── Activite.swift
-|   ├── Message.swift
+|   ├── Discussion.swift
 |   └── Emplacement.swift
 |
 ├── ComposantesUI/

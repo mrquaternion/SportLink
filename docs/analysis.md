@@ -67,4 +67,18 @@ Une option de géolocalisation pourrait éventuellement être envisagée afin d�
 En reconsultant la page de création d'un compte à partir du prototype Figma, nous nous sommes rendus compte qu'elle était trop longue et que cette étape diminueraient non seulement l'efficience du processus d'enregistrement mais également la satisfaction d'utilisateur. C'est pourquoi il serait préférable de déplacer toutes les spécifications, après les champs de texte sur le courriel et le mot de passe, dans la configuration du profil une fois l'utilisateur connecté.
 
 ## Méthodologie
-**Besoin d'éclaircissement**
+### Choix technologiques et plateforme ciblée
+Nous avons opté pour un développement **natif iOS en Swift**, pour :
+- Utilisation de `Xcode` comme IDE pour le code et la simulation en temps réelle
+    - Tirer parti des composants natifs (localisation, notifications)
+    - Cibler uniquement iOS 17+ pour simplifier les tests https://developer.apple.com/support/app-store/ [_Statistiques de répartition des versions iOS_]
+- Utilisation du framework `SwiftUI` afin de bénéficier de la stabilité et des performances natives
+- Utilisation de `Firebase` pour le backend, plus exactement `Cloud Firestore`
+
+### Collecte des données
+Notre collecte des données publiques se fera principalement à partir de l'API OpenStreetMap. Celle-ci nous permettra de recueillir toutes sortes d'information à propos des emplacements sportifs ; coordonnées (latitude/longitude), type de terrain (e.g. soccer, basketball, volleyball), les limites de l'emplacement, le nom de l'infrastructure ou du parc (si s'applique), etc.
+
+Concernant les données personnelles des utilisateurs, nous appliquons un principe de minimisation et de consentement éclairé :
+- **Informations de compte** : nom complet, adresse courriel, mot de passe (encrypté), pseudonyme, préférences sportives et photo de profil
+
+- **Données d’activité** : participants et avis des participants sur la performance des autres joueurs à la suite d'une activité, potentiellement des traces GPS si le temps nous le permet
