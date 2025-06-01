@@ -18,7 +18,7 @@ Nous avons décidé de ne pas mettre les sous vues dans le diagramme, car nous p
 
 ```txt
 utilisateurs
-├── utilisateurId (doc ID)
+├── utilisateurId
     ├── nomUtilisateur : "mimi123"
     ├── courriel : "michel@example.com"
     ├── motDePasseHash : "hashed_pw"
@@ -28,16 +28,16 @@ utilisateurs
     │   ├── mardi : ["AM"]
     │   └── ...
     ├── sportsFavoris : ["Soccer", "Tennis"]
-    ├── mode : "récréatif" | "compétitif"
+    ├── mode : "recreatif" | "competitif"
     ├── pointsParSport :
     │   ├── Soccer : 1200
     │   ├── Tennis : 800
     ├── niveauParSport :
     │   ├── Soccer : 3
     │   ├── Tennis : 2
-    ├── evenementsOrganises : [eventId1, eventId2]
-    ├── evenementsInscrits : [eventId3]
-    ├── evenementsFavoris : [eventId4]
+    ├── activitesOrganises : [eventId1, eventId2]
+    ├── activitesInscrits : [eventId3]
+    ├── activitesFavoris : [eventId4]
     ├── partenairesRecents : [
     │     {
     │       utilisateurId : "autreId",
@@ -48,11 +48,11 @@ utilisateurs
     │   ]
 ```
 
-### `evenements`
+### `activites`
 
 ```txt
-evenements
-├── evenementId (doc ID)
+activites
+├── activiteId
     ├── organisateurId : "utilisateurId"
     ├── sport : "Basketball"
     ├── date : "2025-06-12"
@@ -65,7 +65,7 @@ evenements
     ├── niveau : 2
     ├── maxParticipants : 6
     ├── participants : [utilisateurId1, utilisateurId2]
-    ├── statut : "ouvert" | "complet" | "annulé"
+    ├── statut : "ouvert" | "complet" | "annule"
     ├── discussionId : "chat123"
 ```
 
@@ -74,7 +74,7 @@ evenements
 ```txt
 discussions
 ├── discussionId
-    ├── evenementId : "eventId"
+    ├── activiteId : "activiteId"
     ├── participants : [utilisateurId1, utilisateurId2]
     ├── messages : [
     │     {
@@ -85,17 +85,6 @@ discussions
     │   ]
 ```
 
-### 🔎 Indexation recommandée
-
-- ✅ **Filtre par sport** : `index sport`
-- ✅ **Filtre par date** : `index date`
-- ✅ **Filtre par niveau** (mode compétitif) : `index niveau`
-- ✅ **Tri par distance** : via *geohash* ou librairie comme `geofirestore`
 
 ## Prototype
 La maquette Figma se trouve [ici](https://www.figma.com/design/N0QDEh5Shuht6eS3dpvKTB/SportLink?node-id=0-1&t=CBkQlTjm84oNgfAk-1).
-
-![Flow 1](./gifs/Flow-1.gif)
-![Flow 2](./gifs/Flow-2.gif)
-![Flow 3](./gifs/flow-3.gif)
-![Flow 4](./gifs/flow-4.gif)
