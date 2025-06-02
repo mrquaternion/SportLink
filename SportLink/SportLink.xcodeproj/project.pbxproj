@@ -6,63 +6,74 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		628E053E2DED1EF700FBED91 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 628E053D2DED1EF700FBED91 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		628E05402DED1EF700FBED91 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 628E053F2DED1EF700FBED91 /* FirebaseAuth */; };
+		628E05422DED1EF700FBED91 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 628E05412DED1EF700FBED91 /* FirebaseFirestore */; };
+		628E05442DED1EF700FBED91 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 628E05432DED1EF700FBED91 /* FirebaseStorage */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
-		627189772DCA448C00CDE382 /* PBXContainerItemProxy */ = {
+		628E051E2DED1B7700FBED91 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 627189612DCA448A00CDE382 /* Project object */;
+			containerPortal = 628E05082DED1B7600FBED91 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 627189682DCA448A00CDE382;
-			remoteInfo = SportingApp;
+			remoteGlobalIDString = 628E050F2DED1B7600FBED91;
+			remoteInfo = SportLink;
 		};
-		627189812DCA448C00CDE382 /* PBXContainerItemProxy */ = {
+		628E05282DED1B7700FBED91 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 627189612DCA448A00CDE382 /* Project object */;
+			containerPortal = 628E05082DED1B7600FBED91 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 627189682DCA448A00CDE382;
-			remoteInfo = SportingApp;
+			remoteGlobalIDString = 628E050F2DED1B7600FBED91;
+			remoteInfo = SportLink;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		627189692DCA448A00CDE382 /* SportingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SportingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		627189762DCA448C00CDE382 /* SportingAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SportingAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		627189802DCA448C00CDE382 /* SportingAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SportingAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		628E05102DED1B7600FBED91 /* SportLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SportLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		628E051D2DED1B7700FBED91 /* SportLinkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SportLinkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		628E05272DED1B7700FBED91 /* SportLinkUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SportLinkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6271896B2DCA448A00CDE382 /* SportingApp */ = {
+		628E05122DED1B7600FBED91 /* SportLink */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SportingApp;
+			path = SportLink;
 			sourceTree = "<group>";
 		};
-		627189792DCA448C00CDE382 /* SportingAppTests */ = {
+		628E05202DED1B7700FBED91 /* SportLinkTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SportingAppTests;
+			path = SportLinkTests;
 			sourceTree = "<group>";
 		};
-		627189832DCA448C00CDE382 /* SportingAppUITests */ = {
+		628E052A2DED1B7700FBED91 /* SportLinkUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SportingAppUITests;
+			path = SportLinkUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		627189662DCA448A00CDE382 /* Frameworks */ = {
+		628E050D2DED1B7600FBED91 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				628E053E2DED1EF700FBED91 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				628E05442DED1EF700FBED91 /* FirebaseStorage in Frameworks */,
+				628E05402DED1EF700FBED91 /* FirebaseAuth in Frameworks */,
+				628E05422DED1EF700FBED91 /* FirebaseFirestore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		628E051A2DED1B7700FBED91 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		627189732DCA448C00CDE382 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6271897D2DCA448C00CDE382 /* Frameworks */ = {
+		628E05242DED1B7700FBED91 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -72,22 +83,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		627189602DCA448A00CDE382 = {
+		628E05072DED1B7600FBED91 = {
 			isa = PBXGroup;
 			children = (
-				6271896B2DCA448A00CDE382 /* SportingApp */,
-				627189792DCA448C00CDE382 /* SportingAppTests */,
-				627189832DCA448C00CDE382 /* SportingAppUITests */,
-				6271896A2DCA448A00CDE382 /* Products */,
+				628E05122DED1B7600FBED91 /* SportLink */,
+				628E05202DED1B7700FBED91 /* SportLinkTests */,
+				628E052A2DED1B7700FBED91 /* SportLinkUITests */,
+				628E05112DED1B7600FBED91 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		6271896A2DCA448A00CDE382 /* Products */ = {
+		628E05112DED1B7600FBED91 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				627189692DCA448A00CDE382 /* SportingApp.app */,
-				627189762DCA448C00CDE382 /* SportingAppTests.xctest */,
-				627189802DCA448C00CDE382 /* SportingAppUITests.xctest */,
+				628E05102DED1B7600FBED91 /* SportLink.app */,
+				628E051D2DED1B7700FBED91 /* SportLinkTests.xctest */,
+				628E05272DED1B7700FBED91 /* SportLinkUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,134 +106,141 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		627189682DCA448A00CDE382 /* SportingApp */ = {
+		628E050F2DED1B7600FBED91 /* SportLink */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6271898A2DCA448C00CDE382 /* Build configuration list for PBXNativeTarget "SportingApp" */;
+			buildConfigurationList = 628E05312DED1B7700FBED91 /* Build configuration list for PBXNativeTarget "SportLink" */;
 			buildPhases = (
-				627189652DCA448A00CDE382 /* Sources */,
-				627189662DCA448A00CDE382 /* Frameworks */,
-				627189672DCA448A00CDE382 /* Resources */,
+				628E050C2DED1B7600FBED91 /* Sources */,
+				628E050D2DED1B7600FBED91 /* Frameworks */,
+				628E050E2DED1B7600FBED91 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				6271896B2DCA448A00CDE382 /* SportingApp */,
+				628E05122DED1B7600FBED91 /* SportLink */,
 			);
-			name = SportingApp;
+			name = SportLink;
 			packageProductDependencies = (
+				628E053D2DED1EF700FBED91 /* FirebaseAnalyticsWithoutAdIdSupport */,
+				628E053F2DED1EF700FBED91 /* FirebaseAuth */,
+				628E05412DED1EF700FBED91 /* FirebaseFirestore */,
+				628E05432DED1EF700FBED91 /* FirebaseStorage */,
 			);
-			productName = SportingApp;
-			productReference = 627189692DCA448A00CDE382 /* SportingApp.app */;
+			productName = SportLink;
+			productReference = 628E05102DED1B7600FBED91 /* SportLink.app */;
 			productType = "com.apple.product-type.application";
 		};
-		627189752DCA448C00CDE382 /* SportingAppTests */ = {
+		628E051C2DED1B7700FBED91 /* SportLinkTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6271898D2DCA448C00CDE382 /* Build configuration list for PBXNativeTarget "SportingAppTests" */;
+			buildConfigurationList = 628E05342DED1B7700FBED91 /* Build configuration list for PBXNativeTarget "SportLinkTests" */;
 			buildPhases = (
-				627189722DCA448C00CDE382 /* Sources */,
-				627189732DCA448C00CDE382 /* Frameworks */,
-				627189742DCA448C00CDE382 /* Resources */,
+				628E05192DED1B7700FBED91 /* Sources */,
+				628E051A2DED1B7700FBED91 /* Frameworks */,
+				628E051B2DED1B7700FBED91 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				627189782DCA448C00CDE382 /* PBXTargetDependency */,
+				628E051F2DED1B7700FBED91 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				627189792DCA448C00CDE382 /* SportingAppTests */,
+				628E05202DED1B7700FBED91 /* SportLinkTests */,
 			);
-			name = SportingAppTests;
+			name = SportLinkTests;
 			packageProductDependencies = (
 			);
-			productName = SportingAppTests;
-			productReference = 627189762DCA448C00CDE382 /* SportingAppTests.xctest */;
+			productName = SportLinkTests;
+			productReference = 628E051D2DED1B7700FBED91 /* SportLinkTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		6271897F2DCA448C00CDE382 /* SportingAppUITests */ = {
+		628E05262DED1B7700FBED91 /* SportLinkUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 627189902DCA448C00CDE382 /* Build configuration list for PBXNativeTarget "SportingAppUITests" */;
+			buildConfigurationList = 628E05372DED1B7700FBED91 /* Build configuration list for PBXNativeTarget "SportLinkUITests" */;
 			buildPhases = (
-				6271897C2DCA448C00CDE382 /* Sources */,
-				6271897D2DCA448C00CDE382 /* Frameworks */,
-				6271897E2DCA448C00CDE382 /* Resources */,
+				628E05232DED1B7700FBED91 /* Sources */,
+				628E05242DED1B7700FBED91 /* Frameworks */,
+				628E05252DED1B7700FBED91 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				627189822DCA448C00CDE382 /* PBXTargetDependency */,
+				628E05292DED1B7700FBED91 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				627189832DCA448C00CDE382 /* SportingAppUITests */,
+				628E052A2DED1B7700FBED91 /* SportLinkUITests */,
 			);
-			name = SportingAppUITests;
+			name = SportLinkUITests;
 			packageProductDependencies = (
 			);
-			productName = SportingAppUITests;
-			productReference = 627189802DCA448C00CDE382 /* SportingAppUITests.xctest */;
+			productName = SportLinkUITests;
+			productReference = 628E05272DED1B7700FBED91 /* SportLinkUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		627189612DCA448A00CDE382 /* Project object */ = {
+		628E05082DED1B7600FBED91 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
-					627189682DCA448A00CDE382 = {
-						CreatedOnToolsVersion = 16.3;
+					628E050F2DED1B7600FBED91 = {
+						CreatedOnToolsVersion = 16.4;
 					};
-					627189752DCA448C00CDE382 = {
-						CreatedOnToolsVersion = 16.3;
-						TestTargetID = 627189682DCA448A00CDE382;
+					628E051C2DED1B7700FBED91 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 628E050F2DED1B7600FBED91;
 					};
-					6271897F2DCA448C00CDE382 = {
-						CreatedOnToolsVersion = 16.3;
-						TestTargetID = 627189682DCA448A00CDE382;
+					628E05262DED1B7700FBED91 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 628E050F2DED1B7600FBED91;
 					};
 				};
 			};
-			buildConfigurationList = 627189642DCA448A00CDE382 /* Build configuration list for PBXProject "SportingApp" */;
+			buildConfigurationList = 628E050B2DED1B7600FBED91 /* Build configuration list for PBXProject "SportLink" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 627189602DCA448A00CDE382;
+			mainGroup = 628E05072DED1B7600FBED91;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 6271896A2DCA448A00CDE382 /* Products */;
+			productRefGroup = 628E05112DED1B7600FBED91 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				627189682DCA448A00CDE382 /* SportingApp */,
-				627189752DCA448C00CDE382 /* SportingAppTests */,
-				6271897F2DCA448C00CDE382 /* SportingAppUITests */,
+				628E050F2DED1B7600FBED91 /* SportLink */,
+				628E051C2DED1B7700FBED91 /* SportLinkTests */,
+				628E05262DED1B7700FBED91 /* SportLinkUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		627189672DCA448A00CDE382 /* Resources */ = {
+		628E050E2DED1B7600FBED91 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		627189742DCA448C00CDE382 /* Resources */ = {
+		628E051B2DED1B7700FBED91 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6271897E2DCA448C00CDE382 /* Resources */ = {
+		628E05252DED1B7700FBED91 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -232,21 +250,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		627189652DCA448A00CDE382 /* Sources */ = {
+		628E050C2DED1B7600FBED91 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		627189722DCA448C00CDE382 /* Sources */ = {
+		628E05192DED1B7700FBED91 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6271897C2DCA448C00CDE382 /* Sources */ = {
+		628E05232DED1B7700FBED91 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -256,20 +274,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		627189782DCA448C00CDE382 /* PBXTargetDependency */ = {
+		628E051F2DED1B7700FBED91 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 627189682DCA448A00CDE382 /* SportingApp */;
-			targetProxy = 627189772DCA448C00CDE382 /* PBXContainerItemProxy */;
+			target = 628E050F2DED1B7600FBED91 /* SportLink */;
+			targetProxy = 628E051E2DED1B7700FBED91 /* PBXContainerItemProxy */;
 		};
-		627189822DCA448C00CDE382 /* PBXTargetDependency */ = {
+		628E05292DED1B7700FBED91 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 627189682DCA448A00CDE382 /* SportingApp */;
-			targetProxy = 627189812DCA448C00CDE382 /* PBXContainerItemProxy */;
+			target = 628E050F2DED1B7600FBED91 /* SportLink */;
+			targetProxy = 628E05282DED1B7700FBED91 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		627189882DCA448C00CDE382 /* Debug */ = {
+		628E052F2DED1B7700FBED91 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -321,7 +339,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -332,7 +350,7 @@
 			};
 			name = Debug;
 		};
-		627189892DCA448C00CDE382 /* Release */ = {
+		628E05302DED1B7700FBED91 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -378,7 +396,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -388,7 +406,7 @@
 			};
 			name = Release;
 		};
-		6271898B2DCA448C00CDE382 /* Debug */ = {
+		628E05322DED1B7700FBED91 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -397,17 +415,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportingApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -415,7 +435,7 @@
 			};
 			name = Debug;
 		};
-		6271898C2DCA448C00CDE382 /* Release */ = {
+		628E05332DED1B7700FBED91 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -424,17 +444,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportingApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportLink;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -442,114 +464,148 @@
 			};
 			name = Release;
 		};
-		6271898E2DCA448C00CDE382 /* Debug */ = {
+		628E05352DED1B7700FBED91 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportingAppTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportLinkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SportingApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SportingApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SportLink.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SportLink";
 			};
 			name = Debug;
 		};
-		6271898F2DCA448C00CDE382 /* Release */ = {
+		628E05362DED1B7700FBED91 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportingAppTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportLinkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SportingApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SportingApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SportLink.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SportLink";
 			};
 			name = Release;
 		};
-		627189912DCA448C00CDE382 /* Debug */ = {
+		628E05382DED1B7700FBED91 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportingAppUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportLinkUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SportingApp;
+				TEST_TARGET_NAME = SportLink;
 			};
 			name = Debug;
 		};
-		627189922DCA448C00CDE382 /* Release */ = {
+		628E05392DED1B7700FBED91 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportingAppUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mlr.SportLinkUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SportingApp;
+				TEST_TARGET_NAME = SportLink;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		627189642DCA448A00CDE382 /* Build configuration list for PBXProject "SportingApp" */ = {
+		628E050B2DED1B7600FBED91 /* Build configuration list for PBXProject "SportLink" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				627189882DCA448C00CDE382 /* Debug */,
-				627189892DCA448C00CDE382 /* Release */,
+				628E052F2DED1B7700FBED91 /* Debug */,
+				628E05302DED1B7700FBED91 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6271898A2DCA448C00CDE382 /* Build configuration list for PBXNativeTarget "SportingApp" */ = {
+		628E05312DED1B7700FBED91 /* Build configuration list for PBXNativeTarget "SportLink" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6271898B2DCA448C00CDE382 /* Debug */,
-				6271898C2DCA448C00CDE382 /* Release */,
+				628E05322DED1B7700FBED91 /* Debug */,
+				628E05332DED1B7700FBED91 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6271898D2DCA448C00CDE382 /* Build configuration list for PBXNativeTarget "SportingAppTests" */ = {
+		628E05342DED1B7700FBED91 /* Build configuration list for PBXNativeTarget "SportLinkTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6271898E2DCA448C00CDE382 /* Debug */,
-				6271898F2DCA448C00CDE382 /* Release */,
+				628E05352DED1B7700FBED91 /* Debug */,
+				628E05362DED1B7700FBED91 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		627189902DCA448C00CDE382 /* Build configuration list for PBXNativeTarget "SportingAppUITests" */ = {
+		628E05372DED1B7700FBED91 /* Build configuration list for PBXNativeTarget "SportLinkUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				627189912DCA448C00CDE382 /* Debug */,
-				627189922DCA448C00CDE382 /* Release */,
+				628E05382DED1B7700FBED91 /* Debug */,
+				628E05392DED1B7700FBED91 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.13.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		628E053D2DED1EF700FBED91 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		628E053F2DED1EF700FBED91 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		628E05412DED1EF700FBED91 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		628E05432DED1EF700FBED91 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 627189612DCA448A00CDE382 /* Project object */;
+	rootObject = 628E05082DED1B7600FBED91 /* Project object */;
 }

@@ -79,6 +79,7 @@ Nous avons opté pour un développement **natif iOS en Swift**, pour :
 Notre collecte des données publiques se fera principalement à partir de l'API OpenStreetMap. Celle-ci nous permettra de recueillir toutes sortes d'information à propos des emplacements sportifs ; coordonnées (latitude/longitude), type de terrain (e.g. soccer, basketball, volleyball), les limites de l'emplacement, le nom de l'infrastructure ou du parc (si s'applique), etc.
 
 Concernant les données personnelles des utilisateurs, nous appliquons un principe de minimisation et de consentement éclairé :
+
 - **Informations de compte** : nom complet, adresse courriel, mot de passe (encrypté), pseudonyme, préférences sportives et photo de profil
 
 - **Données d’activité** : participants et avis des participants sur la performance des autres joueurs à la suite d'une activité, potentiellement des traces GPS si le temps nous le permet

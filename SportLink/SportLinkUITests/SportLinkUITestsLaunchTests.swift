@@ -1,13 +1,13 @@
 //
-//  SportingAppUITestsLaunchTests.swift
-//  SportingAppUITests
+//  SportLinkUITestsLaunchTests.swift
+//  SportLinkUITests
 //
-//  Created by Mathias La Rochelle on 2025-05-06.
+//  Created by Mathias La Rochelle on 2025-06-01.
 //
 
 import XCTest
 
-final class SportingAppUITestsLaunchTests: XCTestCase {
+final class SportLinkUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

@@ -1,8 +1,8 @@
 //
 //  ContentView.swift
-//  SportingApp
+//  SportLink
 //
-//  Created by Mathias La Rochelle on 2025-05-06.
+//  Created by Mathias La Rochelle on 2025-06-01.
 //
 
 import SwiftUI

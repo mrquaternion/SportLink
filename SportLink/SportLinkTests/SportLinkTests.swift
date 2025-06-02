@@ -1,14 +1,14 @@
 //
-//  SportingAppTests.swift
-//  SportingAppTests
+//  SportLinkTests.swift
+//  SportLinkTests
 //
-//  Created by Mathias La Rochelle on 2025-05-06.
+//  Created by Mathias La Rochelle on 2025-06-01.
 //
 
 import Testing
-@testable import SportingApp
+@testable import SportLink
 
-struct SportingAppTests {
+struct SportLinkTests {
 
     @Test func example() async throws {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.

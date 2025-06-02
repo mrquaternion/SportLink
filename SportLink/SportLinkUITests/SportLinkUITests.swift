@@ -1,13 +1,13 @@
 //
-//  SportingAppUITests.swift
-//  SportingAppUITests
+//  SportLinkUITests.swift
+//  SportLinkUITests
 //
-//  Created by Mathias La Rochelle on 2025-05-06.
+//  Created by Mathias La Rochelle on 2025-06-01.
 //
 
 import XCTest
 
-final class SportingAppUITests: XCTestCase {
+final class SportLinkUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
