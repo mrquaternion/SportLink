@@ -24,7 +24,7 @@ SportLink/
 |   |   ├── Vues/
 |   |   ├── VuesModeles/
 |   |   └── Sousvues/
-│   └── Profile/
+│   └── Profil/
 |       ├── Vues/
 |       ├── VuesModeles/
 |       └── Sousvues/
@@ -32,7 +32,7 @@ SportLink/
 ├── ModelesPartagees/
 |   ├── Utilisateur.swift
 |   ├── Activite.swift
-|   ├── Discussion.swift
+|   ├── Message.swift
 |   └── Emplacement.swift
 |
 ├── ComposantesUI/
@@ -124,15 +124,6 @@ activites
     ├── participants : [utilisateurId1, utilisateurId2]
     ├── statut : "ouvert" | "complet" | "annule"
     ├── discussionId : "chat123"
-```
-
-### `discussions`
-
-```txt
-discussions
-├── discussionId
-    ├── activiteId : "activiteId"
-    ├── participants : [utilisateurId1, utilisateurId2]
     ├── messages : [
     │     {
     │       auteurId : "utilisateurId1",
