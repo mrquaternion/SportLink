@@ -86,20 +86,14 @@ utilisateurs
     │   └── ...
     ├── sportsFavoris : ["Soccer", "Tennis"]
     ├── mode : "recreatif" | "competitif"
-    ├── pointsParSport :
+    ├── pointsTotauxParSport :
     │   ├── Soccer : 1200
     │   ├── Tennis : 800
-    ├── niveauParSport :
-    │   ├── Soccer : 3
-    │   ├── Tennis : 2
-    ├── activitesOrganises : [eventId1, eventId2]
-    ├── activitesInscrits : [eventId3]
     ├── activitesFavoris : [eventId4]
     ├── partenairesRecents : [
     │     {
     │       utilisateurId : "autreId",
     │       sport : "Soccer",
-    │       activitesPartagees : 4,
     │       dernierResultat : "+10"
     │     }
     │   ]
