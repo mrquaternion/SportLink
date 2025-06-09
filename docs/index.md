@@ -53,7 +53,7 @@ Résumé:
 | Ouverture de projet            | 1 mai         | Proposition de projet               | ✅ Terminé  |
 | Analyse des exigences          | 13 mai        | Document d'analyse                  | ✅ Terminé  |
 | Description de projet          | 23 mai        | Document PDF | ✅ Terminé  |
-| Prototype                      | 2 juin        | Maquette Figma                   | 🔄 En cours  |
-| Architecture                   | 9 juin        | Diagramme UML et modèle de données                      | ⏳ À venir |
+| Prototype                      | 2 juin        | Maquette Figma                   | ✅ Terminé   |
+| Architecture                   | 9 juin        | Diagramme UML et modèle de données                      | 🔄 En cours |
 
 

@@ -48,6 +48,25 @@
 
 ## Semaine 3
 
+??? note "Étapes faites"
+
+ Avancement du prototype dans Figma (version 3) : ajustements esthétiques et amélioration de l’ergonomie
+ Début de la modélisation des classes UML dans PlantUML
+ Analyse des besoins en structure de données avant de poursuivre le diagramme UML
+!!! info "Notes"
+
+En travaillant sur le diagramme UML, nous avons réalisé qu’il nous manquait un modèle de données clair pour représenter les relations et les structures attendues dans notre application. Cela nous a amenés à mettre temporairement le diagramme UML en pause pour mieux cadrer les entités clés et leurs attributs.
+!!! warning "Difficultés rencontrées"
+
+Difficulté à continuer le diagramme UML sans une base de données conceptuelle solide. Certaines relations entre les classes étaient ambiguës sans cette étape intermédiaire.
+!!! abstract "Prochaines étapes"
+
+Élaborer un modèle de données complet (structure des collections/documents si Firebase, ou tables/relations si base SQL)
+Reprendre et compléter le diagramme UML à partir du modèle de données défini
+Intégrer le Figma 3 au dépôt GitHub et ajouter des annotations pour expliquer les interactions
+
+---
+
 ## Semaine 4
 
 ## Semaine 5
