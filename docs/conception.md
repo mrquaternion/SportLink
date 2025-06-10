@@ -121,11 +121,13 @@ activites    (collection)
 ```
 
 ### `messages`
+```txt
 messages    (collection)
 └── {messageId}
     ├── auteurId : "utilisateurId1",
     ├── contenu : "Salut !",
     └── timestamp : "2025-05-31T12:10:00"
+```
 
 ### `emplacements`
 ```txt
