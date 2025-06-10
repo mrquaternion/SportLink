@@ -117,14 +117,15 @@ activites    (collection)
     ├── notesAttribuees     : {           # ActiviteCompetitif
     │     "uId1": { "uId2": "👍", "uId3": "👎" }
     │   }
-    ├── messages : [
-    │     {
-    │       auteurId : "utilisateurId1",
-    │       contenu : "Salut !",
-    │       timestamp : "2025-05-31T12:10:00"
-    │     }
-    │   ]
+    └── messages : [messageId1, messagesId2, ...]
 ```
+
+### `messages`
+messages    (collection)
+└── {messageId}
+    ├── auteurId : "utilisateurId1",
+    ├── contenu : "Salut !",
+    └── timestamp : "2025-05-31T12:10:00"
 
 ### `emplacements`
 ```txt
