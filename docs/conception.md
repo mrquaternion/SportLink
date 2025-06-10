@@ -127,6 +127,7 @@ activites    (collection)
 ```
 
 ### `emplacements`
+```txt
 emplacements    (collection)
 └── {emplacementId}
     ├── nomEmplacement    : "Parc Jean-Drapeau"
@@ -134,6 +135,7 @@ emplacements    (collection)
     ├── longitude         : -73.554
     ├── sportsDisponibles : ["Basketball", "Soccer"]
     └── heuresOuvertures  : "08:00-22:00"
+```
 
 
 ## Prototype
