@@ -97,8 +97,9 @@ utilisateurs    (collection)
 
 ### `activites`
 ```txt
-activites
-├── activiteId
+activites    (collection)
+├── {activiteId}
+    ├── type : "competitif" | "recreatif"
     ├── organisateurId : "utilisateurId"
     ├── sport : "Basketball"
     ├── date : "2025-06-12T17:00"
@@ -111,6 +112,11 @@ activites
     ├── maxParticipants : 6
     ├── participants : [utilisateurId1, utilisateurId2]
     ├── statut : "ouvert" | "complet" | "annule"
+    ├── emplacement : emplacementId
+    ├── invitationsOuvertes : true        # ActiviteRecreatif
+    ├── notesAttribuees     : {           # ActiviteCompetitif
+    │     "uId1": { "uId2": "👍", "uId3": "👎" }
+    │   }
     ├── messages : [
     │     {
     │       auteurId : "utilisateurId1",
@@ -121,7 +127,7 @@ activites
 ```
 
 ### `emplacements`
-emplacements
+emplacements    (collection)
 └── {emplacementId}
     ├── nomEmplacement    : "Parc Jean-Drapeau"
     ├── latitude          : 45.508
