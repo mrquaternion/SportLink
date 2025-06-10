@@ -70,54 +70,47 @@ Nous avons décidé de ne pas mettre les sous vues dans le diagramme, car nous p
 ![Diagramme de classe UML](./diagrams/out/SportLink.svg "Diagramme de classe UML")
 
 ## Modèle de données
-
-
+Voici le modèle de données style NoSQL qui réflète les *entités métiers*. C'est ainsi que les données seront stockées dans Firebase.
 ### `utilisateurs`
 ```txt
-utilisateurs
-├── utilisateurId
-    ├── nomUtilisateur : "mimi123"
-    ├── courriel : "michel@example.com"
-    ├── motDePasseHash : "hashed_pw"
-    ├── photoProfil : "https://..."
-    ├── disponibilites :
-    │   ├── lundi : ["AM", "PM"]
-    │   ├── mardi : ["AM"]
-    │   └── ...
-    ├── sportsFavoris : ["Soccer", "Tennis"]
-    ├── mode : "recreatif" | "competitif"
-    ├── pointsTotauxParSport :
-    │   ├── Soccer : 1200
-    │   ├── Tennis : 800
-    ├── activitesFavoris : [eventId4]
-    ├── partenairesRecents : [
-    │     {
-    │       utilisateurId : "autreId",
-    │       sport : "Soccer",
-    │       dernierResultat : "+10"
-    │     }
+utilisateurs    (collection)
+└── {utilisateurId}
+    ├── nomUtilisateur        : "mimi123"
+    ├── courriel              : "michel@example.com"
+    ├── photoProfil           : "https://..."
+    ├── disponibilites        : ["lundi_AM", "lundi_PM", "mardi_AM"] 
+    ├── sportsFavoris         : ["Soccer", "Tennis"]                  
+    ├── mode                  : "Recreatif" | "Competitif"         
+    ├── favorisActivites      : ["eventId4","eventId9"]              
+    ├── partenairesRecents    : [                                    
+    │     { utilisateurId: "autreId",
+    │       sport: "Soccer",
+    │       dernierResultat: +10 }
     │   ]
+    └── stats   (sous-collection)
+         └── {sport}                
+             ├── partiesJouees   : 30
+             ├── gagnees         : 18
+             ├── perdues         : 12
+             └── dernierResultat : +10
 ```
 
 ### `activites`
-
 ```txt
 activites
 ├── activiteId
     ├── organisateurId : "utilisateurId"
     ├── sport : "Basketball"
-    ├── date : "2025-06-12"
-    ├── heureDebut : "18:00"
-    ├── heureFin : "20:00"
+    ├── date : "2025-06-12T17:00"
+    ├── duree : "02:00"
     ├── lieu :
     │   ├── nom : "Parc Jean-Drapeau"
     │   ├── latitude : 45.508
     │   ├── longitude : -73.554
-    ├── niveau : 2
+    ├── niveau : "debutant" | "intermediaire" | "avance"
     ├── maxParticipants : 6
     ├── participants : [utilisateurId1, utilisateurId2]
     ├── statut : "ouvert" | "complet" | "annule"
-    ├── discussionId : "chat123"
     ├── messages : [
     │     {
     │       auteurId : "utilisateurId1",
@@ -126,6 +119,15 @@ activites
     │     }
     │   ]
 ```
+
+### `emplacements`
+emplacements
+└── {emplacementId}
+    ├── nomEmplacement    : "Parc Jean-Drapeau"
+    ├── latitude          : 45.508
+    ├── longitude         : -73.554
+    ├── sportsDisponibles : ["Basketball", "Soccer"]
+    └── heuresOuvertures  : "08:00-22:00"
 
 
 ## Prototype
