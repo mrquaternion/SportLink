@@ -10,8 +10,9 @@ import SwiftUI
 enum Onglets: Int {
     case accueil   = 0
     case explorer  = 1
-    case activites = 2
-    case profil    = 3
+    case creer     = 2
+    case activites = 3
+    case profil    = 4
 }
 
 struct BarreNavigPerso: View {
@@ -19,14 +20,13 @@ struct BarreNavigPerso: View {
     @Binding var ongletSelectionne : Onglets
     
     var body: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: 4) {
             Button {
                 ongletSelectionne = .accueil
             } label: {
                 BarreNavigBouton(nomOnglet: "Home", nomImage: "home", estActif: ongletSelectionne == .accueil)
             }
             
-            Spacer()
             
             Button {
                 ongletSelectionne = .explorer
@@ -34,7 +34,6 @@ struct BarreNavigPerso: View {
                 BarreNavigBouton(nomOnglet: "Browse", nomImage: "browse", estActif: ongletSelectionne == .explorer)
             }
             
-            Spacer()
             
             Button {
                 //
@@ -44,17 +43,16 @@ struct BarreNavigPerso: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 31.5, height: 39)
-
+                    
                     
                     Text("Create")
                         .font(Font.custom("Blinker", size: 10))
                         .multilineTextAlignment(.center)
-                       
+                    
                 } .foregroundColor(.black)
             }
             .frame(width: 64, height: 64)
             
-            Spacer()
             
             Button {
                 ongletSelectionne = .activites
@@ -62,16 +60,19 @@ struct BarreNavigPerso: View {
                 BarreNavigBouton(nomOnglet: "Activities", nomImage: "activities", estActif: ongletSelectionne == .activites)
             }
             
-            Spacer()
             
             Button {
                 ongletSelectionne = .profil
             } label: {
                 BarreNavigBouton(nomOnglet: "Profil", nomImage: "profil", estActif: ongletSelectionne == .profil)
             }
-
+            
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 17)
+        .background(Color(red: 0.96, green: 0.96, blue: 0.96))
+        .cornerRadius(25)
+        .shadow(color: .black.opacity(0.3), radius: 4.9, x: 0, y: 4)
     }
 }
 

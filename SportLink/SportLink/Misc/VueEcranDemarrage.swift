@@ -21,7 +21,7 @@ struct VueEcranDemarrage: View {
                 
                 Text("SPORTLINK")
                     .font(.system(size: 30, weight: .bold, design: .default))
-                    .foregroundStyle(Color(red: 40/255, green: 40/255, blue: 40/255))
+                    .foregroundStyle(Color(.white))
 
             }
         }

@@ -18,12 +18,12 @@ struct BarreNavigBouton: View {
         
         ZStack{
                 Circle()
-                    .fill(estActif ? Color("CouleurParDefaut") : Color.white)
+                    .fill(estActif ? Color("CouleurParDefaut") : Color.clear)
                     .frame(width: 64, height: 64)
                 
                 
                 VStack(alignment: .center, spacing: -2) {
-                    Image(estActif ? "\(nomImage)_white" : "\(nomImage)_black")
+                    Image(estActif ? "\(nomImage)" : "\(nomImage)")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 39, height: 39)

@@ -79,44 +79,28 @@ utilisateurs    (collection)
     ├── courriel              : "michel@example.com"
     ├── photoProfil           : "https://..."
     ├── disponibilites        : ["lundi_AM", "lundi_PM", "mardi_AM"] 
-    ├── sportsFavoris         : ["Soccer", "Tennis"]                  
-    ├── mode                  : "Recreatif" | "Competitif"         
+    ├── sportsFavoris         : ["Soccer", "Tennis"]                         
     ├── favorisActivites      : ["eventId4","eventId9"]              
-    ├── partenairesRecents    : [                                    
+    └── partenairesRecents    : [                                    
     │     { utilisateurId: "autreId",
     │       sport: "Soccer",
     │       dernierResultat: +10 }
     │   ]
-    └── stats   (sous-collection)
-         └── {sport}                
-             ├── partiesJouees   : 30
-             ├── gagnees         : 18
-             ├── perdues         : 12
-             └── dernierResultat : +10
 ```
 
 ### `activites`
 ```txt
 activites    (collection)
 ├── {activiteId}
-    ├── type : "competitif" | "recreatif"
     ├── organisateurId : "utilisateurId"
     ├── sport : "Basketball"
     ├── date : "2025-06-12T17:00"
     ├── duree : "02:00"
-    ├── lieu :
-    │   ├── nom : "Parc Jean-Drapeau"
-    │   ├── latitude : 45.508
-    │   ├── longitude : -73.554
-    ├── niveau : "debutant" | "intermediaire" | "avance"
-    ├── maxParticipants : 6
+    ├── nbJoueursRecherches : 6
     ├── participants : [utilisateurId1, utilisateurId2]
     ├── statut : "ouvert" | "complet" | "annule"
     ├── emplacement : emplacementId
-    ├── invitationsOuvertes : true        # ActiviteRecreatif
-    ├── notesAttribuees     : {           # ActiviteCompetitif
-    │     "uId1": { "uId2": "👍", "uId3": "👎" }
-    │   }
+    ├── invitationsOuvertes : true 
     └── messages : [messageId1, messagesId2, ...]
 ```
 
