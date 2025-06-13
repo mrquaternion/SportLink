@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+enum Onglets: Int {
+    case accueil = 0
+    case explorer = 1
+    case creer = 2
+    case activites = 3
+    case profil = 4
+}
+
 struct VueRacine: View {
     
     @State private var ongletSelectionne: Onglets = .accueil
