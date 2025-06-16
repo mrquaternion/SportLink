@@ -11,22 +11,20 @@ class MarqueursVueModele: ObservableObject {
     @Published var infrastructures: [Infrastructure] = []
     @Published var parcs: [Parc] = []
     
-    init() {
-        chargerDonnees()
-    }
-    
-    private func chargerDonnees() {
+    func chargerDonnees() {
         do {
             // Parsing des deux fichiers JSON
-            let collectionInfra: Collection = try Bundle.main.decodeJSON("terrain_sport_ext")
+            let collectionInfra = try ChargeurJSON.chargementCollection(from: "terrain_sport_ext")
+            let collectionParc = try ChargeurJSON.chargementCollection(from: "espace_vert")
+            
             let objetsInfra = collectionInfra.objets.filter {
                 let type = $0.proprietes.typeInfra
-                return type == "Sportif" || type == "Récréatif" || type == "Loisirs et détente"
+                return type == "Sportif" ||
+                       type == "Récréatif" ||
+                       type == "Loisirs et détente"
             }
             
             let parcIds = Set(objetsInfra.compactMap { $0.proprietes.indexParcDeInfra })
-            
-            let collectionParc: Collection = try Bundle.main.decodeJSON("espace_vert")
             let objetsParc = collectionParc.objets.filter {
                 guard let id = $0.proprietes.indexParcDeParc else { return false }
                 return parcIds.contains(id)
@@ -60,10 +58,7 @@ class MarqueursVueModele: ObservableObject {
             self.parcs = objetsParc.compactMap { objet in
                 let index = objet.proprietes.indexParcDeParc!
                 
-                let typeParc = objet.proprietes.typeParc ?? ""
-                let lien = objet.proprietes.lien ?? ""
-                let nomParc = objet.proprietes.nomParc ?? ""
-                let nom = "\(typeParc) \(lien) \(nomParc)"
+                let nom = "\(objet.proprietes.typeParc ?? "") \(objet.proprietes.lien ?? "") \(objet.proprietes.nomParc ?? "")"
                 
                 let limites: Parc.Geometrie
                 if let poly = objet.geometrie.polygone {
@@ -75,8 +70,11 @@ class MarqueursVueModele: ObservableObject {
                 }
                 
                 let idsInfra = infrastructures // On veut l'ID des infrastructures qui font parti du parc traité
-                    .filter { $0.indexParc == index }
-                    .compactMap { $0.id }
+                        .filter { $0.indexParc == index }
+                        .compactMap { $0.id }
+                
+                guard !idsInfra.isEmpty else { return nil }
+
                 
                 return Parc(
                     index: index,
@@ -87,7 +85,7 @@ class MarqueursVueModele: ObservableObject {
                 )
             }
         } catch {
-            print("Erreur")
+            print("Erreur : \(error.localizedDescription)", error)
         }
     }
     
@@ -98,20 +96,41 @@ class MarqueursVueModele: ObservableObject {
     }
 }
 
-struct ContentView: View {
-    @StateObject private var vueModele = MarqueursVueModele()
-    
-    var body: some View {
-        List(vueModele.parcs, id: \.index) { parc in
-            Text("""
-                \(parc.index) -
-                \(parc.nom ?? "") - 
-                \(parc.idsInfra)
-            """)
-        }
-        .onAppear()
+extension MarqueursVueModele {
+    func sports(for parc: Parc) -> Set<Sport> {
+        return Set(
+            infrastructures
+                .filter { $0.indexParc == parc.index }
+                .flatMap { $0.sport }
+        )
     }
 }
+
+struct ContentView: View {
+    @StateObject var vueModele = MarqueursVueModele()
+
+    var body: some View {
+        Text("Nombre de parcs: \(vueModele.parcs.count)")
+            .foregroundStyle(.blue)
+        Text("Nombre d'infrastructures: \(vueModele.infrastructures.count)")
+            .foregroundStyle(.blue)
+        
+        List(vueModele.parcs, id: \.index) { parc in
+            VStack(alignment: .leading) {
+                Text("\(parc.index) - \(parc.nom ?? "")")
+                    .font(.headline)
+                                
+                Text("Sports liés : \(vueModele.sports(for: parc).map(\.rawValue).joined(separator: ", "))")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .onAppear {
+            vueModele.chargerDonnees()
+        }
+    }
+}
+
 
 #Preview {
     ContentView()

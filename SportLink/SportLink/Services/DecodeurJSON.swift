@@ -116,15 +116,3 @@ extension Geometrie {
         try container.encode(geometrie, forKey: .coordonnees)
     }
 }
-
-
-extension Bundle {
-    func decodeJSON<T: Decodable>(_ file: String) throws -> T {
-        guard let url = self.url(forResource: file, withExtension: "json") else {
-            throw NSError(domain: "DecoderJSON", code: 1, userInfo: [NSLocalizedDescriptionKey: "Erreur à localiser le JSON \(file) dans le bundle."])
-        }
-        let data = try Data(contentsOf: url)
-        let decoder = JSONDecoder()
-        return try decoder.decode(T.self, from: data)
-    }
-}

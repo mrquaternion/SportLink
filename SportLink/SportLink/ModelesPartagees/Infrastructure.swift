@@ -12,5 +12,5 @@ struct Infrastructure: Decodable {
     let indexParc : String
     let latitude : Double
     let longitude : Double
-    let sport: [Sport]?
+    let sport: [Sport]
 }
