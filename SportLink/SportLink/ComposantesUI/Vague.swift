@@ -36,7 +36,6 @@ struct Vague_Previews: PreviewProvider {
                 Vague(cstMaxX: 0.8, cstMaxY: 1.4)
                     .fill(Color("CouleurRougeClaire"))
                     .frame(height: 235)
-                
                     
                 Vague(cstMaxX: 0.8, cstMaxY: 1.35)
                     .fill(Color("CouleurRougeMedium"))
