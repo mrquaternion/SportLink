@@ -6,28 +6,22 @@ Arborescence approximative des dossiers :
 ```plaintext
 SportLink/
 ├── App/
-|   ├── SportLinkApp.swift
-|   └── EtatApp.swift
+|   └── SportLinkApp.swift
 |
 ├── Fonctionnalitees/
 |   ├── Accueil/
-|   |   ├── Vues/
 |   |   ├── VuesModeles/
 |   |   └── Sousvues/
 │   ├── Explorer/
-|   |   ├── Vues/
 |   |   ├── VuesModeles/
 |   |   └── Sousvues/
 │   ├── Creer/
-|   |   ├── Vues/
 |   |   ├── VuesModeles/
 |   |   └── Sousvues/
 │   ├── Activites/
-|   |   ├── Vues/
 |   |   ├── VuesModeles/
 |   |   └── Sousvues/
 │   └── Profile/
-|       ├── Vues/
 |       ├── VuesModeles/
 |       └── Sousvues/
 |
