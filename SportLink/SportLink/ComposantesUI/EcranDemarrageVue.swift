@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct VueEcranDemarrage: View {
+struct EcranDemarrageVue: View {
     var body: some View {
         ZStack {
             Color("CouleurParDefaut").ignoresSafeArea(.all)
@@ -29,5 +29,5 @@ struct VueEcranDemarrage: View {
 }
 
 #Preview {
-    VueEcranDemarrage()
+    EcranDemarrageVue()
 }
