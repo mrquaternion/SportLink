@@ -29,7 +29,6 @@ struct Geometrie: Codable {
     let type: String
     let point : [Double]?
     let polygone: [[[Double]]]?
-    let multiPolygone: [[[[Double]]]]?
     
     enum CodingKeys: String, CodingKey {
         case type
@@ -43,13 +42,10 @@ struct Geometrie: Codable {
         case "Point":
             point = try c.decode([Double].self, forKey: .coordonnees)
             polygone = nil
-            multiPolygone = nil
         case "Polygon":
             polygone = try c.decode([[[Double]]].self, forKey: .coordonnees)
             point = nil
-            multiPolygone = nil
         case "MultiPolygon":
-            multiPolygone = try c.decode([[[[Double]]]].self, forKey: .coordonnees)
             point = nil
             polygone = nil
         default:
@@ -96,8 +92,6 @@ extension Geometrie {
             try encoderCoordonnees(point, forKey: .coordonnees, in: &container)
         case "Polygon":
             try encoderCoordonnees(polygone, forKey: .coordonnees, in: &container)
-        case "MultiPolygon":
-            try encoderCoordonnees(multiPolygone, forKey: .coordonnees, in: &container)
         default:
             break
         }
