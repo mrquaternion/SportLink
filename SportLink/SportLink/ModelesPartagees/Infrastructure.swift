@@ -6,11 +6,11 @@
 //
 
 import Foundation
+import MapKit
 
-struct Infrastructure: Decodable {
+struct Infrastructure: Identifiable {
     let id : String
     let indexParc : String
-    let latitude : Double
-    let longitude : Double
+    let coordonnees : CLLocationCoordinate2D
     let sport: [Sport]
 }

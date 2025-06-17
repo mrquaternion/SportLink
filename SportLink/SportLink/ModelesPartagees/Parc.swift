@@ -6,33 +6,12 @@
 //
 
 import Foundation
+import MapKit
 
-struct Parc: Decodable {
+struct Parc: Identifiable {
+    var id = UUID().uuidString
     let index: String
     let nom: String?
-    let limites: Geometrie
+    let limites: [CLLocationCoordinate2D]
     let idsInfra : [String]
-    let heuresOuvertures : [String]?
-    
-    enum Geometrie: Decodable {
-        case polygon([[[Double]]])
-        case multiPolygon([[[[Double]]]])
-
-        init(from decoder: Decoder) throws {
-            let container = try decoder.singleValueContainer()
-            if let polygon = try? container.decode([[[Double]]].self) {
-                self = .polygon(polygon)
-            } else if let multi = try? container.decode([[[[Double]]]].self) {
-                self = .multiPolygon(multi)
-            } else {
-                throw DecodingError.typeMismatch(
-                    Geometrie.self,
-                    .init(
-                        codingPath: decoder.codingPath,
-                        debugDescription: "Format géométrie inattendu"
-                    )
-                )
-            }
-        }
-    }
 }
