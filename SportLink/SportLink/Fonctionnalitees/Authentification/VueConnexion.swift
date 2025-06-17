@@ -15,7 +15,7 @@ struct VueConnexion: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // 🌊 Vagues
+                // Vagues
                 ZStack(alignment: .top) {
                     Vague(cstMaxX: 0.8, cstMaxY: 1.4)
                         .fill(Color("CouleurRougeClaire"))
