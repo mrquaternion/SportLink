@@ -33,7 +33,7 @@ struct CarteSelectionVue: View {
                 Map(position: $cameraPosition) {
                     if let location = selectedLocation {
                         Annotation("Marqueur", coordinate: location) {
-                            MarqueurPersoVue()
+                            MarqueurParc()
                         }
                     }
                 }

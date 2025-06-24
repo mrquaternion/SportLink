@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MarqueurPersoVue: View {
+struct MarqueurParc: View {
     var body: some View {
         VStack {
             ZStack{
@@ -19,8 +19,8 @@ struct MarqueurPersoVue: View {
                     .fill(
                         LinearGradient(
                             gradient: Gradient(stops: [
-                                .init(color: Color(red: 0.4, green: 0.79, blue: 0.65), location: 0.0),
-                                .init(color: Color(red: 0.04, green: 0.53, blue: 0.35), location: 1.0)
+                                .init(color: Color("CouleurRougeClaire"), location: 0.0),
+                                .init(color: Color("CouleurParDefaut"), location: 1.0)
                             ]),
                             startPoint: .top,
                             endPoint: .bottom
@@ -43,15 +43,14 @@ struct MarqueurPersoVue: View {
                 .rotationEffect(Angle(degrees: 180))
                 .offset(y: -11)
                 .padding(.bottom, 40)
-            
         }
     }
 }
 
 #Preview {
     ZStack {
-        Color.black.ignoresSafeArea()
+        Color.gray.ignoresSafeArea()
         
-        MarqueurPersoVue()
+        MarqueurParc()
     }
 }

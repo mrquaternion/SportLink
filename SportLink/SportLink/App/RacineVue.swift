@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 enum Onglets: Int {
     case accueil = 0
@@ -17,7 +18,19 @@ enum Onglets: Int {
 
 struct RacineVue: View {
     
+    @EnvironmentObject var emplacementsVM: DonneesEmplacementService
     @State private var ongletSelectionne: Onglets = .accueil
+    
+    init() {
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        tabBarAppearance.backgroundColor = UIColor.white
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+
+        if #available(iOS 15.0, *) {
+            UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        }
+    }
     
     var body: some View {
         TabView(selection: $ongletSelectionne) {
@@ -34,9 +47,10 @@ struct RacineVue: View {
                     Text("Browse")
                 }
                 .tag(Onglets.explorer)
+                .environmentObject(emplacementsVM)
             
             
-            Text("Créer Vue")
+            Text("Vue de la création d'une activité")
                 .tabItem {
                     Image("create_fill")
                     Text("Create")
@@ -66,5 +80,6 @@ struct RacineVue: View {
 
 #Preview {
     RacineVue()
+        .environmentObject(DonneesEmplacementService())
 }
 

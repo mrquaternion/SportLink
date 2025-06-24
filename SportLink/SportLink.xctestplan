@@ -1,0 +1,40 @@
+{
+  "configurations" : [
+    {
+      "id" : "DDBA8CA1-2813-4764-A29F-858C77B318D5",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "locationScenario" : {
+      "identifier" : "..\/..\/SportLink\/Donnees\/montreal.gpx"
+    },
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:SportLink.xcodeproj",
+      "identifier" : "628E050F2DED1B7600FBED91",
+      "name" : "SportLink"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:SportLink.xcodeproj",
+        "identifier" : "628E051C2DED1B7700FBED91",
+        "name" : "SportLinkTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:SportLink.xcodeproj",
+        "identifier" : "628E05262DED1B7700FBED91",
+        "name" : "SportLinkUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

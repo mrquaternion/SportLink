@@ -21,9 +21,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct SportLinkApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject var emplacementsVM = DonneesEmplacementService()
+    
     var body: some Scene {
         WindowGroup {
             RacineVue()
+                .environmentObject(emplacementsVM)
+                .onAppear {
+                    emplacementsVM.chargerDonnees()
+                }
         }
     }
 }

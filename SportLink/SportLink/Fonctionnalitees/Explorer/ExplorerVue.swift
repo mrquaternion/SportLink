@@ -8,11 +8,31 @@
 import SwiftUI
 
 struct ExplorerVue: View {
+    
+    @State private var modeAffichage: ModeAffichage = .liste
+    @EnvironmentObject var emplacementsVM: DonneesEmplacementService
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            VStack {
+                if modeAffichage == .liste {
+                    ExplorerListeVue()
+                } else {
+                    ExplorerCarteVue()
+                        .environmentObject(emplacementsVM)
+                }
+            }
+            
+            VStack {
+                Spacer()
+                BoutonSwitchExplorer(modeAffichage: $modeAffichage)
+                    .padding(.bottom, 20)
+            }
+        }
     }
 }
 
 #Preview {
     ExplorerVue()
+        .environmentObject(DonneesEmplacementService())
 }
