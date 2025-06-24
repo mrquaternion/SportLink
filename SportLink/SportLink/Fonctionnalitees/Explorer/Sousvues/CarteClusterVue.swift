@@ -40,10 +40,10 @@ struct CarteClusterVue: UIViewRepresentable {
     let parcs: [Parc]
     let infras: [Infrastructure]
     var localisationUtilisateur: CLLocation?
-    var centrerCarte: Bool
     
+    @Binding var centrageInitial: Bool
+    @Binding var demandeRecentrage: Bool
     @Binding var selectionne: Parc?
-    @Binding var recentrer: Bool
     @Binding var aInteragiAvecCarte: Bool
 
 
@@ -67,17 +67,15 @@ struct CarteClusterVue: UIViewRepresentable {
     // MARK: Mise à jour de la map selon les changements SwiftUI
     func updateUIView(_ uiVue: MKMapView, context: Context) {
         // Recentrer la carte si demandé
-        if (centrerCarte || recentrer), let loc = localisationUtilisateur {
+        if (centrageInitial || demandeRecentrage), let loc = localisationUtilisateur {
             let region = MKCoordinateRegion(
                 center: loc.coordinate,
                 span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
             )
             uiVue.setRegion(region, animated: true)
 
-            if recentrer {
-                DispatchQueue.main.async {
-                    self.recentrer = false // pour éviter de le refaire au prochain update
-                }
+            DispatchQueue.main.async {
+                self.centrageInitial = false
             }
         }
 
@@ -95,7 +93,7 @@ struct CarteClusterVue: UIViewRepresentable {
         if let parc = selectionne {
             let region = regionEnglobantPolygone(parc.limites)
             uiVue.setRegion(region, animated: true)
-
+            
             let polygon = MKPolygon(coordinates: parc.limites, count: parc.limites.count)
             uiVue.addOverlay(polygon)
             
@@ -108,14 +106,26 @@ struct CarteClusterVue: UIViewRepresentable {
     // MARK: - Coordinateur pour gérer les callbacks de la MKMapView
     class Coordinator: NSObject, MKMapViewDelegate {
         var parent: CarteClusterVue
+        let threshold: CLLocationDegrees = 0.025
 
         init(_ parent: CarteClusterVue) {
             self.parent = parent
         }
         
-        func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        // Check avant que le changement commence pour détecter début d'intéraction carte
+        func mapView(_ mapVue: MKMapView, regionWillChangeAnimated animated: Bool) {
             DispatchQueue.main.async {
                 self.parent.aInteragiAvecCarte = true
+            }
+        }
+        
+        // Check si on doit cacher un parc sélectionné à cause d'un zoom out trop grand
+        func mapView(_ mapVue: MKMapView, regionDidChangeAnimated animated: Bool) {
+            guard parent.selectionne != nil else { return }
+
+            let liveSpan = mapVue.region.span.latitudeDelta
+            if liveSpan > 0.05 {
+                parent.selectionne = nil
             }
         }
 

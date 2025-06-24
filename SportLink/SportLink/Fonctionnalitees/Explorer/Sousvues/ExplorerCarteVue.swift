@@ -21,8 +21,8 @@ struct ExplorerCarteVue: View {
     @State private var position: MapCameraPosition = .automatic
     @State private var aCentreSurUtilisateur = false
     @State private var selectionne: Parc?
-    @State private var carteCentree = false
-    @State private var recentrer = false
+    @State private var centrageInitial = true
+    @State private var demandeRecentrage = false
     @State private var aInteragiAvecCarte = false
 
     
@@ -33,16 +33,16 @@ struct ExplorerCarteVue: View {
                 parcs: vm.parcs,
                 infras: vm.infrastructures,
                 localisationUtilisateur: location,
-                centrerCarte: !carteCentree,
+                centrageInitial: $centrageInitial,
+                demandeRecentrage: $demandeRecentrage,
                 selectionne: $selectionne,
-                recentrer: $recentrer,
                 aInteragiAvecCarte: $aInteragiAvecCarte
             )
             .edgesIgnoringSafeArea(.all)
             
             Button  {
                 selectionne = nil
-                recentrer = true
+                demandeRecentrage = true
             } label: {
                 Image(systemName: "location.fill")
                     .font(.title2)
@@ -64,10 +64,10 @@ struct ExplorerCarteVue: View {
             if !aCentreSurUtilisateur {
                 do {
                     let nouvellePosition = try await LocationManager.shared.currentLocation
-
+                    self.location = nouvellePosition
                     if !aInteragiAvecCarte {
-                        self.location = nouvellePosition
-                        aCentreSurUtilisateur = true
+                        self.centrageInitial = true
+                        self.aCentreSurUtilisateur = true
                     }
                 } catch {
                     print("Erreur de localisation: \(error)")
