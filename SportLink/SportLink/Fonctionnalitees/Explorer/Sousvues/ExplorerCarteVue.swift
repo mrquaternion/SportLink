@@ -20,28 +20,43 @@ struct ExplorerCarteVue: View {
     }()
     @State private var position: MapCameraPosition = .automatic
     @State private var aCentreSurUtilisateur = false
-    @State private var selectionne: Parc?
+    @State private var parcSelectionne: Parc?
+    @State private var infraSelectionnee: Infrastructure?
     @State private var centrageInitial = true
     @State private var demandeRecentrage = false
     @State private var aInteragiAvecCarte = false
-
+    @State private var deselectionnerAnnotation = false
     
     var body: some View {
         // Carte
         ZStack(alignment: .bottomTrailing) {
-            CarteClusterVue(
+            CarteVue(
                 parcs: vm.parcs,
                 infras: vm.infrastructures,
                 localisationUtilisateur: location,
                 centrageInitial: $centrageInitial,
                 demandeRecentrage: $demandeRecentrage,
-                selectionne: $selectionne,
-                aInteragiAvecCarte: $aInteragiAvecCarte
+                parcSelectionne: $parcSelectionne,
+                infraSelectionnee: $infraSelectionnee,
+                aInteragiAvecCarte: $aInteragiAvecCarte,
+                deselectionnerAnnotation: $deselectionnerAnnotation
             )
+            .sheet(item: $infraSelectionnee, onDismiss: {
+                deselectionnerAnnotation = true
+                infraSelectionnee = nil
+                
+            }) { _ in
+                VStack {
+                    Text("Tu es a la bonne place")
+                }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+            }
             .edgesIgnoringSafeArea(.all)
             
             Button  {
-                selectionne = nil
+                parcSelectionne = nil
+                infraSelectionnee = nil
                 demandeRecentrage = true
             } label: {
                 Image(systemName: "location.fill")

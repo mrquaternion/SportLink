@@ -10,7 +10,8 @@
   ],
   "defaultOptions" : {
     "locationScenario" : {
-      "identifier" : "..\/..\/SportLink\/Donnees\/montreal.gpx"
+      "identifier" : "New York, NY, USA",
+      "referenceType" : "built-in"
     },
     "targetForVariableExpansion" : {
       "containerPath" : "container:SportLink.xcodeproj",

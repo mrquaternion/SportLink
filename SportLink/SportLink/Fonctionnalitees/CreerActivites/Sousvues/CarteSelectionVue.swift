@@ -32,9 +32,7 @@ struct CarteSelectionVue: View {
             ZStack {
                 Map(position: $cameraPosition) {
                     if let location = selectedLocation {
-                        Annotation("Marqueur", coordinate: location) {
-                            MarqueurParc()
-                        }
+                        Marker("Marqueur", coordinate: location)
                     }
                 }
                 .mapStyle(.standard)

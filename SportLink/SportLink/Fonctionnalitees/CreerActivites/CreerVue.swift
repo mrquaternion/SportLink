@@ -9,7 +9,7 @@ import SwiftUI
 import CoreLocation
 
 
-struct CreerActiviteVue: View {
+struct CreerVue: View {
     @Environment(\.dismiss) var dismiss
 
     @State private var selectedSport: Sport = .soccer
@@ -23,20 +23,9 @@ struct CreerActiviteVue: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            // Vagues et flèche retour
-            ZStack(alignment: .topLeading) {
-                VaguesVue()
-                    .frame(height: 150)
-
-                Button(action: { dismiss() }) {
-                    Image(systemName: "arrow.left")
-                        .font(.system(size: 26))
-                        .padding()
-                        .foregroundColor(.black)
-                }
-                .padding(.top, 16)
-                .padding(.leading, 16)
-            }
+            // Vagues
+            VaguesVue()
+                .frame(height: 150)
             
             Spacer()
                 .frame(height: 30)
@@ -203,5 +192,5 @@ struct CreerActiviteVue: View {
 
 
 #Preview {
-    CreerActiviteVue()
+    CreerVue()
 }

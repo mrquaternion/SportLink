@@ -19,8 +19,11 @@ enum Onglets: Int {
 struct RacineVue: View {
     
     @EnvironmentObject var emplacementsVM: DonneesEmplacementService
-    @State private var ongletSelectionne: Onglets = .accueil
     
+    @State var estPresente = false
+    @State private var ongletSelectionne: Onglets = .accueil
+    @State private var ancienOngletSelectionne: Onglets = .accueil
+
     init() {
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
@@ -50,11 +53,10 @@ struct RacineVue: View {
                 .environmentObject(emplacementsVM)
             
             
-            Text("Vue de la création d'une activité")
+            Text("")
                 .tabItem {
-                    Image("create_fill")
+                    Image(ongletSelectionne == .creer ? "create_fill" : "create")
                     Text("Create")
-                        .foregroundStyle(.black)
                 }
                 .tag(Onglets.creer)
             
@@ -75,6 +77,21 @@ struct RacineVue: View {
                 .tag(Onglets.profil)
         }
         .tint(Color("CouleurParDefaut"))
+        .onChange(of: ongletSelectionne) { oldValue, newValue in // source : https://stackoverflow.com/questions/64103934/swiftui-tab-view-display-sheet
+            if ongletSelectionne == .creer {
+                self.estPresente = true
+                DispatchQueue.main.async {
+                    self.ongletSelectionne = oldValue
+                }
+            } else {
+                self.ancienOngletSelectionne = newValue
+            }
+        }
+        .sheet(isPresented: $estPresente) {
+            self.ongletSelectionne = self.ancienOngletSelectionne
+        } content: {
+            CreerVue()
+        }
     }
 }
 

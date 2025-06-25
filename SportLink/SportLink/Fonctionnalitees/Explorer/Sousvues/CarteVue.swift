@@ -36,16 +36,17 @@ class InfraAnnotation: NSObject, MKAnnotation {
 }
 
 // MARK: - Vue UIKit intégrée à SwiftUI pour gérer clustering + sélection
-struct CarteClusterVue: UIViewRepresentable {
+struct CarteVue: UIViewRepresentable {
     let parcs: [Parc]
     let infras: [Infrastructure]
     var localisationUtilisateur: CLLocation?
     
     @Binding var centrageInitial: Bool
     @Binding var demandeRecentrage: Bool
-    @Binding var selectionne: Parc?
+    @Binding var parcSelectionne: Parc?
+    @Binding var infraSelectionnee: Infrastructure?
     @Binding var aInteragiAvecCarte: Bool
-
+    @Binding var deselectionnerAnnotation: Bool
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -61,6 +62,7 @@ struct CarteClusterVue: UIViewRepresentable {
         // Enregistrement des vues pour cluster et marqueur
         mapVue.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "marker")
         mapVue.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "cluster")
+        
         return mapVue
     }
 
@@ -84,13 +86,13 @@ struct CarteClusterVue: UIViewRepresentable {
 
         // Ajout des marqueurs sauf celui sélectionné
         let annotations = parcs
-            .filter { $0.id != selectionne?.id }
+            .filter { $0.id != parcSelectionne?.id }
             .map { ParcAnnotation(parc: $0) }
         uiVue.addAnnotations(annotations)
 
         // Gestion du polygone du parc sélectionné
         uiVue.removeOverlays(uiVue.overlays)
-        if let parc = selectionne {
+        if let parc = parcSelectionne {
             let region = regionEnglobantPolygone(parc.limites)
             uiVue.setRegion(region, animated: true)
             
@@ -101,14 +103,23 @@ struct CarteClusterVue: UIViewRepresentable {
             let infrasAnnotations = infrasParcSelectionne.map { InfraAnnotation(infra: $0) }
             uiVue.addAnnotations(infrasAnnotations)
         }
+        
+        if deselectionnerAnnotation {
+            for annotation in uiVue.selectedAnnotations {
+                uiVue.deselectAnnotation(annotation, animated: false)
+            }
+            DispatchQueue.main.async {
+                deselectionnerAnnotation = false
+            }
+        }
     }
 
     // MARK: - Coordinateur pour gérer les callbacks de la MKMapView
     class Coordinator: NSObject, MKMapViewDelegate {
-        var parent: CarteClusterVue
+        var parent: CarteVue
         let threshold: CLLocationDegrees = 0.025
 
-        init(_ parent: CarteClusterVue) {
+        init(_ parent: CarteVue) {
             self.parent = parent
         }
         
@@ -121,11 +132,12 @@ struct CarteClusterVue: UIViewRepresentable {
         
         // Check si on doit cacher un parc sélectionné à cause d'un zoom out trop grand
         func mapView(_ mapVue: MKMapView, regionDidChangeAnimated animated: Bool) {
-            guard parent.selectionne != nil else { return }
+            guard parent.parcSelectionne != nil else { return }
 
             let liveSpan = mapVue.region.span.latitudeDelta
-            if liveSpan > 0.05 {
-                parent.selectionne = nil
+            let parcSpan = regionEnglobantPolygone(parent.parcSelectionne!.limites).span.longitudeDelta
+            if liveSpan > parcSpan * 3 {
+                parent.parcSelectionne = nil
             }
         }
 
@@ -150,8 +162,8 @@ struct CarteClusterVue: UIViewRepresentable {
                 var parcVue = mapVue.dequeueReusableAnnotationView(withIdentifier: id) as? MKMarkerAnnotationView
                 parcVue = parcVue ?? MKMarkerAnnotationView(annotation: parcAnnotation, reuseIdentifier: id)
                 parcVue?.annotation = parcAnnotation
-                parcVue?.glyphImage = UIImage(systemName: "figure.run")
-                parcVue?.markerTintColor = UIColor(named: "CouleurParDefaut") ?? .blue
+                parcVue?.glyphImage = UIImage(systemName: "tree.fill")
+                parcVue?.markerTintColor = UIColor(red: 123/255.0, green: 171/255.0, blue: 104/255.0, alpha: 1.0)
                 parcVue?.clusteringIdentifier = "cluster"
                 parcVue?.displayPriority = .defaultHigh
                 parcVue?.canShowCallout = true
@@ -164,8 +176,8 @@ struct CarteClusterVue: UIViewRepresentable {
                 var infraVue = mapVue.dequeueReusableAnnotationView(withIdentifier: id) as? MKMarkerAnnotationView
                 infraVue = infraVue ?? MKMarkerAnnotationView(annotation: infraAnnotation, reuseIdentifier: id)
                 infraVue?.annotation = infraAnnotation
-                infraVue?.markerTintColor = .blue
-                infraVue?.glyphImage = UIImage(systemName: infraAnnotation.typeDeSport[0].icone!.rawValue)
+                infraVue?.markerTintColor = UIColor(named: "CouleurParDefaut")
+                infraVue?.glyphImage = imagePourSports(infraAnnotation.typeDeSport)
                 return infraVue
             }
 
@@ -184,44 +196,35 @@ struct CarteClusterVue: UIViewRepresentable {
             }
 
             if let parcAnnotation = vue.annotation as? ParcAnnotation {
-                parent.selectionne = parcAnnotation.parc
+                parent.parcSelectionne = parcAnnotation.parc
 
                 let region = regionEnglobantPolygone(parcAnnotation.parc.limites)
                 mapVue.setRegion(region, animated: true)
 
                 mapVue.removeAnnotation(parcAnnotation)
             }
+            
+            if let infraAnnotation = vue.annotation as? InfraAnnotation {
+                parent.infraSelectionnee = infraAnnotation.infra
+                
+                let lat = infraAnnotation.coordinate.latitude - mapVue.region.span.longitudeDelta * 0.1
+                let lon = infraAnnotation.coordinate.longitude
+                let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                                                span: mapVue.region.span)
+                mapVue.setRegion(region, animated: true)
+            }
         }
-
 
         // Rendu du polygone (parc sélectionné)
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             if let polygone = overlay as? MKPolygon {
                 let renderer = MKPolygonRenderer(polygon: polygone)
-                renderer.fillColor = UIColor.red.withAlphaComponent(0.4)
-                renderer.strokeColor = UIColor.red
+                renderer.fillColor = UIColor.red.withAlphaComponent(0.2)
+                renderer.strokeColor = UIColor(named: "CouleurParDefaut")
                 renderer.lineWidth = 2
                 return renderer
             }
             return MKOverlayRenderer(overlay: overlay)
-        }
-    }
-}
-
-extension Sport {
-    var icone: IconeSport? {
-        switch self {
-            case .soccer: return .soccer
-            case .basketball: return .basketball
-            case .volleyball: return .volleyball
-            case .tennis: return .tennis
-            case .baseball: return .baseball
-            case .rugby: return .rugby
-            case .football: return .football
-            case .pingpong: return .pingpong
-            case .badminton: return .badminton
-            case .ultimateFrisbee: return .ultimateFrisbee
-            case .petanque: return .petanque
         }
     }
 }

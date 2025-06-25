@@ -14,7 +14,7 @@ enum Sport: String, Decodable, CaseIterable {
     case football = "football"
     case volleyball = "volleyball"
     case badminton = "badminton"
-    case baseball = "baseball"
+    case baseball = "balle"
     case rugby = "rugby"
     case pingpong = "ping-pong"
     case ultimateFrisbee = "ultimate frisbee"
