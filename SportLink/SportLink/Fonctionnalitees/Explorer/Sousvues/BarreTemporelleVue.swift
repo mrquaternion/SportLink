@@ -13,67 +13,77 @@ struct BarreTemporelleVue: View {
     private let couleur: Color = Color("CouleurParDefaut").opacity(0.8)
     private let dateMin = Date.now // aujourd'hui
     private let dateMax = Calendar.current.date(byAdding: .weekOfYear, value: 4, to: Date())!
-
+    
 
     var body: some View {
         HStack {
-            Button {
-                let nouvelleDate = Calendar.current.date(byAdding: .day, value: -7, to: dateSelectionnee)!
-                if nouvelleDate < dateMin {
-                    // On ne bloque pas,on force à aujourd'hui
-                    dateSelectionnee = dateMin
-                } else {
-                    dateSelectionnee = nouvelleDate
-                }
-            } label: {
-                Image(systemName: "chevron.left")
-            }
-            .disabled(Calendar.current.isDate(dateSelectionnee, equalTo: dateMin, toGranularity: .weekOfYear) || dateSelectionnee <= dateMin)
-            
-            Spacer()
-            
-            ForEach(Date.datesDeLaSemaine(dateSelectionnee: dateSelectionnee), id: \.self) { jour in
-                VStack {
-                    Text("\(Calendar.current.component(.day, from: jour))")
-                        .font(.headline)
-                        .frame(width: 30, height: 30, alignment: .center)
-                        .foregroundStyle(getCouleurTexte(for: jour, couleurAlt1: .white))
-                        .background(Calendar.current.isDate(jour, inSameDayAs: dateSelectionnee) ? couleur : Color.clear)
-                            .cornerRadius(20)
-
-                    Text(jour.formatted(.dateTime.weekday(.abbreviated)))
-                        .font(.caption)
-                        .foregroundStyle(getCouleurTexte(for: jour, couleurAlt1: couleur))
+            VStack(spacing: 0) {
+                Text("\(dateSelectionnee.formatted(.dateTime.month(.wide)))")
+                
+                Divider()
+                    .overlay(Color.black)
+                    .padding([.trailing, .leading], 30)
+                    .padding([.top, .bottom], 8)
+                
+                HStack {
+                    Button {
+                        let nouvelleDate = Calendar.current.date(byAdding: .day, value: -7, to: dateSelectionnee)!
+                        if nouvelleDate < dateMin {
+                            // On ne bloque pas,on force à aujourd'hui
+                            dateSelectionnee = dateMin
+                        } else {
+                            dateSelectionnee = nouvelleDate
+                        }
+                    } label: {
+                        Image(systemName: "chevron.left")
+                    }
+                    .disabled(Calendar.current.isDate(dateSelectionnee, equalTo: dateMin, toGranularity: .weekOfYear) || dateSelectionnee <= dateMin)
                     
-                    Circle()
-                        .fill(Calendar.current.isDate(jour, inSameDayAs: dateSelectionnee) ? couleur : Color.clear)
-                        .frame(width: 5, height: 5, alignment: .center)
+                    Spacer()
+                    
+                    ForEach(Date.datesDeLaSemaine(dateSelectionnee: dateSelectionnee), id: \.self) { jour in
+                        VStack {
+                            Text("\(Calendar.current.component(.day, from: jour))")
+                                .font(.headline)
+                                .frame(width: 30, height: 30, alignment: .center)
+                                .foregroundStyle(getCouleurTexte(for: jour, couleurAlt1: .white))
+                                .background(Calendar.current.isDate(jour, inSameDayAs: dateSelectionnee) ? couleur : Color.clear)
+                                .cornerRadius(20)
+                            
+                            Text(jour.formatted(.dateTime.weekday(.abbreviated)))
+                                .font(.caption)
+                                .foregroundStyle(getCouleurTexte(for: jour, couleurAlt1: couleur))
+                            
+                            Circle()
+                                .fill(Calendar.current.isDate(jour, inSameDayAs: dateSelectionnee) ? couleur : Color.clear)
+                                .frame(width: 5, height: 5, alignment: .center)
+                        }
+                        .padding([.trailing, .leading], 3)
+                        .padding(.top, 6)
+                        .onTapGesture {
+                            dateSelectionnee = jour
+                        }
+                        .disabled(Calendar.current.startOfDay(for: dateMin) > Calendar.current.startOfDay(for: jour))
+                    }
+                    
+                    Spacer()
+                    
+                    Button {
+                        let nouvelleDate = Calendar.current.date(byAdding: .day, value: 7, to: dateSelectionnee)!
+                        if nouvelleDate > dateMax {
+                            dateSelectionnee = dateMax
+                        } else {
+                            dateSelectionnee = nouvelleDate
+                        }
+                    } label: {
+                        Image(systemName: "chevron.right")
+                    }
+                    .disabled(Calendar.current.isDate(dateSelectionnee, equalTo: dateMax, toGranularity: .weekOfYear) || dateSelectionnee >= dateMax)
                 }
-                .padding([.trailing, .leading], 3)
-                .padding(.top, 6)
-                .onTapGesture {
-                    dateSelectionnee = jour
-                }
-                .disabled(Calendar.current.startOfDay(for: dateMin) > Calendar.current.startOfDay(for: jour))
             }
-            
-            Spacer()
-            
-            Button {
-                let nouvelleDate = Calendar.current.date(byAdding: .day, value: 7, to: dateSelectionnee)!
-                if nouvelleDate > dateMax {
-                    dateSelectionnee = dateMax
-                } else {
-                    dateSelectionnee = nouvelleDate
-                }
-            } label: {
-                Image(systemName: "chevron.right")
-            }
-            .disabled(Calendar.current.isDate(dateSelectionnee, equalTo: dateMax, toGranularity: .weekOfYear) || dateSelectionnee >= dateMax)
         }
         .padding(.horizontal, 14)
-        .padding(.vertical, 12)
-        .frame(width: 370, height: 95, alignment: .center)
+        .frame(width: 375, height: 125, alignment: .center)
         .background(Color(red: 0.95, green: 0.95, blue: 0.95).opacity(0.92))
         .cornerRadius(8)
         .shadow(color: .black.opacity(0.25), radius: 2.7, x: 0, y: 3)
