@@ -57,6 +57,7 @@ struct CarteVue: UIViewRepresentable {
         let mapVue = MKMapView()
         mapVue.delegate = context.coordinator
         mapVue.showsUserLocation = true
+        mapVue.showsCompass = false
         mapVue.pointOfInterestFilter = .excludingAll
 
         // Enregistrement des vues pour cluster et marqueur

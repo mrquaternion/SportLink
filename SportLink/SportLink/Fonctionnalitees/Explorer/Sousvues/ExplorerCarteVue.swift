@@ -27,9 +27,11 @@ struct ExplorerCarteVue: View {
     @State private var aInteragiAvecCarte = false
     @State private var deselectionnerAnnotation = false
     
+    @State private var dateSelectionnee: Date = Date.now
+    
     var body: some View {
         // Carte
-        ZStack(alignment: .bottomTrailing) {
+        ZStack {
             CarteVue(
                 parcs: vm.parcs,
                 infras: vm.infrastructures,
@@ -46,26 +48,41 @@ struct ExplorerCarteVue: View {
                 infraSelectionnee = nil
                 
             }) { infra in
-                sheetVue(infra: infra)
+                InfraDetailVue(infra: infra, dateSelectionnee: $dateSelectionnee)
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
             }
             .edgesIgnoringSafeArea(.all)
             
-            Button  {
-                parcSelectionne = nil
-                infraSelectionnee = nil
-                demandeRecentrage = true
-            } label: {
-                Image(systemName: "location.fill")
-                    .font(.title2)
-                    .padding(10)
-                    .background(Color.white)
-                    .clipShape(Circle())
-                    .shadow(radius: 4)
+            VStack {
+                BarreTemporelleVue(dateSelectionnee: $dateSelectionnee)
+                    .padding(.top, 10)
+                
+                Spacer()
             }
-            .padding([.top, .leading, .trailing])
-            .padding(.bottom, 20)
+            
+            VStack {
+                Spacer()
+                
+                HStack {
+                    Spacer()
+                    
+                    Button  {
+                        parcSelectionne = nil
+                        infraSelectionnee = nil
+                        demandeRecentrage = true
+                    } label: {
+                        Image(systemName: "location.fill")
+                            .font(.title2)
+                            .padding(10)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .shadow(radius: 4)
+                    }
+                    .padding([.top, .leading, .trailing])
+                    .padding(.bottom, 20)
+                }
+            }
         }
         .task {
             LocationManager.shared.checkAuthorization()

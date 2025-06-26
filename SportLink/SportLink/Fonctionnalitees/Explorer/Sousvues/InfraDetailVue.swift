@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-struct sheetVue: View {
+struct InfraDetailVue: View {
     var infra: Infrastructure
+    @Binding var dateSelectionnee: Date
     
-    init(infra: Infrastructure) {
+    init(infra: Infrastructure, dateSelectionnee: Binding<Date>) {
         self.infra = infra
+        self._dateSelectionnee = dateSelectionnee
     }
     
     var body: some View {
@@ -23,7 +25,7 @@ struct sheetVue: View {
                 Spacer()
                 
                 Button {
-                    // Toggle
+                    // Code
                 } label: {
                     Image(systemName: "plus")
                         .resizable()
@@ -43,5 +45,7 @@ struct sheetVue: View {
 }
 
 #Preview {
-    sheetVue(infra: DonneesEmplacementService().infrastructures.first!)
+    InfraDetailVue(infra: DonneesEmplacementService().infrastructures.first!,
+                   dateSelectionnee: .constant(Date(timeIntervalSinceNow: 0)))
 }
+
