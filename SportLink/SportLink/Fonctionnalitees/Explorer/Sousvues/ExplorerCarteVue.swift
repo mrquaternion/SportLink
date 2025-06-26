@@ -45,12 +45,10 @@ struct ExplorerCarteVue: View {
                 deselectionnerAnnotation = true
                 infraSelectionnee = nil
                 
-            }) { _ in
-                VStack {
-                    Text("Tu es a la bonne place")
-                }
-                .presentationDetents([.medium, .large])
-                .presentationDragIndicator(.visible)
+            }) { infra in
+                sheetVue(infra: infra)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
             }
             .edgesIgnoringSafeArea(.all)
             

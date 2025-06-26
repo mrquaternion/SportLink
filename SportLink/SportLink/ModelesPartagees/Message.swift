@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct Message: Identifiable {
+    var id = UUID().uuidString
+    let auteurId : UUID
+    let contenu : String
+    let timestamp : Date
+}
