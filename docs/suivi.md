@@ -110,6 +110,26 @@
 
 ## Semaine 6
 
+??? note "Étapes faites"
+    - [x] Participation à la foire et collection des commentaires et critiques
+    - [x] Mettre au point le modèle de donnée
+    - [x] Diagramme UML finalisé
+
+!!! info "Notes"
+    - Plusieurs intérogation ont été soulevées par les paires et plusieurs des critiques ont été retenu pour la continuation du projet
+        * Une certaine complexité autour du mode compétitif, nous a amené à prendre la décision qu'il est préférable de ne pas y aller de l'avant avec ce mode. Nous garderons simplement le mode compétitif.
+
+!!! warning "Difficultés rencontrées"
+    - Plusieurs questionnnements autours des pointeurs sur la carte, notament sur son fonctionnement, sa précision, son nombre par rapport principalement à un niveau donné de "zoomage"
+    - Questionnement autour de l'abandon du mode comptéttiif. Gardons-nous un certain système de pointage même dans le mode récréatif.
+
+!!! abstract "Prochaines étapes"
+    - Décut de la conception de l'application dans Xcode. 
+    - Testé l'intégration de la base de donnée Firebase
+    - 
+
+---
+
 ## Semaine 7
 
 ## Semaine 8
