@@ -108,33 +108,76 @@
 ---
 
 
-## Semaine 6
+## Semaine 6 (8-14 juin)
 
 ??? note "Étapes faites"
-    - [x] Participation à la foire et collection des commentaires et critiques
-    - [x] Mettre au point le modèle de donnée
-    - [x] Diagramme UML finalisé
+    - [x] Participation à la foire et collecte des commentaires et critiques
+    - [x] Ajustement du modèle de données
+    - [x] Finalisation du diagramme UML
 
 !!! info "Notes"
-    - Plusieurs intérogation ont été soulevées par les paires et plusieurs des critiques ont été retenu pour la continuation du projet
-        * Une certaine complexité autour du mode compétitif, nous a amené à prendre la décision qu'il est préférable de ne pas y aller de l'avant avec ce mode. Nous garderons simplement le mode compétitif.
+    - Plusieurs interrogations ont été soulevées par les pairs, et plusieurs critiques ont été retenues pour orienter la suite du projet :
+        * La complexité entourant le mode compétitif nous a amenés à conclure qu’il est préférable de ne pas le développer davantage. Seul le mode récréatif sera conservé.
 
 !!! warning "Difficultés rencontrées"
-    - Plusieurs questionnnements autours des pointeurs sur la carte, notament sur son fonctionnement, sa précision, son nombre par rapport principalement à un niveau donné de "zoomage"
-    - Questionnement autour de l'abandon du mode comptéttiif. Gardons-nous un certain système de pointage même dans le mode récréatif.
+    - Nombreux questionnements autour des pointeurs sur la carte, notamment en ce qui concerne leur fonctionnement, leur précision et leur nombre en fonction du niveau de zoom.
+    - Réflexion sur l’abandon du mode compétitif : devons-nous conserver un certain système de pointage même en mode récréatif ?
 
 !!! abstract "Prochaines étapes"
-    - Décut de la conception de l'application dans Xcode. 
-    - Testé l'intégration de la base de donnée Firebase
-    - 
+    - Début de la conception de l’application dans Xcode.
+    - Tests d’intégration avec la base de données Firebase
+    - Faire un logo
 
 ---
 
-## Semaine 7
+## Semaine 7 (15-21 juin)
 
-## Semaine 8
+??? note "Étapes faites"
+    - [x] Implémentation de la base de l’application sur Xcode
+    - [x] Conception de la vue pour les pages d’inscription et de connexion
+    - [x] Début de la conception de la vue pour les informations d’un événement particulier
 
-## Semaine 9
+!!! info "Notes"
+    - Une décision a été prise concernant l’affichage des pointeurs sur la carte : à un certain niveau de zoom peu élevé, si plusieurs parcs sont trop rapprochés, un pointeur chiffré s’affichera indiquant le nombre de parcs dans ce secteur. En appuyant sur ce pointeur ou en zoomant davantage, plusieurs pointeurs individuels apparaîtront.
+    - De même, lorsqu’un parc spécifique est sélectionné ou que l’utilisateur effectue un zoom sur celui-ci, des pointeurs supplémentaires s’afficheront autour du périmètre du parc, indiquant les différents sports pouvant y être pratiqués.
+
+!!! warning "Difficultés rencontrées"
+    - Aucune difficulté majeure rencontrée. Nos réflexions actuelles nous permettent de mieux visualiser le produit final, tout en gardant en tête les contraintes et réalités techniques du projet.
+    - Aucune décision n’a encore été prise quant à l’intégration ou non d’un système de pointage dans le mode récréatif.
+
+!!! abstract "Prochaines étapes"
+    - Conception de la vue de la page *Explorer*.
+    - Conception de la vue de la page *Création d’événement*.
+
+
+
+## Semaine 8 (22-28 juin)
+
+??? note "Étapes faites"
+    - [x] Conception de la vue de la page *Explorer*.
+    - [x] Conception de la vue de la page *Création d’événement*.
+    - [x] Début de l'implémentation des pointeurs (parc et sport)
+    
+
+
+!!! info "Notes"
+    - À discuter : Dans la carte de création d'évènement, il sera probalemment préférable d'ajouter une barre de recherche pour pour faire une recherche par le nom d'un parc ou une adresse. Cela pourra probalblement faciliter la recherche tout en gardant la fonctionnalité de la carte implémenté dans le mode *Explorer*
+
+!!! warning "Difficultés rencontrées"
+    - Les marqueurs personnalisés sont très difficile à implémenter pour plusieurs raisons :
+        * Plus lours à gérer visuellement (scaling, animation)
+        * Demande beaucoup de ressources
+        * Difficlie à mettre à jour en temps réel
+    - API de la ville de Montréal ne marche pas, nous devons dont avoir recours aux fichier rae JSON
+
+
+!!! abstract "Prochaines étapes"
+    - Débuter certain fonctionnalité de la création d'évènement, comme pourvoir les stocker dans le Firebase. Faire fonctionné la carte
+    - Faire la version liste de la page Explore
+    - Faire le mode vue de la page *Home*
+    - Faire le mode vue de la page *Profil*
+
+## Semaine 9 (29 juin - 5 juillet)
 
 ## Semaine 10
 
