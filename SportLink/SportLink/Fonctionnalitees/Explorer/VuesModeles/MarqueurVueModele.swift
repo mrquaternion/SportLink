@@ -27,7 +27,7 @@ extension Sport {
 }
 
 enum IconeSport: String {
-    case soccer = "soccerball.inverse"
+    case soccer = "soccerball"
     case basketball = "basketball.fill"
     case volleyball = "volleyball.fill"
     case tennis = "tennis.racket"

@@ -21,9 +21,9 @@ struct BoutonSwitchExplorer: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: buttonHeight / 2)
-                .fill(Color(red: 0.95, green: 0.95, blue: 0.95))
+                .fill(Color(red: 0.97, green: 0.97, blue: 0.97))
                 .frame(width: buttonWidth * 2 + 30, height: buttonHeight)
-                .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 4)
+                .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)
 
             HStack {
                 RoundedRectangle(cornerRadius: buttonHeight / 2)

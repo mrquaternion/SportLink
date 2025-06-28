@@ -35,6 +35,31 @@ class InfraAnnotation: NSObject, MKAnnotation {
     }
 }
 
+enum TypeDeCarte: CaseIterable, Hashable {
+    case standard
+    case hybride
+    case satellite
+    
+    var configuration: MKMapConfiguration {
+        switch self {
+        case .standard:
+            return MKStandardMapConfiguration(elevationStyle: .realistic)
+        case .hybride:
+            return MKHybridMapConfiguration()
+        case .satellite:
+            return MKImageryMapConfiguration()
+        }
+    }
+    
+    var nomLisible: String {
+        switch self {
+        case .standard: return "standard"
+        case .hybride: return "hybride"
+        case .satellite: return "satellite"
+        }
+    }
+}
+
 // MARK: - Vue UIKit intégrée à SwiftUI pour gérer clustering + sélection
 struct CarteVue: UIViewRepresentable {
     let parcs: [Parc]
@@ -47,6 +72,8 @@ struct CarteVue: UIViewRepresentable {
     @Binding var infraSelectionnee: Infrastructure?
     @Binding var aInteragiAvecCarte: Bool
     @Binding var deselectionnerAnnotation: Bool
+    @Binding var typeDeCarteSelectionne: TypeDeCarte
+    @Binding var filtresSelectionnes: Set<String>
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -58,6 +85,7 @@ struct CarteVue: UIViewRepresentable {
         mapVue.delegate = context.coordinator
         mapVue.showsUserLocation = true
         mapVue.showsCompass = false
+        mapVue.preferredConfiguration = typeDeCarteSelectionne.configuration
         mapVue.pointOfInterestFilter = .excludingAll
 
         // Enregistrement des vues pour cluster et marqueur
@@ -79,30 +107,57 @@ struct CarteVue: UIViewRepresentable {
 
             DispatchQueue.main.async {
                 self.centrageInitial = false
+                self.demandeRecentrage = false
             }
         }
-
-        // Nettoyage des marqueurs
-        uiVue.removeAnnotations(uiVue.annotations)
-
-        // Ajout des marqueurs sauf celui sélectionné
-        let annotations = parcs
-            .filter { $0.id != parcSelectionne?.id }
-            .map { ParcAnnotation(parc: $0) }
-        uiVue.addAnnotations(annotations)
+        
+        // 1. Filtrer les infrastructures selon les filtres sélectionnés (sauf si "All")
+        let infrasFiltrees: [Infrastructure]
+        if !filtresSelectionnes.contains("All") {
+            infrasFiltrees = infras.filter { infra in
+                infra.sport.contains { sport in
+                    filtresSelectionnes.contains(sport.rawValue.capitalized)
+                }
+            }
+        } else {
+            infrasFiltrees = infras
+        }
+        
+        // 2. Filtrer les parcs pour ne garder que ceux qui ont au moins une infra filtrée
+        let parcsFiltres = parcs.filter { parc in
+            // Parcs qui ont au moins une infrastructure filtrée dans leur idsInfra
+            let infraIdsDuParc = Set(parc.idsInfra)
+            let infraFiltreesIds = Set(infrasFiltrees.map { $0.id })
+            return !infraIdsDuParc.intersection(infraFiltreesIds).isEmpty
+        }
 
         // Gestion du polygone du parc sélectionné
-        uiVue.removeOverlays(uiVue.overlays)
         if let parc = parcSelectionne {
+            // Nettoyage des marqueurs
+            uiVue.removeAnnotations(uiVue.annotations)
+            uiVue.removeOverlays(uiVue.overlays)
+
+            // Ajout des marqueurs sauf celui sélectionné
+            let parcAnnotations = parcsFiltres
+                .filter { $0.id != parcSelectionne?.id }
+                .map { ParcAnnotation(parc: $0) }
+            uiVue.addAnnotations(parcAnnotations)
+            
             let region = regionEnglobantPolygone(parc.limites)
             uiVue.setRegion(region, animated: true)
             
             let polygon = MKPolygon(coordinates: parc.limites, count: parc.limites.count)
             uiVue.addOverlay(polygon)
             
-            let infrasParcSelectionne = infras.filter { parc.idsInfra.contains($0.id) }
+            let infrasParcSelectionne = infrasFiltrees.filter { parc.idsInfra.contains($0.id) }
             let infrasAnnotations = infrasParcSelectionne.map { InfraAnnotation(infra: $0) }
             uiVue.addAnnotations(infrasAnnotations)
+        } else {
+            uiVue.removeAnnotations(uiVue.annotations)
+            uiVue.removeOverlays(uiVue.overlays)
+
+            let parcAnnotations = parcsFiltres.map { ParcAnnotation(parc: $0) }
+            uiVue.addAnnotations(parcAnnotations)
         }
         
         if deselectionnerAnnotation {
@@ -113,6 +168,10 @@ struct CarteVue: UIViewRepresentable {
                 deselectionnerAnnotation = false
             }
         }
+        
+        // Changer de type de carte
+        uiVue.preferredConfiguration = typeDeCarteSelectionne.configuration
+        uiVue.pointOfInterestFilter = .excludingAll
     }
 
     // MARK: - Coordinateur pour gérer les callbacks de la MKMapView

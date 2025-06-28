@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ExplorerVue: View {
-    
     @State private var modeAffichage: ModeAffichage = .liste
     @EnvironmentObject var emplacementsVM: DonneesEmplacementService
     
@@ -25,6 +24,7 @@ struct ExplorerVue: View {
             
             VStack {
                 Spacer()
+                
                 BoutonSwitchExplorer(modeAffichage: $modeAffichage)
                     .padding(.bottom, 20)
             }

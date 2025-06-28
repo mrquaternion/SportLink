@@ -10,7 +10,7 @@ import SwiftUI
 struct BarreTemporelleVue: View {
     @Binding var dateSelectionnee: Date
     
-    private let couleur: Color = Color("CouleurParDefaut").opacity(0.8)
+    private let couleurSelection: Color = Color("CouleurParDefaut").opacity(0.8)
     private let dateMin = Date.now // aujourd'hui
     private let dateMax = Calendar.current.date(byAdding: .weekOfYear, value: 4, to: Date())!
     
@@ -26,6 +26,7 @@ struct BarreTemporelleVue: View {
                     .padding([.top, .bottom], 8)
                 
                 HStack {
+                    // Bouton de gauche
                     Button {
                         let nouvelleDate = Calendar.current.date(byAdding: .day, value: -7, to: dateSelectionnee)!
                         if nouvelleDate < dateMin {
@@ -41,21 +42,22 @@ struct BarreTemporelleVue: View {
                     
                     Spacer()
                     
+                    // Dates
                     ForEach(Date.datesDeLaSemaine(dateSelectionnee: dateSelectionnee), id: \.self) { jour in
                         VStack {
                             Text("\(Calendar.current.component(.day, from: jour))")
                                 .font(.headline)
                                 .frame(width: 30, height: 30, alignment: .center)
                                 .foregroundStyle(getCouleurTexte(for: jour, couleurAlt1: .white))
-                                .background(Calendar.current.isDate(jour, inSameDayAs: dateSelectionnee) ? couleur : Color.clear)
+                                .background(Calendar.current.isDate(jour, inSameDayAs: dateSelectionnee) ? couleurSelection : Color.clear)
                                 .cornerRadius(20)
                             
                             Text(jour.formatted(.dateTime.weekday(.abbreviated)))
                                 .font(.caption)
-                                .foregroundStyle(getCouleurTexte(for: jour, couleurAlt1: couleur))
+                                .foregroundStyle(getCouleurTexte(for: jour, couleurAlt1: couleurSelection))
                             
                             Circle()
-                                .fill(Calendar.current.isDate(jour, inSameDayAs: dateSelectionnee) ? couleur : Color.clear)
+                                .fill(Calendar.current.isDate(jour, inSameDayAs: dateSelectionnee) ? couleurSelection : Color.clear)
                                 .frame(width: 5, height: 5, alignment: .center)
                         }
                         .padding([.trailing, .leading], 3)
@@ -68,6 +70,7 @@ struct BarreTemporelleVue: View {
                     
                     Spacer()
                     
+                    // Bouton de droite
                     Button {
                         let nouvelleDate = Calendar.current.date(byAdding: .day, value: 7, to: dateSelectionnee)!
                         if nouvelleDate > dateMax {
@@ -82,11 +85,27 @@ struct BarreTemporelleVue: View {
                 }
             }
         }
-        .padding(.horizontal, 14)
-        .frame(width: 375, height: 125, alignment: .center)
-        .background(Color(red: 0.95, green: 0.95, blue: 0.95).opacity(0.92))
-        .cornerRadius(8)
-        .shadow(color: .black.opacity(0.25), radius: 2.7, x: 0, y: 3)
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if abs(value.translation.width) > 50 { // seuil pour éviter les petits gestes
+                        if value.translation.width < 0 {
+                            // Glissé vers la gauche : semaine suivante
+                            let nouvelleDate = Calendar.current.date(byAdding: .day, value: 7, to: dateSelectionnee)!
+                            withAnimation {
+                                dateSelectionnee = min(nouvelleDate, dateMax)
+                            }
+                        } else {
+                            // Glissé vers la droite : semaine précédente
+                            let nouvelleDate = Calendar.current.date(byAdding: .day, value: -7, to: dateSelectionnee)!
+                            withAnimation {
+                                dateSelectionnee = max(nouvelleDate, dateMin)
+                            }
+                        }
+                    }
+                }
+        )
+
     }
 }
 
