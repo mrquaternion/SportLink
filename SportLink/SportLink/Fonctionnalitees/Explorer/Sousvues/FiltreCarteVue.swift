@@ -39,8 +39,8 @@ struct FiltreCarteVue: View {
                         }
                     } label: {
                         HStack {
-                            if let sport = sport, let icone = sport.icone {
-                                Image(systemName: icone.rawValue)
+                            if let sport = sport {
+                                Image(systemName: sport.icone)
                             }
                             
                             Text(nom)

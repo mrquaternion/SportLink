@@ -85,6 +85,7 @@ struct CarteVue: UIViewRepresentable {
         mapVue.delegate = context.coordinator
         mapVue.showsUserLocation = true
         mapVue.showsCompass = false
+        
         mapVue.preferredConfiguration = typeDeCarteSelectionne.configuration
         mapVue.pointOfInterestFilter = .excludingAll
 

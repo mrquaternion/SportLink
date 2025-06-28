@@ -34,6 +34,8 @@ struct ExplorerCarteVue: View {
     @State var afficherTypeDeCarte = false
     @State var afficherFiltrage: Bool = false
     
+    
+    
     private let couleurDeFond = Color(red: 0.97, green: 0.97, blue: 0.97)
     
     var body: some View {
