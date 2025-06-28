@@ -50,15 +50,15 @@ struct FiltreCarteVue: View {
                         }
                         .padding(.horizontal, 12)
                         .background(filtresSelectionnes.contains(nom) ? Color("CouleurParDefaut") : .white)
-                        .foregroundColor(filtresSelectionnes.contains(nom) ? .white : .primary)
+                        .foregroundColor(filtresSelectionnes.contains(nom) ? Color(red: 0.97, green: 0.97, blue: 0.97) : .primary)
                         .cornerRadius(14)
                         .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)
                     }
                 }
             }
             .frame(height: 45)
+            .padding(.leading, 12)
         }
-        .frame(width: .infinity)
     }
 }
 

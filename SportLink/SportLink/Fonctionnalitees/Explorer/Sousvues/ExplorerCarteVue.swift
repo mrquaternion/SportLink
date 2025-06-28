@@ -71,35 +71,42 @@ struct ExplorerCarteVue: View {
                     .cornerRadius(16)
                     .shadow(color: .black.opacity(0.4), radius: 2, x: 0, y: 2)
                 
-                HStack {
-                    Spacer()
+                ZStack(alignment: .trailing) {
+                    let espacementDroite: CGFloat = 12
+                    let cercleDim: CGFloat = 30
                     
                     if afficherFiltrage {
                         FiltreCarteVue(filtresSelectionnes: $filtresSelectionnes)
-                            .transition(.from(position: CGPoint(x: 400, y: 0)))
+                            .padding(.trailing, (cercleDim / 2) + espacementDroite)
+                            .transition(
+                                .aPartirDe(position: CGPoint(x: 400, y: 0), masquePosition: (cercleDim / 2) + espacementDroite)
+                            )
                     }
                     
-                    // Bouton de filtrage des parcs/infras
-                    Button {
-                        withAnimation(.spring(response: 0.4, dampingFraction: 1)) {
-                            afficherFiltrage.toggle()
+                    HStack {
+                        Spacer()
+                        // Bouton de filtrage des parcs/infras
+                        Button {
+                            withAnimation(.spring(response: 0.4, dampingFraction: 1)) {
+                                afficherFiltrage.toggle()
+                            }
+                        } label: {
+                            Image("filter_map")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: cercleDim, height: cercleDim)
+                                .padding(10)
+                                .background(couleurDeFond)
+                                .foregroundStyle(Color.black)
+                                .clipShape(Circle())
+                                .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)
                         }
-                    } label: {
-                        Image("filter_map")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30, height: 30)
-                            .padding(10)
-                            .background(couleurDeFond)
-                            .foregroundStyle(Color.black)
-                            .clipShape(Circle())
-                            .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)
+                        .buttonStyle(.plain)
+                        .padding(.trailing, espacementDroite)
+                        
                     }
-                    .buttonStyle(.plain)
-
+                    .padding(.vertical, 8)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
                 
                 Spacer()
             }
@@ -224,21 +231,31 @@ struct ExplorerCarteVue: View {
 }
 
 extension AnyTransition {
-    static func from(position: CGPoint) -> AnyTransition {
+    static func aPartirDe(position: CGPoint, masquePosition: CGFloat = 0) -> AnyTransition {
         AnyTransition.modifier(
-            active: OffsetAndFade(offset: CGSize(width: position.x, height: position.y), opacity: 0),
-            identity: OffsetAndFade(offset: .zero, opacity: 1)
+            active: OffsetEtMasque(offset: CGSize(width: position.x, height: position.y), opacite: 0, masquePosition: masquePosition),
+            identity: OffsetEtMasque(offset: .zero, opacite: 1, masquePosition: masquePosition)
         )
     }
     
-    private struct OffsetAndFade: ViewModifier {
+    private struct OffsetEtMasque: ViewModifier {
         let offset: CGSize
-        let opacity: Double
+        let opacite: Double
+        let masquePosition: CGFloat
         
         func body(content: Content) -> some View {
             content
                 .offset(offset)
-                .opacity(opacity)
+                .opacity(opacite)
+                .mask(
+                    HStack {
+                        Rectangle()
+                        if masquePosition > 0 {
+                            Spacer()
+                                .frame(width: masquePosition)
+                        }
+                    }
+                )
         }
     }
 }
