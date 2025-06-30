@@ -24,9 +24,9 @@ enum Sport: String, Decodable, CaseIterable {
         switch self {
         case .soccer: return "soccer"
         case .basketball: return "basketball"
-        case .tennis: return"tennis"
+        case .tennis: return "tennis"
         case .football: return "football"
-        case .volleyball: return"volleyball"
+        case .volleyball: return "volleyball"
         case .badminton: return "badminton"
         case .baseball: return "balle"
         case .rugby: return "rugby"

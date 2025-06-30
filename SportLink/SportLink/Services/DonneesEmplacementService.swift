@@ -89,7 +89,7 @@ class DonneesEmplacementService: ObservableObject {
     
     private func obtenirSport(chaine: String) -> [Sport]? {
         return Sport.allCases.filter { sport in
-            chaine.localizedCaseInsensitiveContains(sport.rawValue)
+            chaine.localizedCaseInsensitiveContains(sport.nom)
         }
     }
 }
