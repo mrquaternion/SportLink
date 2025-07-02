@@ -87,7 +87,7 @@ struct RacineVue: View {
                 self.ancienOngletSelectionne = newValue
             }
         }
-        .sheet(isPresented: $estPresente) {
+        .fullScreenCover(isPresented: $estPresente) {
             self.ongletSelectionne = self.ancienOngletSelectionne
         } content: {
             CreerVue()

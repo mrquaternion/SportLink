@@ -29,23 +29,12 @@ struct RecherchePOIVue: View {
         } label: {
             HStack {
                 Image(systemName: "mappin.and.ellipse")
-                
-                (
-                    Text("See ") +
-                    Text(parc.nom!)
-                        .foregroundColor(Color("CouleurParDefaut"))
-                        .bold() +
-                    Text(" details")
-                )
+        
+                Text("View in Maps")
             }
-            .padding(.vertical, 10)
-            .padding(.horizontal, 16)
-            .foregroundColor(.primary)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(.black, lineWidth: 1)
-            )
         }
+        .buttonStyle(.bordered)
+        .tint(.green)
         .buttonStyle(.plain)
         .alert("Opening in Apple Maps", isPresented: $afficherConfirmation, actions: {
             Button("Close", role: .cancel) { }

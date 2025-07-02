@@ -21,22 +21,13 @@ struct InfraDetailVue: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Field for \(infra.sport[0].rawValue)")
+                Text("\(infra.sport[0].rawValue.capitalized) infrastructure")
                     .font(.title)
                 
                 Spacer()
-                
-                Button {
-                    // Code
-                } label: {
-                    Image(systemName: "plus")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                        .foregroundStyle(.black)
-                }
-
-            }.padding(.top)
+            }
+            .padding(.top)
+            
             
             Divider()
                 .overlay(Color.black)
@@ -45,13 +36,22 @@ struct InfraDetailVue: View {
                 .padding(.top)
             
             Spacer()
-        }.padding()
+        }.padding(25)
     }
 }
 
 #Preview {
-    InfraDetailVue(infra: DonneesEmplacementService().infrastructures.first!,
-                   parc: DonneesEmplacementService().parcs.first!,
-                   dateSelectionnee: .constant(Date(timeIntervalSinceNow: 0)))
+    let service = DonneesEmplacementService()
+    service.chargerDonnees()
+    guard let infra = service.infrastructures.first,
+          let parc = service.parcs.first else {
+        return AnyView(EmptyView())
+    }
+    
+    return InfraDetailVue(
+        infra: infra,
+        parc: parc,
+        dateSelectionnee: .constant(Date())
+    )
 }
 
