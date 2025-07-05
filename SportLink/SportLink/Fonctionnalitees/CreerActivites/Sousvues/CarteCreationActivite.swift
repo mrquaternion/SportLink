@@ -24,6 +24,7 @@ struct CarteCreationActivite: View {
     @State private var aInteragiAvecCarte = false
     @State private var deselectionnerAnnotation = false
     @State private var typeDeCarteSelectionne: TypeDeCarte = .standard
+    @State private var infraSelectionneeEnProgres = false
     
     @Binding var sportChoisis: Set<String>
     @Binding var infraChoisie: Infrastructure?
@@ -40,7 +41,8 @@ struct CarteCreationActivite: View {
             aInteragiAvecCarte: $aInteragiAvecCarte,
             deselectionnerAnnotation: $deselectionnerAnnotation,
             typeDeCarteSelectionne: $typeDeCarteSelectionne,
-            filtresSelectionnes: $sportChoisis
+            filtresSelectionnes: $sportChoisis,
+            infraSelectionneeEnProgres: $infraSelectionneeEnProgres
         )
         .ignoresSafeArea(.all)
         .onChange(of: infraSelectionnee?.id) {

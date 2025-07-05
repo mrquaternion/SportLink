@@ -74,6 +74,7 @@ struct CarteVue: UIViewRepresentable {
     @Binding var deselectionnerAnnotation: Bool
     @Binding var typeDeCarteSelectionne: TypeDeCarte
     @Binding var filtresSelectionnes: Set<String>
+    @Binding var infraSelectionneeEnProgres: Bool
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -98,7 +99,13 @@ struct CarteVue: UIViewRepresentable {
 
     // MARK: Mise à jour de la map selon les changements SwiftUI
     func updateUIView(_ uiVue: MKMapView, context: Context) {
-        // Recentrer la carte si demandé
+        // 1. Éviter la mise a jour si c'est juste une sélection d'infrastructure
+        if infraSelectionneeEnProgres {
+            infraSelectionneeEnProgres = false
+            return
+        }
+        
+        // 2. Recentrer la carte si le bouton concerné est toggle
         if (centrageInitial || demandeRecentrage), let loc = localisationUtilisateur {
             let region = MKCoordinateRegion(
                 center: loc.coordinate,
@@ -112,7 +119,7 @@ struct CarteVue: UIViewRepresentable {
             }
         }
         
-        // 1. Filtrer les infrastructures selon les filtres sélectionnés (sauf si "All")
+        // 3. Filtrer les infrastructures selon les filtres sélectionnés (sauf si "All")
         let infrasFiltrees: [Infrastructure]
         if !filtresSelectionnes.contains("All") {
             infrasFiltrees = infras.filter { infra in
@@ -124,7 +131,7 @@ struct CarteVue: UIViewRepresentable {
             infrasFiltrees = infras
         }
         
-        // 2. Filtrer les parcs pour ne garder que ceux qui ont au moins une infra filtrée
+        // 4. Filtrer les parcs pour ne garder que ceux qui ont au moins une infra filtrée
         let parcsFiltres = parcs.filter { parc in
             // Parcs qui ont au moins une infrastructure filtrée dans leur idsInfra
             let infraIdsDuParc = Set(parc.idsInfra)
@@ -132,7 +139,7 @@ struct CarteVue: UIViewRepresentable {
             return !infraIdsDuParc.intersection(infraFiltreesIds).isEmpty
         }
 
-        // Gestion du polygone du parc sélectionné
+        // 5. Gestion du polygone du parc sélectionné
         if let parc = parcSelectionne {
             // Nettoyage des marqueurs
             uiVue.removeAnnotations(uiVue.annotations)
@@ -161,6 +168,7 @@ struct CarteVue: UIViewRepresentable {
             uiVue.addAnnotations(parcAnnotations)
         }
         
+        // 6. Retirer l'annotation quand le sheet concerné est dismissed
         if deselectionnerAnnotation {
             for annotation in uiVue.selectedAnnotations {
                 uiVue.deselectAnnotation(annotation, animated: false)
@@ -170,7 +178,7 @@ struct CarteVue: UIViewRepresentable {
             }
         }
         
-        // Changer de type de carte
+        // 7. Changer de type de carte
         uiVue.preferredConfiguration = typeDeCarteSelectionne.configuration
         uiVue.pointOfInterestFilter = .excludingAll
     }
@@ -179,6 +187,7 @@ struct CarteVue: UIViewRepresentable {
     class Coordinator: NSObject, MKMapViewDelegate {
         var parent: CarteVue
         let threshold: CLLocationDegrees = 0.025
+        var isInfraSelectionInProgress = false // flag pour empecher de updateView de se déclencher lorsqu'un infra est sélectionné
 
         init(_ parent: CarteVue) {
             self.parent = parent
@@ -283,13 +292,18 @@ struct CarteVue: UIViewRepresentable {
             }
             
             if let infraAnnotation = vue.annotation as? InfraAnnotation {
-                parent.infraSelectionnee = infraAnnotation.infra
-                
-                let lat = infraAnnotation.coordinate.latitude - mapVue.region.span.longitudeDelta * 0.1
-                let lon = infraAnnotation.coordinate.longitude
-                let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
-                                                span: mapVue.region.span)
-                mapVue.setRegion(region, animated: true)
+                // 1. Activer le drapeau
+                parent.infraSelectionneeEnProgres = true
+               
+               // 2. Mettre à jour la variable d'état (ce qui déclenchera updateUIView)
+               parent.infraSelectionnee = infraAnnotation.infra
+               
+               // 3. Le reste de votre logique de recentrage
+               let lat = infraAnnotation.coordinate.latitude - mapVue.region.span.longitudeDelta * 0.1
+               let lon = infraAnnotation.coordinate.longitude
+               let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                                               span: mapVue.region.span)
+               mapVue.setRegion(region, animated: true)
             }
         }
 

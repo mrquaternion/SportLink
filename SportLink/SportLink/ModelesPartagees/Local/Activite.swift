@@ -11,7 +11,23 @@ import FirebaseFirestore
 enum StatutActivite: Int, Codable {
     case ouvert = 0
     case complet = 1
-    case annule = 2
+    case annulee = 2
+    
+    var strVal: String {
+        switch self {
+        case .ouvert: return "open"
+        case .complet: return "full"
+        case .annulee: return "" // doesn't matter
+        }
+    }
+    
+    var couleur: UIColor {
+        switch self {
+        case .ouvert: return .systemGreen
+        case .complet: return .systemRed
+        case .annulee: return .black // doesn't matter
+        }
+    }
 }
 
 enum ActiviteErreur: Error {
@@ -41,7 +57,7 @@ struct Activite: Identifiable, Codable {
     var date: PlageHoraire
     var nbJoueursRecherches: Int
     var participants: [UtilisateurID]
-    var statut: Int
+    var statut: StatutActivite
     var invitationsOuvertes: Bool
     var messages: [MessageID]
     
@@ -56,43 +72,12 @@ struct Activite: Identifiable, Codable {
         statut: StatutActivite,
         invitationsOuvertes: Bool,
         messages: [MessageID]
-    ) throws {
-        guard titre.count <= 25 else {
-            throw ActiviteErreur.titreTropLong
-        }
-        
+    ) {        
         self.titre = titre
         self.organisateurId = organisateurId
         self.infraId = infraId
         self.sport = sport.nom
         self.date = PlageHoraire(debut: date.start, fin: date.end)
-        self.nbJoueursRecherches = nbJoueursRecherches
-        self.participants = participants
-        self.statut = statut.rawValue
-        self.invitationsOuvertes = invitationsOuvertes
-        self.messages = messages
-    }
-    
-    // Init interne sans validation
-    private init(
-        id: String,
-        titre: String,
-        organisateurId: UtilisateurID,
-        infraId: String,
-        sport: String,
-        date: PlageHoraire,
-        nbJoueursRecherches: Int,
-        participants: [UtilisateurID],
-        statut: Int,
-        invitationsOuvertes: Bool,
-        messages: [MessageID]
-    ) {
-        self.id = id
-        self.titre = titre
-        self.organisateurId = organisateurId
-        self.infraId = infraId
-        self.sport = sport
-        self.date = date
         self.nbJoueursRecherches = nbJoueursRecherches
         self.participants = participants
         self.statut = statut
@@ -102,36 +87,6 @@ struct Activite: Identifiable, Codable {
 }
 
 extension Activite {
-    // Factory method depuis Firestore
-    static func depuisFirestore(
-        id: String,
-        titre: String,
-        organisateurId: String,
-        infraId: String,
-        sport: String,
-        debut: Date,
-        fin: Date,
-        nbJoueursRecherches: Int,
-        participants: [String],
-        statut: Int,
-        invitationsOuvertes: Bool,
-        messages: [String]
-    ) -> Activite {
-        Activite(
-            id: id,
-            titre: titre,
-            organisateurId: UtilisateurID(valeur: organisateurId),
-            infraId: infraId,
-            sport: sport,
-            date: PlageHoraire(debut: debut, fin: fin),
-            nbJoueursRecherches: nbJoueursRecherches,
-            participants: participants.map { UtilisateurID(valeur: $0) },
-            statut: statut,
-            invitationsOuvertes: invitationsOuvertes,
-            messages: messages.map { MessageID(valeur: $0) }
-        )
-    }
-    
     func versDTO() -> ActiviteDTO {
         ActiviteDTO(
             id: id,
@@ -142,7 +97,7 @@ extension Activite {
             date: date,
             nbJoueursRecherches: nbJoueursRecherches,
             participants: participants.map { $0.valeur },
-            statut: statut,
+            statut: statut.rawValue,
             invitationsOuvertes: invitationsOuvertes,
             messages: messages.map { $0.valeur }
         )

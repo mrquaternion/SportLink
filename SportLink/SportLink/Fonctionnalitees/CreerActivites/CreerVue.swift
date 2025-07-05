@@ -7,8 +7,9 @@
 
 import SwiftUI
 import CoreLocation
+import Combine
 
-private enum ActiveOverlay {
+enum ActiveOverlay {
     case none, sport, date, time, participants, guests
 }
 
@@ -17,6 +18,7 @@ struct CreerVue: View {
     @EnvironmentObject var serviceActivites: ServiceFuncActivites
     @Environment(\.dismiss) var dismiss
     
+    @State private var titre: String = ""
     @State private var sportSelectionne: Sport = .soccer
     @State private var dateSelectionnee: Date = .init()
     @State private var tempsDebut: Date = .init()
@@ -26,11 +28,18 @@ struct CreerVue: View {
     @State private var overlayActif: ActiveOverlay = .none
     @State private var sportChoisis: Set<String> = [Sport.soccer.nom.capitalized]
     @State private var infraChoisie: Infrastructure? = nil
+    
+    private let dateMin = Date.now
+    private let dateMax = Calendar.current.date(byAdding: .weekOfYear, value: 4, to: Date())!
+    private let texteLimite = 40
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
-                Spacer().frame(height: 8)
+            VStack(spacing: 20) {
+                Spacer()
+                
+                ChampTitre(titre: $titre, overlayActif: $overlayActif, texteLimite: texteLimite)
+                
                 OverlayOptionButton(
                     icon: sportSelectionne.icone,
                     text: sportSelectionne.nom.capitalized,
@@ -75,55 +84,14 @@ struct CreerVue: View {
                         .tint(.red)
                     Spacer()
                 }.padding(.horizontal)
+                
                 Spacer()
                 
                 // MARK: Bouton de création de l'activité
                 Button {
-                    guard let infra = infraChoisie else {
-                        print("Aucune infrastructure sélectionnée.")
-                        return
-                    }
-                    
-                    guard let nb = nbParticipants, let autoriserInvitations = permettreInvitations else {
-                        print("Veuillez sélectionner tous les champs nécessaires.")
-                        return
-                    }
-
-                    // Créer l'intervalle de date
-                    let calendrier = Calendar.current
-                    let dateDebut = calendrier.date(bySettingHour: calendrier.component(.hour, from: tempsDebut),
-                                                    minute: calendrier.component(.minute, from: tempsDebut),
-                                                    second: 0,
-                                                    of: dateSelectionnee) ?? dateSelectionnee
-
-                    let dateFin = calendrier.date(bySettingHour: calendrier.component(.hour, from: tempsFin),
-                                                  minute: calendrier.component(.minute, from: tempsFin),
-                                                  second: 0,
-                                                  of: dateSelectionnee) ?? dateDebut.addingTimeInterval(3600)
-
-                    let interval = DateInterval(start: dateDebut, end: dateFin)
-
-                    // Créer l’activité
-                    do {
-                        let activite = try Activite(
-                            titre: "Activité \(sportSelectionne.nom)", // ou demander à l'utilisateur d'écrire un titre
-                            organisateurId: UtilisateurID(valeur: "mockID"), // remplace par le bon ID utilisateur
-                            infraId: infra.id,
-                            sport: sportSelectionne,
-                            date: interval,
-                            nbJoueursRecherches: nb,
-                            participants: [],
-                            statut: .ouvert,
-                            invitationsOuvertes: autoriserInvitations,
-                            messages: []
-                        )
-
-                        Task {
-                            await serviceActivites.sauvegarderActiviteAsync(activite: activite)
-                            dismiss()
-                        }
-                    } catch {
-                        print("Erreur lors de la création de l'activité : \(error)")
+                    Task {
+                        await creerActivite()
+                        dismiss()
                     }
                 } label: {
                     Text("Create")
@@ -207,7 +175,7 @@ struct CreerVue: View {
         )) {
             VStack(spacing: 16) {
                 Text("Select a date").font(.headline)
-                DatePicker("", selection: $dateSelectionnee, displayedComponents: .date)
+                DatePicker("", selection: $dateSelectionnee, in: dateMin...dateMax,displayedComponents: .date)
                     .datePickerStyle(.graphical)
                     .labelsHidden()
                     .frame(maxHeight: 300)
@@ -306,6 +274,50 @@ struct CreerVue: View {
     }
 }
 
+extension CreerVue {
+    func creerActivite() async {
+        guard let infra = infraChoisie else {
+            print("Aucune infrastructure sélectionnée.")
+            return
+        }
+        
+        guard let nb = nbParticipants, let autoriserInvitations = permettreInvitations else {
+            print("Veuillez sélectionner tous les champs nécessaires.")
+            return
+        }
+        
+        // Créer l'intervalle de date
+        let calendrier = Calendar.current
+        let dateDebut = calendrier.date(bySettingHour: calendrier.component(.hour, from: tempsDebut),
+                                        minute: calendrier.component(.minute, from: tempsDebut),
+                                        second: 0,
+                                        of: dateSelectionnee) ?? dateSelectionnee
+        
+        let dateFin = calendrier.date(bySettingHour: calendrier.component(.hour, from: tempsFin),
+                                      minute: calendrier.component(.minute, from: tempsFin),
+                                      second: 0,
+                                      of: dateSelectionnee) ?? dateDebut.addingTimeInterval(3600)
+        
+        let interval = DateInterval(start: dateDebut, end: dateFin)
+        
+        // Créer l’activité
+        let nvActivite = Activite(
+            titre: titre,
+            organisateurId: UtilisateurID(valeur: "mockID"), // remplace par le bon ID utilisateur
+            infraId: infra.id,
+            sport: sportSelectionne,
+            date: interval,
+            nbJoueursRecherches: nb,
+            participants: [],
+            statut: .ouvert,
+            invitationsOuvertes: autoriserInvitations,
+            messages: []
+        )
+        
+        await serviceActivites.sauvegarderActiviteAsync(activite: nvActivite)
+    }
+}
+
 struct OverlayOptionButton: View {
     let icon: String, text: String, action: () -> Void
     var body: some View {
@@ -316,6 +328,40 @@ struct OverlayOptionButton: View {
                 Text(text).foregroundColor(.black)
             }
         }.buttonStyle(.plain)
+    }
+}
+
+struct ChampTitre: View {
+    @Binding var titre: String
+    @Binding var overlayActif: ActiveOverlay
+    let texteLimite: Int
+    
+    var body: some View {
+        HStack {
+            TextField("Title of the activity", text: $titre)
+                .onReceive(Just(titre)) { _ in limiterTexte(texteLimite) }
+                .disabled(overlayActif != .none)
+            
+            Spacer()
+        }
+        .padding()
+        .frame(maxWidth: .infinity, minHeight: 50)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                )
+                .shadow(color: Color.gray.opacity(0.1), radius: 2, x: 0, y: 1)
+        )
+        .padding(.horizontal)
+    }
+    
+    func limiterTexte(_ upper: Int) {
+        if titre.count > upper {
+            titre = String(titre.prefix(upper))
+        }
     }
 }
 

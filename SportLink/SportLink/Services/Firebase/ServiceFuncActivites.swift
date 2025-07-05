@@ -32,8 +32,15 @@ class ServiceFuncActivites: ObservableObject {
             let activitesFiltrees = activitesConverties
                 .filter { calendrier.isDate($0.date.debut, inSameDayAs: date) }
                 .sorted { $0.date.debut < $1.date.debut }
+            
+            // Assigner un ID localement
+            let activites = activitesFiltrees.map { activite in
+                var activiteMutable = activite
+                activiteMutable.id = UUID().uuidString
+                return activiteMutable
+            }
 
-            self.activites = activitesFiltrees
+            self.activites = activites
         } catch {
             print("Erreur lors de la récupération des activités : \(error)")
         }
@@ -42,7 +49,7 @@ class ServiceFuncActivites: ObservableObject {
     func sauvegarderActiviteAsync(activite: Activite) async {
         let dto = activite.versDTO()
         do {
-            let ref = try await Firestore.firestore()
+            let ref = try Firestore.firestore()
                 .collection("activites")
                 .addDocument(from: dto)
             print("Activité sauvegardée avec l’ID :", ref.documentID)

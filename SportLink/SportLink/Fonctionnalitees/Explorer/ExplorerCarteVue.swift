@@ -30,6 +30,7 @@ struct ExplorerCarteVue: View {
     @State private var deselectionnerAnnotation = false
     @State private var typeDeCarteSelectionne: TypeDeCarte = .standard
     @State private var filtresSelectionnes: Set<String> = ["All"]
+    @State private var infraSelectionneeEnProgres = false
     
     @State private var dateSelectionnee: Date = Date.now
     @State var afficherTypeDeCarte = false
@@ -52,9 +53,11 @@ struct ExplorerCarteVue: View {
                 aInteragiAvecCarte: $aInteragiAvecCarte,
                 deselectionnerAnnotation: $deselectionnerAnnotation,
                 typeDeCarteSelectionne: $typeDeCarteSelectionne,
-                filtresSelectionnes: $filtresSelectionnes
+                filtresSelectionnes: $filtresSelectionnes,
+                infraSelectionneeEnProgres: $infraSelectionneeEnProgres
             )
             .sheet(item: $infraSelectionnee, onDismiss: {
+                infraSelectionneeEnProgres = false
                 deselectionnerAnnotation = true
                 infraSelectionnee = nil
             }) { infra in

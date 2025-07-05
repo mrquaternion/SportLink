@@ -87,20 +87,5 @@ struct ActiviteRangeeListeVue: View {
         partenairesRecents: []
     )
     
-    let mockActivite = Activite.depuisFirestore( // on fait genre c'est pull de la DB
-        id: UUID().uuidString,
-        titre: "Première fois tennis",
-        organisateurId: mockUtilisateur1.id,
-        infraId: "1",
-        sport: Sport.tennis.nom,
-        debut: Date(),
-        fin: Date().addingTimeInterval(3600), // 1h plus tard
-        nbJoueursRecherches: 4,
-        participants: [mockUtilisateur1.id, mockUtilisateur2.id],
-        statut: StatutActivite.ouvert.rawValue,
-        invitationsOuvertes: true,
-        messages: []
-    )
-    
-    ActiviteRangeeListeVue(activite: mockActivite, estFavoris: .constant(false))
+    ActiviteRangeeListeVue(activite: nil, estFavoris: .constant(false))
 }

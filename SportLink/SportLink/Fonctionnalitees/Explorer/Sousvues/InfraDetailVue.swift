@@ -95,6 +95,7 @@ struct InfraDetailVue: View {
                 ForEach(serviceActivites.activites, id: \.id) { activite in
                     let (heureDebut, heureFin) = activite.obtenirPlageHoraireStr()
                     
+                    // Row de l'activité
                     HStack(alignment: .center, spacing: 12) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(activite.titre)
@@ -107,6 +108,9 @@ struct InfraDetailVue: View {
                         }
 
                         Spacer()
+                        
+                        Text(activite.statut.strVal.capitalized)
+                            .foregroundStyle(Color(activite.statut.couleur))
                     }
                     .frame(height: 30)
                     .padding()
