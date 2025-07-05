@@ -8,17 +8,23 @@
 import SwiftUI
 
 struct ExplorerVue: View {
-    @State private var modeAffichage: ModeAffichage = .liste
     @EnvironmentObject var emplacementsVM: DonneesEmplacementService
+    @EnvironmentObject var serviceActivites: ServiceFuncActivites
     
+    @State private var modeAffichage: ModeAffichage = .liste
+    
+    @Binding var utilisateur: Utilisateur
+
     var body: some View {
         ZStack {
             VStack {
                 if modeAffichage == .liste {
-                    ExplorerListeVue()
+                    ExplorerListeVue(utilisateur: $utilisateur)
+                        .environmentObject(serviceActivites)
                 } else {
-                    ExplorerCarteVue()
+                    ExplorerCarteVue(utilisateur: $utilisateur)
                         .environmentObject(emplacementsVM)
+                        .environmentObject(serviceActivites)
                 }
             }
             
@@ -33,6 +39,16 @@ struct ExplorerVue: View {
 }
 
 #Preview {
-    ExplorerVue()
+    let mockUtilisateur = Utilisateur(
+        nomUtilisateur: "mathias13",
+        courriel: "",
+        photoProfil: "",
+        disponibilites: [:],
+        sportsFavoris: [],
+        activitesFavoris: [],
+        partenairesRecents: []
+    )
+    
+    ExplorerVue(utilisateur: .constant(mockUtilisateur))
         .environmentObject(DonneesEmplacementService())
 }

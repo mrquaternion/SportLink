@@ -117,7 +117,7 @@ struct CarteVue: UIViewRepresentable {
         if !filtresSelectionnes.contains("All") {
             infrasFiltrees = infras.filter { infra in
                 infra.sport.contains { sport in
-                    filtresSelectionnes.contains(sport.rawValue.capitalized)
+                    filtresSelectionnes.contains(sport.nom.capitalized)
                 }
             }
         } else {
@@ -193,6 +193,24 @@ struct CarteVue: UIViewRepresentable {
         
         // Check si on doit cacher un parc sélectionné à cause d'un zoom out trop grand
         func mapView(_ mapVue: MKMapView, regionDidChangeAnimated animated: Bool) {
+            // Limiter le dezoom maximal
+            var spanActuel = mapVue.region.span
+            let spanMax = MKCoordinateSpan(latitudeDelta: 15, longitudeDelta: 15)
+            
+            spanActuel.latitudeDelta = min(spanActuel.latitudeDelta, spanMax.latitudeDelta)
+            spanActuel.longitudeDelta = min(spanActuel.longitudeDelta, spanMax.longitudeDelta)
+            
+            if spanActuel.latitudeDelta != mapVue.region.span.latitudeDelta || spanActuel.longitudeDelta != mapVue.region.span.longitudeDelta {
+                var nvRegion: MKCoordinateRegion
+                if let locUtilisateur = parent.localisationUtilisateur {
+                    nvRegion = MKCoordinateRegion(center: locUtilisateur.coordinate, span: spanActuel)
+                } else {
+                    nvRegion = MKCoordinateRegion(center: mapVue.region.center, span: spanActuel)
+                }
+                mapVue.setRegion(nvRegion, animated: true)
+            }
+            
+            // Si un parc a été sélectionné
             guard parent.parcSelectionne != nil else { return }
 
             let liveSpan = mapVue.region.span.latitudeDelta
@@ -227,7 +245,6 @@ struct CarteVue: UIViewRepresentable {
                 parcVue?.markerTintColor = UIColor(red: 123/255.0, green: 171/255.0, blue: 104/255.0, alpha: 1.0)
                 parcVue?.clusteringIdentifier = "cluster"
                 parcVue?.displayPriority = .defaultHigh
-                parcVue?.canShowCallout = true
                 return parcVue
             }
             

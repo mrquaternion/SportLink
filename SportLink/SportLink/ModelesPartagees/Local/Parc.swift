@@ -10,6 +10,7 @@ import MapKit
 
 struct Parc: Identifiable {
     var id = UUID().uuidString
+    
     let index: String
     let nom: String?
     let limites: [CLLocationCoordinate2D]

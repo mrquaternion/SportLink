@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct FiltreCarteVue: View {
-    private let options: [(Sport?, String)] = [(nil, "All")] + Sport.allCases.map { ($0, $0.rawValue.capitalized) }
+    private let options: [(Sport?, String)] = [(nil, "All")] + Sport.allCases.map { ($0, $0.nom.capitalized) }
     let espacementDroite: CGFloat = 12
     let cercleDim: CGFloat = 30
     private let couleurDeFond = Color(red: 0.97, green: 0.97, blue: 0.97)

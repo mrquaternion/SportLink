@@ -8,11 +8,30 @@
 import SwiftUI
 
 struct ExplorerListeVue: View {
+    @State private var activites: [Activite] = []
+    @Binding var utilisateur: Utilisateur
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        sectionActivites
+    }
+    
+    private var sectionActivites: some View {
+        EmptyView()
     }
 }
 
+
+
 #Preview {
-    ExplorerListeVue()
+    let mockUtilisateur = Utilisateur(
+        nomUtilisateur: "mathias13",
+        courriel: "",
+        photoProfil: "",
+        disponibilites: [:],
+        sportsFavoris: [],
+        activitesFavoris: [],
+        partenairesRecents: []
+    )
+    
+    ExplorerListeVue(utilisateur: .constant(mockUtilisateur))
 }

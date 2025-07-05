@@ -1,8 +1,8 @@
 //
-//  Activite.swift
+//  Sport+Extension.swift
 //  SportLink
 //
-//  Created by Mathias La Rochelle on 2025-06-14.
+//  Created by Mathias La Rochelle on 2025-07-03.
 //
 
 import Foundation
@@ -40,8 +40,8 @@ enum Sport: String, Decodable, CaseIterable {
         switch self {
         case .soccer: return "soccerball"
         case .basketball: return "basketball.fill"
+        case .tennis: return "tennisball.fill"
         case .volleyball: return "volleyball.fill"
-        case .tennis: return "tennis.racket"
         case .baseball: return "baseball.fill"
         case .rugby: return "rugbyball.fill"
         case .football: return "american.football.fill"
@@ -51,25 +51,26 @@ enum Sport: String, Decodable, CaseIterable {
         case .petanque: return "target"
         }
     }
+    
+    var emoji: String {
+        switch self {
+        case .soccer: return "⚽️"
+        case .basketball: return "🏀"
+        case .tennis: return "🎾"
+        case .football: return "🏈"
+        case .rugby: return "🏉"
+        case .pingpong: return "🏓"
+        case .ultimateFrisbee: return "🥏"
+        case .volleyball: return "🏐"
+        case .baseball: return "⚾️"
+        case .badminton: return "🏸"
+        case .petanque: return "🎯"
+        }
+    }
 }
 
-enum StatutActivite: String, Codable {
-    case ouvert
-    case complet
-    case annule
+extension Sport {
+    static func depuisNom(_ nom: String) -> Sport {
+        return Sport.allCases.first { $0.nom == nom }!
+    }
 }
-
-struct Activite: Identifiable {
-    var id = UUID().uuidString
-    let organisateurId : UUID
-    let infraId : String
-    let sport : Sport
-    let horaire : DateInterval
-    let nbJoueursRecherches : Int
-    let participants : [UUID]
-    let statut : StatutActivite
-    let invitationsOuvertes : Bool
-    let messages : [UUID]
-}
-
-

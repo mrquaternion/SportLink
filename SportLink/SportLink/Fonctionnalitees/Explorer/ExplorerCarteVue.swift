@@ -12,6 +12,7 @@ private let delta = 0.02
 
 struct ExplorerCarteVue: View {
     @EnvironmentObject var emplacementsVM: DonneesEmplacementService
+    @EnvironmentObject var serviceActivites: ServiceFuncActivites
     
     @State var location: CLLocation? = {
         if let coord = UserDefaults.standard.dernierePosition {
@@ -32,6 +33,8 @@ struct ExplorerCarteVue: View {
     
     @State private var dateSelectionnee: Date = Date.now
     @State var afficherTypeDeCarte = false
+    
+    @Binding var utilisateur: Utilisateur
     
     private let couleurDeFond = Color(red: 0.97, green: 0.97, blue: 0.97)
     
@@ -56,9 +59,11 @@ struct ExplorerCarteVue: View {
                 infraSelectionnee = nil
             }) { infra in
                 let parcParent = emplacementsVM.parcs.filter { $0.index == infra.indexParc }
-                InfraDetailVue(infra: infra, parc: parcParent.first!, dateSelectionnee: $dateSelectionnee)
+                
+                InfraDetailVue(infra: infra, parc: parcParent.first!, dateSelectionnee: $dateSelectionnee, utilisateur: $utilisateur)
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
+                    .environmentObject(serviceActivites)
             }
             .edgesIgnoringSafeArea(.all)
             
@@ -81,7 +86,7 @@ struct ExplorerCarteVue: View {
                 HStack {
                     Spacer()
                     
-                    // Bouton pour changer les types de carte
+                    // MARK: Bouton pour changer les types de carte
                     Button {
                         afficherTypeDeCarte = true
                     } label: {
@@ -116,7 +121,7 @@ struct ExplorerCarteVue: View {
                             Spacer()
                             
                             HStack(spacing: 60) {
-                                // Types de carte
+                                // MARK: Types de carte
                                 ForEach(TypeDeCarte.allCases, id: \.self) { type in
                                     Button {
                                         typeDeCarteSelectionne = type
@@ -152,7 +157,7 @@ struct ExplorerCarteVue: View {
                 HStack {
                     Spacer()
                     
-                    // Bouton de recentrage utilisateur
+                    // MARK: Bouton de recentrage utilisateur
                     Button  {
                         parcSelectionne = nil
                         infraSelectionnee = nil
@@ -197,6 +202,17 @@ struct ExplorerCarteVue: View {
 
 
 #Preview {
-    ExplorerCarteVue()
+    let mockUtilisateur = Utilisateur(
+        nomUtilisateur: "mathias13",
+        courriel: "",
+        photoProfil: "",
+        disponibilites: [:],
+        sportsFavoris: [],
+        activitesFavoris: [],
+        partenairesRecents: []
+    )
+    
+    ExplorerCarteVue(utilisateur: .constant(mockUtilisateur))
         .environmentObject(DonneesEmplacementService())
+        .environmentObject(ServiceFuncActivites())
 }

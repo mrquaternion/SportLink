@@ -19,10 +19,21 @@ enum Onglets: Int {
 struct RacineVue: View {
     
     @EnvironmentObject var emplacementsVM: DonneesEmplacementService
+    @EnvironmentObject var serviceActivites: ServiceFuncActivites
     
     @State var estPresente = false
     @State private var ongletSelectionne: Onglets = .accueil
     @State private var ancienOngletSelectionne: Onglets = .accueil
+    // MARK: Mock
+    @State private var utilisateur = Utilisateur(
+        nomUtilisateur: "mathias13",
+        courriel: "",
+        photoProfil: "",
+        disponibilites: [:],
+        sportsFavoris: [],
+        activitesFavoris: [],
+        partenairesRecents: []
+    )
 
     init() {
         let tabBarAppearance = UITabBarAppearance()
@@ -44,13 +55,14 @@ struct RacineVue: View {
                 }
                 .tag(Onglets.accueil)
             
-            ExplorerVue()
+            ExplorerVue(utilisateur: $utilisateur)
                 .tabItem {
                     Image(ongletSelectionne == .explorer ? "browse_fill" : "browse")
                     Text("Browse")
                 }
                 .tag(Onglets.explorer)
                 .environmentObject(emplacementsVM)
+                .environmentObject(serviceActivites)
             
             
             Text("")
@@ -91,6 +103,8 @@ struct RacineVue: View {
             self.ongletSelectionne = self.ancienOngletSelectionne
         } content: {
             CreerVue()
+                .environmentObject(emplacementsVM)
+                .environmentObject(serviceActivites)
         }
     }
 }

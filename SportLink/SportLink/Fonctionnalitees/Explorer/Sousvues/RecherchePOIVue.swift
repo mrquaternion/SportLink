@@ -27,15 +27,8 @@ struct RecherchePOIVue: View {
                 }
             }
         } label: {
-            HStack {
-                Image(systemName: "mappin.and.ellipse")
-        
-                Text("View in Maps")
-            }
+            Label("Open in Maps", systemImage: "arrow.up.right.square")
         }
-        .buttonStyle(.bordered)
-        .tint(.green)
-        .buttonStyle(.plain)
         .alert("Opening in Apple Maps", isPresented: $afficherConfirmation, actions: {
             Button("Close", role: .cancel) { }
             Button("Open") {
