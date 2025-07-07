@@ -38,10 +38,10 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		62D287192E05C27F00C0A9FB /* Exceptions for "SportLink" folder in "SportLink" target */ = {
+		6237EFA12E1B221000762A14 /* Exceptions for "SportLink" folder in "SportLink" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Configuration/Info.plist,
 			);
 			target = 628E050F2DED1B7600FBED91 /* SportLink */;
 		};
@@ -51,7 +51,7 @@
 		628E05122DED1B7600FBED91 /* SportLink */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				62D287192E05C27F00C0A9FB /* Exceptions for "SportLink" folder in "SportLink" target */,
+				6237EFA12E1B221000762A14 /* Exceptions for "SportLink" folder in "SportLink" target */,
 			);
 			path = SportLink;
 			sourceTree = "<group>";
@@ -431,7 +431,7 @@
 				DEVELOPMENT_TEAM = LLT44AL679;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SportLink/Info.plist;
+				INFOPLIST_FILE = SportLink/Resources/Configuration/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need to know your location for better spatial recognition.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -463,7 +463,7 @@
 				DEVELOPMENT_TEAM = LLT44AL679;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SportLink/Info.plist;
+				INFOPLIST_FILE = SportLink/Resources/Configuration/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need to know your location for better spatial recognition.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
