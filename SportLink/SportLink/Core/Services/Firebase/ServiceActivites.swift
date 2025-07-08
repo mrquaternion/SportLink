@@ -15,6 +15,25 @@ class ServiceActivites: ObservableObject {
     @Published var activites: [Activite] = []
     
     func fetchActivitesParInfrastructureEtDateAsync(infraId: String, date: Date) async {
+        let activitesConverties = await fetchActivitesParInfrastructure(infraId: infraId)
+        
+        // Filtrer par date
+        let calendrier = Calendar.current
+        let activitesFiltrees = activitesConverties
+            .filter { calendrier.isDate($0.date.debut, inSameDayAs: date) }
+            .sorted { $0.date.debut < $1.date.debut }
+        
+        // Assigner un ID localement
+        let activites = activitesFiltrees.map { activite in
+            var activiteMutable = activite
+            activiteMutable.id = UUID().uuidString
+            return activiteMutable
+        }
+
+        self.activites = activites
+    }
+    
+    func fetchActivitesParInfrastructure(infraId: String) async -> [Activite] {
         do {
             let requeteSnapshot = try await Firestore.firestore()
                 .collection("activites")
@@ -25,24 +44,12 @@ class ServiceActivites: ObservableObject {
                 try document.data(as: ActiviteDTO.self)
             }
 
-            let activitesConverties = try dtos.map { try $0.versActivite() }
+            let activitesConverties = dtos.map { $0.versActivite() }
             
-            // Filtrer par date
-            let calendrier = Calendar.current
-            let activitesFiltrees = activitesConverties
-                .filter { calendrier.isDate($0.date.debut, inSameDayAs: date) }
-                .sorted { $0.date.debut < $1.date.debut }
-            
-            // Assigner un ID localement
-            let activites = activitesFiltrees.map { activite in
-                var activiteMutable = activite
-                activiteMutable.id = UUID().uuidString
-                return activiteMutable
-            }
-
-            self.activites = activites
+            return activitesConverties
         } catch {
             print("Erreur lors de la récupération des activités : \(error)")
+            return []
         }
     }
     

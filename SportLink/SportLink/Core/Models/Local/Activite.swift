@@ -57,6 +57,7 @@ struct Activite: Identifiable, Codable {
     var date: PlageHoraire
     var nbJoueursRecherches: Int
     var participants: [UtilisateurID]
+    var description: String
     var statut: StatutActivite
     var invitationsOuvertes: Bool
     var messages: [MessageID]
@@ -69,6 +70,7 @@ struct Activite: Identifiable, Codable {
         date: DateInterval,
         nbJoueursRecherches: Int,
         participants: [UtilisateurID],
+        description: String,
         statut: StatutActivite,
         invitationsOuvertes: Bool,
         messages: [MessageID]
@@ -80,6 +82,7 @@ struct Activite: Identifiable, Codable {
         self.date = PlageHoraire(debut: date.start, fin: date.end)
         self.nbJoueursRecherches = nbJoueursRecherches
         self.participants = participants
+        self.description = description
         self.statut = statut
         self.invitationsOuvertes = invitationsOuvertes
         self.messages = messages
@@ -97,6 +100,7 @@ extension Activite {
             date: date,
             nbJoueursRecherches: nbJoueursRecherches,
             participants: participants.map { $0.valeur },
+            description: description,
             statut: statut.rawValue,
             invitationsOuvertes: invitationsOuvertes,
             messages: messages.map { $0.valeur }

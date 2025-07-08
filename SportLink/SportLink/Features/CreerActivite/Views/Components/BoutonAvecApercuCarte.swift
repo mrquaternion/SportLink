@@ -22,39 +22,29 @@ struct BoutonAvecApercuCarte: View {
         }
         .sheet(isPresented: $montrerCarte) {
             NavigationView {
-                VStack(spacing: 16) {
-                    Text("Select a marker")
-                        .font(.headline)
-                        .padding(.top, 40)
-
-                    Divider()
-
-                    // Carte
-                    CarteSelectionInfrastructure(sportChoisis: $sportChoisis, infraChoisie: $infraChoisie)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color.black, lineWidth: 1)
-                        )
-                        .padding(.horizontal)
-
-                    Spacer()
-
-                    Button {
-                        montrerCarte = false
-                    } label: {
-                        Text("Close")
-                            .padding(.horizontal, 20)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(Color("CouleurParDefaut"))
-                        
+                // Carte
+                VStack {
+                    CarteSelectionInfrastructure(
+                        sportChoisis: $sportChoisis,
+                        infraChoisie: $infraChoisie
+                    )
                 }
-                .background(.ultraThinMaterial)
+                .navigationTitle("Select a marker")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Done") {
+                            montrerCarte = false
+                        }
+                        .fontWeight(.medium)
+                        .foregroundStyle(Color("CouleurParDefaut"))
+                    }
+                }
+                .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
             }
             .presentationDetents([.large])
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(20)
+            .presentationCornerRadius(30)
         }
     }
 }
@@ -63,3 +53,4 @@ struct BoutonAvecApercuCarte: View {
     BoutonAvecApercuCarte(sportChoisis: .constant(["All"]), infraChoisie: .constant(nil))
         .environmentObject(DonneesEmplacementService())
 }
+

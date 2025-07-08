@@ -23,10 +23,7 @@ struct CarteSelectionInfrastructure: View {
     @State private var parcSelectionne: Parc?
     @State private var infraSelectionnee: Infrastructure?
     @State private var aInteragiAvecCarte = false
-    @State private var deselectionnerAnnotation = false
     @State private var typeDeCarteSelectionne: TypeDeCarte = .standard
-    @State private var infraSelectionneeEnProgres = false
-    
     @Binding var sportChoisis: Set<String>
     @Binding var infraChoisie: Infrastructure?
     
@@ -40,10 +37,8 @@ struct CarteSelectionInfrastructure: View {
             parcSelectionne: $parcSelectionne,
             infraSelectionnee: $infraSelectionnee,
             aInteragiAvecCarte: $aInteragiAvecCarte,
-            deselectionnerAnnotation: $deselectionnerAnnotation,
             typeDeCarteSelectionne: $typeDeCarteSelectionne,
-            filtresSelectionnes: $sportChoisis,
-            infraSelectionneeEnProgres: $infraSelectionneeEnProgres
+            filtresSelectionnes: $sportChoisis
         )
         .ignoresSafeArea(.all)
         .onChange(of: infraSelectionnee?.id) {

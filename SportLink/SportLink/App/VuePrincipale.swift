@@ -17,7 +17,6 @@ enum Onglets: Int {
 }
 
 struct VuePrincipale: View {
-    
     @EnvironmentObject var emplacementsVM: DonneesEmplacementService
     
     @State var estPresente = false

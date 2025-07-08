@@ -11,8 +11,8 @@ struct FenetreModaleFlottante<Content: View>: View {
     @Binding var estPresente: Bool
     let content: Content
 
-    init(isPresented: Binding<Bool>, @ViewBuilder content: () -> Content) {
-        self._estPresente = isPresented
+    init(estPresente: Binding<Bool>, @ViewBuilder content: () -> Content) {
+        self._estPresente = estPresente
         self.content = content()
     }
 
@@ -30,7 +30,7 @@ struct FenetreModaleFlottante<Content: View>: View {
                 VStack {
                     content
                 }
-                .padding()
+
                 .background(Color.white)
                 .cornerRadius(12)
                 .shadow(radius: 8)
