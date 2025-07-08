@@ -30,6 +30,7 @@ struct CreerActiviteVue: View {
     private let dateMin = Date.now
     private let dateMax = Calendar.current.date(byAdding: .weekOfYear, value: 4, to: Date())!
     private let texteLimite = 40
+    @State private var description: String = ""
 
     var body: some View {
         NavigationStack {
@@ -78,6 +79,10 @@ struct CreerActiviteVue: View {
                         text: texteInvitations,
                         action: { overlayActif = .invites }
                     )
+                    
+                    BoiteDescription(description: $description, nombreMotsMax: 50)
+
+
                     HStack {
                         Spacer()
                         Button("Invite teammates") { /* à compléter */ }
