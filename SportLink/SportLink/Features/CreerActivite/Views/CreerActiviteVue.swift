@@ -40,96 +40,6 @@ struct CreerActiviteVue: View {
     @State private var overlayActif: ActiveOverlay = .none
     @State private var sportChoisis: Set<String> = [Sport.soccer.nom.capitalized]
     @State private var infraChoisie: Infrastructure? = nil
-<<<<<<< HEAD
-    private let dateMin = Date.now
-    private let dateMax = Calendar.current.date(byAdding: .weekOfYear, value: 4, to: Date())!
-    private let texteLimite = 40
-    @State private var description: String = ""
-
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    ChampTitre(
-                        titre: $titre,
-                        overlayActif: $overlayActif,
-                        texteLimite: texteLimite
-                    )
-                    
-                    BoutonOptionOverlay(
-                        icon: sportSelectionne.icone,
-                        text: sportSelectionne.nom.capitalized,
-                        action: { overlayActif = .sport }
-                    )
-                    BoutonOptionOverlay(
-                        icon: "calendar",
-                        text: dateEnString,
-                        action: { overlayActif = .date }
-                    )
-                    BoutonOptionOverlay(
-                        icon: "clock",
-                        text: "\(debutDuTempsEnString) to \(finDuTempsEnString)",
-                        action: { overlayActif = .temps }
-                    )
-                    
-                    VStack(spacing: 8) {
-                        BoutonAvecApercuCarte(sportChoisis: $sportChoisis, infraChoisie: $infraChoisie)
-                            .padding(.horizontal)
-                            .environmentObject(emplacementsVM)
-                        
-                        Text((infraChoisie != nil) ? "A marker has been selected" : "Click on the map to select a marker")
-                            .font(.caption)
-                            .foregroundStyle(Color(red: 0.3, green: 0.3, blue: 0.3))
-                        
-                    }
-                    
-                    BoutonOptionOverlay(
-                        icon: "person.3",
-                        text: texteParticipants,
-                        action: { overlayActif = .participants }
-                    )
-                    BoutonOptionOverlay(
-                        icon: "person.2.badge.plus",
-                        text: texteInvitations,
-                        action: { overlayActif = .invites }
-                    )
-                    
-                    BoiteDescription(description: $description, nombreMotsMax: 50)
-
-
-                    HStack {
-                        Spacer()
-                        Button("Invite teammates") { /* à compléter */ }
-                            .buttonStyle(.bordered)
-                            .tint(.red)
-                        Spacer()
-                    }.padding(.horizontal)
-                    
-                    Spacer()
-                    
-                    // MARK: Bouton de création de l'activité
-                    Button {
-                        Task {
-                            await vm.creerActivite(
-                                nbParticipants: nbParticipants,
-                                permettreInvitations: permettreInvitations,
-                                tempsDebut: tempsDebut,
-                                tempsFin: tempsFin,
-                                dateSelectionnee: dateSelectionnee,
-                                titre: titre,
-                                sportSelectionne: sportSelectionne
-                            )
-                            dismiss()
-                        }
-                    } label: {
-                        Text("Create")
-                            .font(.title3)
-                            .fontWeight(.medium)
-                            .padding(.horizontal, 20)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.red)
-=======
     @State private var dateMin: Date
     @State private var dateMax: Date
     private let titreLimite = 40
@@ -180,7 +90,6 @@ struct CreerActiviteVue: View {
             .onChange(of: tempsDebut) { _, nv in
                 if tempsFin < nv {
                     tempsFin = Calendar.current.date(byAdding: .hour, value: 1, to: nv)!
->>>>>>> e37782140e2d0013f03fcc35eea244aeaa8f2f14
                 }
             }
             .toolbar {
