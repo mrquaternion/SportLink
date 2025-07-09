@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ExplorerVue: View {
     @EnvironmentObject var emplacementsVM: DonneesEmplacementService
-    @EnvironmentObject var serviceActivites: ServiceActivites
     
     @State private var modeAffichage: ModeAffichage = .liste
     

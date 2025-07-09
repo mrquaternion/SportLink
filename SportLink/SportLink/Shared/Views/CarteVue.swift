@@ -71,10 +71,8 @@ struct CarteVue: UIViewRepresentable {
     @Binding var parcSelectionne: Parc?
     @Binding var infraSelectionnee: Infrastructure?
     @Binding var aInteragiAvecCarte: Bool
-    @Binding var deselectionnerAnnotation: Bool
     @Binding var typeDeCarteSelectionne: TypeDeCarte
     @Binding var filtresSelectionnes: Set<String>
-    @Binding var infraSelectionneeEnProgres: Bool
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -100,8 +98,8 @@ struct CarteVue: UIViewRepresentable {
     // MARK: Mise à jour de la map selon les changements SwiftUI
     func updateUIView(_ uiVue: MKMapView, context: Context) {
         // 1. Éviter la mise a jour si c'est juste une sélection d'infrastructure
-        if infraSelectionneeEnProgres {
-            infraSelectionneeEnProgres = false
+        if context.coordinator.skipProchainUpdate {
+            context.coordinator.skipProchainUpdate = false
             return
         }
         
@@ -168,13 +166,12 @@ struct CarteVue: UIViewRepresentable {
             uiVue.addAnnotations(parcAnnotations)
         }
         
-        // 6. Retirer l'annotation quand le sheet concerné est dismissed
-        if deselectionnerAnnotation {
+        // 6. Si on n’a plus d’infraSelectionnee, on force la déselection des pins
+        if infraSelectionnee == nil {
             for annotation in uiVue.selectedAnnotations {
-                uiVue.deselectAnnotation(annotation, animated: false)
-            }
-            DispatchQueue.main.async {
-                deselectionnerAnnotation = false
+                if annotation is InfraAnnotation {
+                    uiVue.deselectAnnotation(annotation, animated: false)
+                }
             }
         }
         
@@ -187,7 +184,7 @@ struct CarteVue: UIViewRepresentable {
     class Coordinator: NSObject, MKMapViewDelegate {
         var parent: CarteVue
         let threshold: CLLocationDegrees = 0.025
-        var isInfraSelectionInProgress = false // flag pour empecher de updateView de se déclencher lorsqu'un infra est sélectionné
+        var skipProchainUpdate = false
 
         init(_ parent: CarteVue) {
             self.parent = parent
@@ -292,18 +289,25 @@ struct CarteVue: UIViewRepresentable {
             }
             
             if let infraAnnotation = vue.annotation as? InfraAnnotation {
-                // 1. Activer le drapeau
-                parent.infraSelectionneeEnProgres = true
+                // Activer le drapeau
+                skipProchainUpdate = true
                
-               // 2. Mettre à jour la variable d'état (ce qui déclenchera updateUIView)
-               parent.infraSelectionnee = infraAnnotation.infra
-               
-               // 3. Le reste de votre logique de recentrage
-               let lat = infraAnnotation.coordinate.latitude - mapVue.region.span.longitudeDelta * 0.1
-               let lon = infraAnnotation.coordinate.longitude
-               let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                // Mettre à jour la variable d'état (déclenche updateUIView)
+                parent.infraSelectionnee = infraAnnotation.infra
+                let lat = infraAnnotation.coordinate.latitude - mapVue.region.span.longitudeDelta * 0.1
+                let lon = infraAnnotation.coordinate.longitude
+                let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
                                                span: mapVue.region.span)
-               mapVue.setRegion(region, animated: true)
+                mapVue.setRegion(region, animated: true)
+            }
+        }
+        
+        // Listener de la deselection d'un marqueur infra
+        func mapView(_ mapVue: MKMapView, didDeselect vue: MKAnnotationView) {
+            if vue.annotation is InfraAnnotation {
+                DispatchQueue.main.async {
+                    self.parent.infraSelectionnee = nil
+                }
             }
         }
 

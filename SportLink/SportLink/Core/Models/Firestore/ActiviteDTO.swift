@@ -18,14 +18,15 @@ struct ActiviteDTO: Identifiable, Codable {
     var date: PlageHoraire
     var nbJoueursRecherches: Int
     var participants: [String]
+    var description: String
     var statut: Int
     var invitationsOuvertes: Bool
     var messages: [String]
 }
 
 extension ActiviteDTO {
-    func versActivite() throws -> Activite {
-        try Activite(
+    func versActivite() -> Activite {
+        Activite(
             titre: titre,
             organisateurId: UtilisateurID(valeur: organisateurId),
             infraId: infraId,
@@ -33,6 +34,7 @@ extension ActiviteDTO {
             date: date.interval,
             nbJoueursRecherches: nbJoueursRecherches,
             participants: participants.map { UtilisateurID(valeur: $0) },
+            description: description,
             statut: StatutActivite(rawValue: statut) ?? .ouvert,
             invitationsOuvertes: invitationsOuvertes,
             messages: messages.map { MessageID(valeur: $0) }

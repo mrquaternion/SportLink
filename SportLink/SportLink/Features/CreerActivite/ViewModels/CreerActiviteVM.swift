@@ -13,7 +13,7 @@ class CreerActiviteVM: ObservableObject {
     @Published var imageApercu: UIImage?
     @StateObject var serviceActivites = ServiceActivites()
     private let gestionnaireLocalisation = GestionnaireLocalisation.instance
-    private let locParDefaut = CLLocationCoordinate2D(latitude: 45.4215, longitude: -75.6972) // Ottawa
+    private let locParDefaut = CLLocationCoordinate2D(latitude: 45.4215, longitude: -75.6972) // Ottawa fallback
     var infraChoisie: Infrastructure?
     
     func genererApercu() {
@@ -59,21 +59,13 @@ class CreerActiviteVM: ObservableObject {
     func creerActivite(
         nbParticipants: Int?,
         permettreInvitations: Bool?,
+        description: String,
         tempsDebut: Date,
         tempsFin: Date,
         dateSelectionnee: Date,
         titre: String,
         sportSelectionne: Sport
     ) async {
-        guard let infra = infraChoisie else {
-            print("Aucune infrastructure sélectionnée.")
-            return
-        }
-        guard let nb = nbParticipants, let autoriserInvitations = permettreInvitations else {
-            print("Veuillez sélectionner tous les champs nécessaires.")
-            return
-        }
-        
         // Créer l'intervalle de date
         let calendrier = Calendar.current
         let dateDebut = calendrier.date(bySettingHour: calendrier.component(.hour, from: tempsDebut),
@@ -91,16 +83,36 @@ class CreerActiviteVM: ObservableObject {
         let nvActivite = Activite(
             titre: titre,
             organisateurId: UtilisateurID(valeur: "mockID"), // remplace par le bon ID utilisateur
-            infraId: infra.id,
+            infraId: infraChoisie!.id, // unwrappable a cause de la logiuque dans la vue
             sport: sportSelectionne,
             date: interval,
-            nbJoueursRecherches: nb,
+            nbJoueursRecherches: nbParticipants!, // unwrappable a cause de la logiuque dans la vue
             participants: [],
+            description: description,
             statut: .ouvert,
-            invitationsOuvertes: autoriserInvitations,
+            invitationsOuvertes: permettreInvitations!, // unwrappable a cause de la logiuque dans la vue
             messages: []
         )
         
         await serviceActivites.sauvegarderActiviteAsync(activite: nvActivite)
+    }
+    
+    func existeActivitesDejaCreer(for infraId: String, debutActivite: Date, finActivite: Date) async -> Bool {
+        let activitesConverties = await serviceActivites.fetchActivitesParInfrastructure(infraId: infraId)
+        
+        let calendrier = Calendar.current
+        let intervalFiltre = DateInterval(start: debutActivite, end: finActivite)
+        
+        let activitesFiltrees = activitesConverties
+            .filter { calendrier.isDate($0.date.debut, inSameDayAs: debutActivite) }
+            .filter { activite in
+                let intervalAct = DateInterval(start: activite.date.debut, end: activite.date.fin)
+                return intervalAct.intersects(intervalFiltre)
+            }
+        
+        if activitesFiltrees.isEmpty {
+            return false
+        }
+        return true
     }
 }
