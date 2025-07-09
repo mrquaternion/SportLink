@@ -149,7 +149,7 @@
     - Conception de la vue de la page *Explorer*.
     - Conception de la vue de la page *Création d’événement*.
 
-
+---
 
 ## Semaine 8 (22-28 juin)
 
@@ -177,9 +177,31 @@
     - Faire le mode vue de la page *Home*
     - Faire le mode vue de la page *Profil*
 
-## Semaine 9 (29 juin - 5 juillet)
+---
 
-## Semaine 10
+## Semaine 9 (29 juin – 5 juillet)
+
+??? note "Étapes faites"
+    - [x] Finalisation du mode *Carte* de la vue *Explorer*.
+    - [x] Finalisation de la vue *Créer évènement*.
+    - [x] Test d'une première implémentation de la création d'évènement avec la base de données *Firebase*.
+
+!!! info "Notes"
+    - Nous avons réussi à implémenter une carte intelligente qui filtre dynamiquement les infrastructures lors de la création d’un évènement. Lorsqu’un sport est sélectionné, seuls les pointeurs correspondant aux parcs offrant les infrastructures pour ce sport sont affichés sur la carte.
+    - La page *Home* sera réalisée en dernier.
+    - La page *Profil* n’est pas encore prioritaire.
+
+!!! warning "Difficultés rencontrées"
+    - Il reste complexe de s'assurer qu'un même évènement ne puisse pas être créé pour un même créneau horaire, au même endroit et sur la même infrastructure. Une logique de vérification supplémentaire devra être mise en place pour éviter ces doublons.
+
+!!! abstract "Prochaines étapes"
+    - Développer le mode vue de la page *Activités*.
+    - Développer le mode vue de la page *Profil*.
+
+
+---
+
+## Semaine 10 (6-12 juillet)
 
 ## Semaine 11
 
