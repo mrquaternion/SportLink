@@ -15,16 +15,21 @@ struct ActivitesVue: View {
     var body: some View {
         VStack(spacing: 0) {
             OngletsActivites(selection: $selection)
-
-            switch selection {
-            case .hosted:
-                HostedVue()
-            case .going:
-                GoingVue()
-            case .bookmarked:
-                BookmarkedVue()
+                .zIndex(1)
+            
+            Group {
+                switch selection {
+                case .hosted:
+                    HostedVue()
+                case .going:
+                    GoingVue()
+                case .bookmarked:
+                    BookmarkedVue()
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .edgesIgnoringSafeArea(.bottom)
     }
 }
 
