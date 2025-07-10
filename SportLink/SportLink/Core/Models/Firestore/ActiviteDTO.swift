@@ -26,7 +26,7 @@ struct ActiviteDTO: Identifiable, Codable {
 
 extension ActiviteDTO {
     func versActivite() -> Activite {
-        var activite = Activite(
+        Activite(
             titre: titre,
             organisateurId: UtilisateurID(valeur: organisateurId),
             infraId: infraId,
@@ -39,7 +39,5 @@ extension ActiviteDTO {
             invitationsOuvertes: invitationsOuvertes,
             messages: messages.map { MessageID(valeur: $0) }
         )
-        activite.id = id // ID Firestore
-        return activite
     }
 }

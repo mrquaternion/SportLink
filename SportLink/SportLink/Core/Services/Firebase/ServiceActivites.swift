@@ -23,16 +23,14 @@ class ServiceActivites: ObservableObject {
             .filter { calendrier.isDate($0.date.debut, inSameDayAs: date) }
             .sorted { $0.date.debut < $1.date.debut }
         
-        /* Assigner un ID localement
+        // Assigner un ID localement
         let activites = activitesFiltrees.map { activite in
             var activiteMutable = activite
             activiteMutable.id = UUID().uuidString
             return activiteMutable
         }
 
-        self.activites = activites */
-        
-        self.activites = activitesFiltrees
+        self.activites = activites
     }
     
     func fetchActivitesParInfrastructure(infraId: String) async -> [Activite] {
@@ -68,7 +66,7 @@ class ServiceActivites: ObservableObject {
     }
     
     // Pour HostedVue
-    func fetchActivitesParOrganisateur(organisateurId: String) async -> [Activite] {
+    func fetchActivitesParOrganisateur(organisateurId: String) async {
         do {
             let requeteSnapshot = try await Firestore.firestore()
                 .collection("activites")
@@ -79,12 +77,17 @@ class ServiceActivites: ObservableObject {
                 try doc.data(as: ActiviteDTO.self)
             }
 
-            return dtos.map { $0.versActivite() }
-
+            let activitesConverties = dtos.map { $0.versActivite() }
+            
+            let activites = activitesConverties.map { activite in
+                var activiteMutable = activite
+                activiteMutable.id = UUID().uuidString
+                return activiteMutable
+            }
+            
+            self.activites = activites
         } catch {
             print("Erreur Hosted : \(error)")
-            return []
         }
     }
-
 }
