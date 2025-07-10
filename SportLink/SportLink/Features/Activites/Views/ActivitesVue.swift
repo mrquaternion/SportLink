@@ -6,16 +6,15 @@
 //
 
 
+
 import SwiftUI
 
 struct ActivitesVue: View {
     @State private var selection: OngletsActivites.Onglet = .hosted
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             OngletsActivites(selection: $selection)
-
-            Spacer()
 
             switch selection {
             case .hosted:
@@ -25,8 +24,6 @@ struct ActivitesVue: View {
             case .bookmarked:
                 BookmarkedVue()
             }
-
-            Spacer()
         }
     }
 }
@@ -34,4 +31,6 @@ struct ActivitesVue: View {
 #Preview {
     ActivitesVue()
 }
+
+
 

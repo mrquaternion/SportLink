@@ -23,14 +23,16 @@ class ServiceActivites: ObservableObject {
             .filter { calendrier.isDate($0.date.debut, inSameDayAs: date) }
             .sorted { $0.date.debut < $1.date.debut }
         
-        // Assigner un ID localement
+        /* Assigner un ID localement
         let activites = activitesFiltrees.map { activite in
             var activiteMutable = activite
             activiteMutable.id = UUID().uuidString
             return activiteMutable
         }
 
-        self.activites = activites
+        self.activites = activites */
+        
+        self.activites = activitesFiltrees
     }
     
     func fetchActivitesParInfrastructure(infraId: String) async -> [Activite] {
@@ -64,4 +66,25 @@ class ServiceActivites: ObservableObject {
             print("Erreur lors de la sauvegarde de l’activité :", error)
         }
     }
+    
+    // Pour HostedVue
+    func fetchActivitesParOrganisateur(organisateurId: String) async -> [Activite] {
+        do {
+            let requeteSnapshot = try await Firestore.firestore()
+                .collection("activites")
+                .whereField("organisateurId", isEqualTo: organisateurId)
+                .getDocuments()
+
+            let dtos = try requeteSnapshot.documents.map { doc in
+                try doc.data(as: ActiviteDTO.self)
+            }
+
+            return dtos.map { $0.versActivite() }
+
+        } catch {
+            print("Erreur Hosted : \(error)")
+            return []
+        }
+    }
+
 }
