@@ -28,7 +28,7 @@ struct OngletsActivites: View {
                         .fontWeight(selection == onglet ? .bold : .regular)
                         .foregroundColor(selection == onglet ? .white : .black)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
+                        .padding(.vertical, 10)
                         .background(selection == onglet ? Color.red : Color.red.opacity(0.2))
                 }
             }

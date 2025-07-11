@@ -15,7 +15,7 @@ struct ActivitesVue: View {
     var body: some View {
         VStack {
             OngletsActivites(selection: $selection)
-                .padding(.top, 50)
+                .padding(.top, 40)
                 .zIndex(1)
             
             Group {
