@@ -35,7 +35,9 @@ struct BoutonSwitchExplorer: View {
 
             HStack(spacing: 15) {
                 Button {
-                    modeAffichage = .liste
+                    withAnimation(.linear(duration: 0.2).delay(0.1)) {
+                        modeAffichage = .liste
+                    }
                 } label: {
                     Text("List")
                         .frame(width: buttonWidth, height: buttonHeight)
@@ -44,7 +46,7 @@ struct BoutonSwitchExplorer: View {
                 }
 
                 Button {
-                    withAnimation(.easeInOut(duration: 0.5)) {
+                    withAnimation(.linear(duration: 0.2).delay(0.1)) {
                         modeAffichage = .carte
                     }
                 } label: {

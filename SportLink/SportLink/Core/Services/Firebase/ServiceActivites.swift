@@ -14,6 +14,31 @@ import FirebaseFirestore
 class ServiceActivites: ObservableObject {
     @Published var activites: [Activite] = []
     
+    func fetchTousActivites() async {
+        do {
+            let requeteSnapshot = try await Firestore.firestore()
+                .collection("activites")
+                .getDocuments()
+            
+            let dtos = try requeteSnapshot.documents.map { document in
+                try document.data(as: ActiviteDTO.self)
+            }
+
+            let activitesConverties = dtos.map { $0.versActivite() }
+            
+            // Assigner un ID localement
+            let activites = activitesConverties.map { activite in
+                var activiteMutable = activite
+                activiteMutable.id = UUID().uuidString
+                return activiteMutable
+            }
+            
+            self.activites = activites
+        } catch {
+            print("Erreur lors de la récupération des activités : \(error)")
+        }
+    }
+    
     func fetchActivitesParInfrastructureEtDateAsync(infraId: String, date: Date) async {
         let activitesConverties = await fetchActivitesParInfrastructure(infraId: infraId)
         
@@ -53,19 +78,6 @@ class ServiceActivites: ObservableObject {
         }
     }
     
-    func sauvegarderActiviteAsync(activite: Activite) async {
-        let dto = activite.versDTO()
-        do {
-            let ref = try Firestore.firestore()
-                .collection("activites")
-                .addDocument(from: dto)
-            print("Activité sauvegardée avec l’ID :", ref.documentID)
-        } catch {
-            print("Erreur lors de la sauvegarde de l’activité :", error)
-        }
-    }
-    
-    // Pour HostedVue
     func fetchActivitesParOrganisateur(organisateurId: String) async {
         do {
             let requeteSnapshot = try await Firestore.firestore()
@@ -88,6 +100,18 @@ class ServiceActivites: ObservableObject {
             self.activites = activites
         } catch {
             print("Erreur Hosted : \(error)")
+        }
+    }
+    
+    func sauvegarderActiviteAsync(activite: Activite) async {
+        let dto = activite.versDTO()
+        do {
+            let ref = try Firestore.firestore()
+                .collection("activites")
+                .addDocument(from: dto)
+            print("Activité sauvegardée avec l’ID :", ref.documentID)
+        } catch {
+            print("Erreur lors de la sauvegarde de l’activité :", error)
         }
     }
 }

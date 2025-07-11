@@ -9,9 +9,7 @@ import SwiftUI
 
 struct ExplorerVue: View {
     @EnvironmentObject var emplacementsVM: DonneesEmplacementService
-    
     @State private var modeAffichage: ModeAffichage = .liste
-    
     @Binding var utilisateur: Utilisateur
 
     var body: some View {
@@ -19,6 +17,7 @@ struct ExplorerVue: View {
             VStack {
                 if modeAffichage == .liste {
                     ExplorerListeVue(utilisateur: $utilisateur)
+                        .environmentObject(emplacementsVM)
                 } else {
                     ExplorerCarteVue(utilisateur: $utilisateur)
                         .environmentObject(emplacementsVM)
@@ -32,6 +31,7 @@ struct ExplorerVue: View {
                     .padding(.bottom, 20)
             }
         }
+        
     }
 }
 

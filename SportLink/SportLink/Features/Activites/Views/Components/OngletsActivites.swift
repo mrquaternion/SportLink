@@ -20,23 +20,25 @@ struct OngletsActivites: View {
     var body: some View {
         HStack(spacing: 0) {
             ForEach(Onglet.allCases, id: \.self) { onglet in
-                Button(action: {
+                Button {
                     selection = onglet
-                }) {
+                } label: {
                     Text(onglet.rawValue)
-                        .font(.system(size: 15, weight: .bold))
+                        .font(.system(size: 15))
+                        .fontWeight(selection == onglet ? .bold : .regular)
                         .foregroundColor(selection == onglet ? .white : .black)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
+                        .padding(.vertical, 12)
                         .background(selection == onglet ? Color.red : Color.red.opacity(0.2))
                 }
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding()
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .padding(.horizontal, 40)
     }
 }
 
 #Preview {
     OngletsActivites(selection: .constant(.hosted))
+        .environmentObject(DonneesEmplacementService())
 }

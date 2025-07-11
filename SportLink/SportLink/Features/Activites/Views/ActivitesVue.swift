@@ -13,8 +13,9 @@ struct ActivitesVue: View {
     @State private var selection: OngletsActivites.Onglet = .hosted
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack {
             OngletsActivites(selection: $selection)
+                .padding(.top, 50)
                 .zIndex(1)
             
             Group {
@@ -35,6 +36,7 @@ struct ActivitesVue: View {
 
 #Preview {
     ActivitesVue()
+        .environmentObject(DonneesEmplacementService())
 }
 
 

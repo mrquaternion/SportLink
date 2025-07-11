@@ -41,11 +41,34 @@ struct ActiviteID: Hashable, Codable {
 struct PlageHoraire: Codable {
     let debut: Date
     let fin: Date
-    
+
     var interval: DateInterval {
         DateInterval(start: debut, end: fin)
     }
+
+    var affichage: String {
+        struct Format {
+            static let date: DateFormatter = {
+                let f = DateFormatter()
+                f.locale = Locale(identifier: "en_US_POSIX")
+                f.dateFormat = "MMM d"    // ex. "Jul 10"
+                return f
+            }()
+            static let temps: DateFormatter = {
+                let f = DateFormatter()
+                f.locale = Locale(identifier: "en_US_POSIX")
+                f.dateFormat = "h:mm a"   // ex. "9:05 PM"
+                return f
+            }()
+        }
+
+        let dateStr  = Format.date.string(from: debut)
+        let debutStr = Format.temps.string(from: debut)
+        let finStr   = Format.temps.string(from: fin)
+        return "\(dateStr), \(debutStr)-\(finStr)"
+    }
 }
+
 
 struct Activite: Identifiable, Codable {
     @DocumentID var id: String?
