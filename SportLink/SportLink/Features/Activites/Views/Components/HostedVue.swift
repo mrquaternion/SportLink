@@ -20,7 +20,7 @@ struct HostedVue: View {
                         ActiviteBoite(
                             titre: activite.titre,
                             sport: Sport.depuisNom(activite.sport),
-                            infraNom: parc.nom ?? "Nom inconnu", // ✅ On passe le nom du parc
+                            infraNom: parc.nom ?? "Nom inconnu", 
                             date: activite.date.interval,
                             nbPlacesRestantes: activite.nbJoueursRecherches,
                             imageApercu: nil

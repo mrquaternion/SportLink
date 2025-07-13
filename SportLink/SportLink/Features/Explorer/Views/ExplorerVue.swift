@@ -16,8 +16,7 @@ struct ExplorerVue: View {
         ZStack {
             VStack {
                 if modeAffichage == .liste {
-                    ExplorerListeVue(utilisateur: $utilisateur)
-                        .environmentObject(emplacementsVM)
+                    ExplorerListeVue(utilisateur: $utilisateur, emplacementsVM: emplacementsVM)
                 } else {
                     ExplorerCarteVue(utilisateur: $utilisateur)
                         .environmentObject(emplacementsVM)
@@ -31,7 +30,7 @@ struct ExplorerVue: View {
                     .padding(.bottom, 20)
             }
         }
-        
+        .ignoresSafeArea(.keyboard)
     }
 }
 

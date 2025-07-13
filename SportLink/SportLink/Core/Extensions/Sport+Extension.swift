@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum Sport: String, Decodable, CaseIterable {
     case soccer
@@ -13,11 +14,9 @@ enum Sport: String, Decodable, CaseIterable {
     case tennis
     case football
     case volleyball
-    case badminton
     case baseball
     case rugby
     case pingpong
-    case ultimateFrisbee
     case petanque
     
     var nom: String {
@@ -27,11 +26,9 @@ enum Sport: String, Decodable, CaseIterable {
         case .tennis: return "tennis"
         case .football: return "football"
         case .volleyball: return "volleyball"
-        case .badminton: return "badminton"
         case .baseball: return "balle"
         case .rugby: return "rugby"
         case .pingpong: return "ping-pong"
-        case .ultimateFrisbee: return "ultimate frisbee"
         case .petanque: return "pétanque"
         }
     }
@@ -46,8 +43,6 @@ enum Sport: String, Decodable, CaseIterable {
         case .rugby: return "rugbyball.fill"
         case .football: return "american.football.fill"
         case .pingpong: return "figure.table.tennis"
-        case .badminton: return "figure.badminton"
-        case .ultimateFrisbee: return "figure.disc.sports"
         case .petanque: return "target"
         }
     }
@@ -60,12 +55,26 @@ enum Sport: String, Decodable, CaseIterable {
         case .football: return "🏈"
         case .rugby: return "🏉"
         case .pingpong: return "🏓"
-        case .ultimateFrisbee: return "🥏"
         case .volleyball: return "🏐"
         case .baseball: return "⚾️"
-        case .badminton: return "🏸"
         case .petanque: return "🎯"
         }
+    }
+    
+    var arriereplan: Image {
+        let imageStr: String
+        switch self {
+        case .soccer: imageStr = "soccer"
+        case .baseball: imageStr = "baseball"
+        case .basketball: imageStr = "basketball"
+        case .volleyball: imageStr = "volleyball"
+        case .petanque: imageStr = "petanque"
+        case .pingpong: imageStr = "pingpong"
+        case .football: imageStr = "football"
+        case .rugby: imageStr = "football"
+        case .tennis: imageStr = "tennis"
+        }
+        return Image(imageStr + "-min")
     }
 }
 

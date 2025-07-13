@@ -42,7 +42,7 @@ struct CreerActiviteVue: View {
     @State private var infraChoisie: Infrastructure? = nil
     @State private var dateMin: Date
     @State private var dateMax: Date
-    private let titreLimite = 40
+    private let titreLimite = 30
     private let descriptionLimite = 420
     @State private var montrerAlerteChevauchement = false
     
@@ -92,12 +92,8 @@ struct CreerActiviteVue: View {
                     tempsFin = Calendar.current.date(byAdding: .hour, value: 1, to: nv)!
                 }
             }
-            .toolbar {
-                contenuToolbar
-            }
-            .safeAreaInset(edge: .bottom, alignment: .center) {
-                barAction
-            }
+            .toolbar { contenuToolbar }
+            .safeAreaInset(edge: .bottom, alignment: .center) { barAction }
         }
         .overlay(vueOverlay)
     }
@@ -402,34 +398,34 @@ struct CreerActiviteVue: View {
                 .padding(.bottom, 10)
                 
                 VStack(spacing: 0) {
-                  Divider()
-
-                  HStack(spacing: 0) {
-                    Button(action: {
-                        sportSelectionTemporaire = sportSelectionne
-                        overlayActif = .none
-                    }) {
-                      Text("Close")
-                        .frame(maxWidth: .infinity, maxHeight: 60)
-                    }
-                    .foregroundColor(.primary)
-                    .fontWeight(.semibold)
-
                     Divider()
-                      .frame(width: 1, height: 60)
 
-                    Button(action: {
-                      if let sportConfirme = sportSelectionTemporaire {
-                          sportSelectionne = sportConfirme
-                          sportChoisis = [sportConfirme.nom.capitalized]
-                      }
-                      overlayActif = .none
-                    }) {
-                      Text("OK")
-                        .frame(maxWidth: .infinity, maxHeight: 60)
+                      HStack(spacing: 0) {
+                        Button(action: {
+                            sportSelectionTemporaire = sportSelectionne
+                            overlayActif = .none
+                        }) {
+                          Text("Close")
+                            .frame(maxWidth: .infinity, maxHeight: 60)
+                        }
+                        .foregroundColor(.primary)
+                        .fontWeight(.semibold)
+
+                        Divider()
+                          .frame(width: 1, height: 60)
+
+                        Button(action: {
+                          if let sportConfirme = sportSelectionTemporaire {
+                              sportSelectionne = sportConfirme
+                              sportChoisis = [sportConfirme.nom.capitalized]
+                          }
+                          overlayActif = .none
+                        }) {
+                          Text("OK")
+                            .frame(maxWidth: .infinity, maxHeight: 60)
+                        }
+                        .foregroundColor(Color("CouleurParDefaut"))
                     }
-                    .foregroundColor(Color("CouleurParDefaut"))
-                  }
                 }
             }
             .frame(width: 300)
@@ -655,74 +651,74 @@ struct CreerActiviteVue: View {
     }
 
     private var pickerPourInvites: some View {
-      FenetreModaleFlottante(estPresente: Binding(
+        FenetreModaleFlottante(estPresente: Binding(
           get: { overlayActif == .invites },
           set: { if !$0 { overlayActif = .none } }
       )) {
-        VStack(spacing: 0) {
           VStack(spacing: 0) {
-            Text("Guests invitations")
-              .font(.title3)
-              .fontWeight(.semibold)
+              VStack(spacing: 0) {
+                  Text("Guests invitations")
+                      .font(.title3)
+                      .fontWeight(.semibold)
 
-            VStack(spacing: 10) {
-              Button {
-                permettreInvitationsSelectionTemporaire = true
-              } label: {
-                Label("Authorize", systemImage: "figure.child.and.lock.open.fill")
-                  .frame(maxWidth: .infinity, alignment: .leading)
-                  .padding()
-                  .background(Color(.systemGray6))
-                  .foregroundColor(permettreInvitationsSelectionTemporaire ? Color("CouleurParDefaut") : .black)
-                  .cornerRadius(8)
+                  VStack(spacing: 10) {
+                      Button {
+                          permettreInvitationsSelectionTemporaire = true
+                      } label: {
+                          Label("Open to guests invitations", systemImage: "figure.child.and.lock.open.fill")
+                              .frame(maxWidth: .infinity, alignment: .leading)
+                              .padding()
+                              .background(Color(.systemGray6))
+                                .foregroundColor(permettreInvitationsSelectionTemporaire ? Color("CouleurParDefaut") : .black)
+                                .cornerRadius(8)
+                      }
+                      .buttonStyle(.plain)
+
+                      Button {
+                          permettreInvitationsSelectionTemporaire = false
+                      } label: {
+                          Label("Close to guests invitations", systemImage: "figure.child.and.lock.fill")
+                              .frame(maxWidth: .infinity, alignment: .leading)
+                              .padding()
+                              .background(Color(.systemGray6))
+                              .foregroundColor(!permettreInvitationsSelectionTemporaire ? Color("CouleurParDefaut") : .black)
+                              .cornerRadius(8)
+                      }
+                      .buttonStyle(.plain)
+                  }
+                  .padding(.top, 20)
               }
-              .buttonStyle(.plain)
+              .padding([.top, .leading, .trailing], 20)
+              .padding(.bottom, 25)
 
-              Button {
-                permettreInvitationsSelectionTemporaire = false
-              } label: {
-                Label("Disallow", systemImage: "figure.child.and.lock.fill")
-                  .frame(maxWidth: .infinity, alignment: .leading)
-                  .padding()
-                  .background(Color(.systemGray6))
-                  .foregroundColor(!permettreInvitationsSelectionTemporaire ? Color("CouleurParDefaut") : .black)
-                  .cornerRadius(8)
+              // --- Barre Close / OK
+              Divider()
+              HStack(spacing: 0) {
+                  Button("Close") {
+                      if permettreInvitationsSelectionTemporaire && !permettreInvitations {
+                          permettreInvitationsSelectionTemporaire = false
+                      } else if !permettreInvitationsSelectionTemporaire && permettreInvitations {
+                          permettreInvitationsSelectionTemporaire = true
+                      }
+                      overlayActif = .none
+                  }
+                  .frame(maxWidth: .infinity, maxHeight: 60)
+                  .foregroundColor(.primary)
+                  .fontWeight(.semibold)
+
+                  Divider().frame(width: 1, height: 60)
+
+                  Button("OK") {
+                      permettreInvitations = permettreInvitationsSelectionTemporaire
+                      overlayActif = .none
+                  }
+                  .frame(maxWidth: .infinity, maxHeight: 60)
+                  .foregroundColor(Color("CouleurParDefaut"))
+                  .fontWeight(.semibold)
               }
-              .buttonStyle(.plain)
-            }
-            .padding(.top, 20)
           }
-          .padding([.top, .leading, .trailing], 30)
-          .padding(.bottom, 25)
-
-          // --- Barre Close / OK
-          Divider()
-          HStack(spacing: 0) {
-            Button("Close") {
-                if permettreInvitationsSelectionTemporaire && !permettreInvitations {
-                    permettreInvitationsSelectionTemporaire = false
-                } else if !permettreInvitationsSelectionTemporaire && permettreInvitations {
-                    permettreInvitationsSelectionTemporaire = true
-                }
-                overlayActif = .none
-            }
-            .frame(maxWidth: .infinity, maxHeight: 60)
-            .foregroundColor(.primary)
-            .fontWeight(.semibold)
-
-            Divider().frame(width: 1, height: 60)
-
-            Button("OK") {
-                permettreInvitations = permettreInvitationsSelectionTemporaire
-                overlayActif = .none
-            }
-            .frame(maxWidth: .infinity, maxHeight: 60)
-            .foregroundColor(Color("CouleurParDefaut"))
-            .fontWeight(.semibold)
-          }
+          .frame(width: 300)
         }
-        .frame(width: 300)
-      }
     }
 
 
@@ -744,7 +740,7 @@ struct CreerActiviteVue: View {
         }
     }
     private var texteInvitations: String {
-        return permettreInvitations ? "I authorize guests invitations" : "I disallow guests invitations"
+        return permettreInvitations ? "Open to guests invitations" : "Close to guests invitations"
     }
 }
 

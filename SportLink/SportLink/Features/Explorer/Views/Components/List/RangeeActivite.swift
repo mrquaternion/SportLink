@@ -9,103 +9,203 @@ import SwiftUI
 import MapKit
 
 struct RangeeActivite: View {
-    @EnvironmentObject private var emplacementsVM: DonneesEmplacementService
+    @EnvironmentObject var vm: ExplorerListeVM
     @State private var estFavoris = false
+    @Binding var afficherInfo: Bool
     @Binding var estSelectionnee: Bool
 
     let activite: Activite
+    let couleur = Color(red: 0.784, green: 0.231, blue: 0.216)
     let geolocalisation: CLLocationCoordinate2D?
-    private let vm = ExplorerListeVM()
 
     // Distance en kilomètres, ou nil si la géoloc n'est pas fournie
     private var distanceStr: String {
         guard
             let userLoc = geolocalisation,
-            let infraCoords = vm.obtenirInfrastructureObj(
-                pour: activite.infraId,
-                service: emplacementsVM
+            let infraCoords = vm.obtenirObjetInfrastructure(
+                pour: activite.infraId
             )?.coordonnees
         else {
             return ""
         }
         
         let dist = calculerDistanceEntreCoordonnees(
-                position1: userLoc,
-                position2: infraCoords
-            )
+            position1: userLoc,
+            position2: infraCoords
+        )
         
-        return String(format: "%.2f km away", dist)
+        if dist < 1 {
+            let distConvertie = dist * 1000
+            return String(format: "%d m", Int(distConvertie))
+        } else {
+            return String(format: "%.1f km", dist)
+        }
     }
     
     private var nomParc: String {
-        guard let nom = vm.obtenirParcObjAPartirInfra(pour: activite.infraId, service: emplacementsVM)?.nom
+        guard let nom = vm.obtenirObjetParcAPartirInfra(pour: activite.infraId)?.nom
         else { return "" }
         return nom
     }
     
+    private var nbPlacesRestantes: String {
+        let diff = activite.nbJoueursRecherches - activite.participants.count
+        
+        if diff == 0 { return "No spot left" }
+        return String(format: "%d spots left", diff)
+    }
+    
     var body: some View {
-        Button {
-            estSelectionnee.toggle()
-        } label: {
-            HStack(spacing: 12) {
-                Text(Sport.depuisNom(activite.sport).emoji)
-                    .font(.system(size: 35))
-                
-                VStack(spacing: 2) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(activite.sport.capitalized)
-                                .font(.system(size: 18))
-                                .fontWeight(.bold)
-                            
-                            Text(nomParc)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
-                                .font(.caption2)
-                        }
-                        
-                        Spacer()
-                        
-                        Button {
-                            withAnimation(.linear(duration: 0.2)) {
-                                estFavoris.toggle()
-                            }
-                        } label: {
-                            Image(systemName: estFavoris ? "bookmark" : "bookmark.fill")
+        VStack {
+            VStack(alignment: .leading, spacing: 12) {
+                ZStack(alignment: .bottomTrailing) {
+                    ZStack(alignment: .topTrailing) {
+                        ZStack {
+                            Sport.depuisNom(activite.sport).arriereplan
                                 .resizable()
-                                .scaledToFit()
-                                .frame(height: 26)
-                                .scaleEffect(x: 1.2, y: 1.0)
-                                .foregroundStyle(.yellow)
-                            
+                                .scaledToFill()
+                                .frame(height: 140)
+                                .clipped()
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .blur(radius: afficherInfo ? 6 : 0)
+                                .contentShape(RoundedRectangle(cornerRadius: 12))
+                                .onTapGesture {
+                                    withAnimation {
+                                        afficherInfo.toggle()
+                                    }
+                                }
+
+                            if afficherInfo {
+                                // Info bulle au centre de l'image
+                                Text("Image for illustration only, not actual representation of the \(activite.sport) infrastructure.")
+                                    .multilineTextAlignment(.center)
+                                    .font(.footnote)
+                                    .foregroundColor(.black)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 10)
+                                    .background(.ultraThinMaterial)
+                                    .cornerRadius(6)
+                                    .padding(.horizontal, 14)
+                                    .transition(.opacity.combined(with: .scale))
+                            }
                         }
+                        .frame(height: 140)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        
+                        HStack {
+                            Image(systemName: "mappin.and.ellipse")
+                            Text("\(distanceStr) away")
+                        }
+                        .font(.caption)
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 8) // padding INTERNE
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(couleur.opacity(0.9))
+                        )
+                        .padding([.trailing, .top], 10) // padding EXTERNE
+                        .blur(radius: afficherInfo ? 6 : 0)
+                        .zIndex(1)
                     }
-                  
+                    
+                    Image(systemName: estFavoris ? "bookmark.fill" : "bookmark")
+                        .font(.system(size: 19  ))
+                        .foregroundStyle(estFavoris ? couleur : .white)
+                        .padding(8)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
+                        .shadow(color: .black.opacity(0.3), radius: 3, x: 0, y: 2)
+                        .padding([.bottom, .trailing], 8)
+                        .onTapGesture {
+                            withAnimation(.linear(duration: 0.2)) { estFavoris.toggle() }
+                        }
+                        .disabled(afficherInfo)
+                        .blur(radius: afficherInfo ? 6 : 0)
+                }
+               
+                VStack(alignment: .trailing, spacing: 0) {
+                    HStack(spacing: 6) {
+                        Circle()
+                            .frame(width: 7, height: 7)
+                        Text("\(nbPlacesRestantes)")
+                            .font(.system(size: 16))
+                            .fontWeight(.light)
+                    }
+                    .foregroundStyle(Color(uiColor: activite.statut.couleur))
+                    
                     HStack(alignment: .top) {
-                        Text(distanceStr)
-                            .italic()
-                            .font(.caption2)
+                        Image(systemName: Sport.depuisNom(activite.sport).icone)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 28)
+                            .padding(.trailing, 4)
+                            .padding(.top, 10)
                         
-                        Spacer()
-                        
-                        Text(activite.date.affichage)
-                            .font(.system(size: 11))
-                            .fontWeight(.semibold)
+                        HStack(alignment: .center) {
+                            VStack(alignment: .leading) {
+                                Text(activite.titre)
+                                    .font(.title3)
+                                    .fontWeight(.semibold)
+                                
+                                VStack(alignment: .leading, spacing: 12) {
+                                    Text(nomParc)
+                                        .lineLimit(1)
+                                        .font(.callout)
+                                        .fontWeight(.light)
+                                        .foregroundStyle(Color(.systemGray))
+                                    
+                                    Text(activite.date.affichage)
+                                        .fontWeight(.medium)
+                                }
+                            }
+                            
+                            Spacer()
+                        }
                     }
                 }
             }
-            .padding(.horizontal, 20)
-            .frame(width: 360, height: 80)
-            .overlay(
-                RoundedRectangle(cornerRadius: 13.52371)
-                    .stroke(Color(red: 0.89, green: 0.89, blue: 0.89), lineWidth: 0.7)
-            )
-            .foregroundStyle(.black)
+            .padding([.top, .trailing, .leading])
+            
+            VStack(spacing: 0) {
+                Divider()
+                
+                HStack(spacing: 0) {
+                    Button {
+
+                    } label: {
+                        Text("See more")
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.primary)
+                    }
+                   
+                    Divider()
+                        .frame(width: 1, height: 50)
+
+                    Button {
+
+                    } label: {
+                        Text("Join Game")
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(couleur)
+                            .fontWeight(.semibold)
+                    }
+                }
+                .frame(height: 50)
+            }
+            
         }
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.15), radius: 2, x: 0, y: 1)
+        )
+        .contentShape(Rectangle())
     }
 }
 
-#Preview {
+#Preview(traits: .sizeThatFitsLayout) {
     let mockUtilisateur1 = Utilisateur(
         nomUtilisateur: "mathias13",
         courriel: "",
@@ -140,6 +240,10 @@ struct RangeeActivite: View {
         messages: []
     )
     
-    RangeeActivite(estSelectionnee: .constant(false), activite: mockActivite, geolocalisation: CLLocationCoordinate2D(latitude: 45.508888, longitude: -73.561668))
-        .environmentObject(DonneesEmplacementService())
+    RangeeActivite(afficherInfo: .constant(false), estSelectionnee: .constant(false), activite: mockActivite, geolocalisation: CLLocationCoordinate2D(latitude: 45.508888, longitude: -73.561668))
+        .environmentObject({
+          let s = DonneesEmplacementService()
+            s.chargerDonnees()
+            return s
+        }())
 }
