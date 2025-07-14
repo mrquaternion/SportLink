@@ -25,7 +25,6 @@ struct ExplorerVue: View {
             
             VStack {
                 Spacer()
-                
                 BoutonSwitchExplorer(modeAffichage: $modeAffichage)
                     .padding(.bottom, 20)
             }

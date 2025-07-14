@@ -15,7 +15,7 @@ struct BarreDeRecherche: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(Color(.systemGray2))
             
-            TextField("Search by parc name...", text: $texteDeRecherche)
+            TextField("Search by title or parc", text: $texteDeRecherche)
                 .autocorrectionDisabled(true)
                 .overlay(
                     Image(systemName: "xmark.circle.fill")
@@ -40,7 +40,6 @@ struct BarreDeRecherche: View {
                     radius: 10, x: 0, y: 0
                 )
         )
-        .padding()
     }
 }
 

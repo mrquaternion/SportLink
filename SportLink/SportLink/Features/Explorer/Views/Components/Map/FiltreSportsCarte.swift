@@ -87,7 +87,7 @@ struct FiltreSportsCarte: View {
                         .scaledToFit()
                         .frame(width: cercleDim, height: cercleDim)
                         .padding(10)
-                        .background(couleurDeFond)
+                        .background(.thickMaterial)
                         .foregroundStyle(Color.black)
                         .clipShape(Circle())
                         .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)

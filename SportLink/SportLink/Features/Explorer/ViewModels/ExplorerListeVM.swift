@@ -10,32 +10,112 @@ import CoreLocation
 import SwiftUI
 import Combine
 
+
+enum OptionTri { case date, dateInv, distance, distanceInv }
+
 @MainActor
 class ExplorerListeVM: ObservableObject {
     @Published var optionTri: OptionTri = .date
     @Published var activites: [Activite] = []
     @Published var activitesTriees: [Activite] = []
     @Published var texteDeRecherche: String = ""
+    @Published var dateAFiltree: Date = .now
+    @Published var sportsChoisis: Set<String> = []
+    @Published var dateMin: Date
+    @Published var dateMax: Date
     var service: DonneesEmplacementService
     var gestionnaire = GestionnaireLocalisation()
     
-    enum OptionTri { case date, dateInv, distance, distanceInv }
-    
     init(service: DonneesEmplacementService) {
         self.service = service
+        
+        // Même chose que dans CreerActiviteVM
+        let maintenant = Date.now
+        let calendrier = Calendar.current
+        let heureActuelle = calendrier.component(.hour, from: maintenant)
+        let valeurDeBase: Date
+
+        if heureActuelle >= 22 || heureActuelle < 6 {
+            let debutAujourdhui = calendrier.startOfDay(for: maintenant)
+            let debutDemain = calendrier.date(byAdding: .day, value: 1, to: debutAujourdhui)!
+            valeurDeBase = calendrier.date(
+                bySettingHour: 6,
+                minute: 0,
+                second: 0,
+                of: debutDemain
+            )!
+        } else {
+            valeurDeBase = maintenant
+        }
+
+        self.dateMin = valeurDeBase
+        self.dateMax = calendrier.date(byAdding: .weekOfYear, value: 4, to: valeurDeBase)!
+        
         ajouterSubscriber()
     }
     
     func ajouterSubscriber() {
         $optionTri
-            .combineLatest($texteDeRecherche, $activites)
-            .map(filtrerEtTrier)
+            .combineLatest($texteDeRecherche, $dateAFiltree, $sportsChoisis)
+            .combineLatest($activites)
+            .map { arguments, activites in
+                let (option, texte, date, sports) = arguments
+                return self.chercherFiltrerEtTrier(
+                    option: option,
+                    texte: texte,
+                    date: date,
+                    sports: sports,
+                    activites: activites
+                )
+            }
             .assign(to: &$activitesTriees)
     }
     
-    private func filtrerEtTrier(par option: OptionTri, pour texte: String, activites: [Activite]) -> [Activite] {
-        let activitesFiltrees = filtrer(pour: texte, activites: activites)
+    private func chercherFiltrerEtTrier(
+        option: OptionTri,
+        texte: String,
+        date: Date,
+        sports: Set<String>,
+        activites: [Activite]
+    ) -> [Activite] {
+        let activitesCherchees = chercher(pour: texte, activites: activites)
+        let activitesFiltrees = filtrer(par: sports, pour: date, activites: activitesCherchees)
         return trier(par: option, activites: activitesFiltrees)
+    }
+    
+    private func chercher(pour texte: String, activites: [Activite]) -> [Activite] {
+        guard !texte.isEmpty else { return activites }
+
+        let texteNormalise = texte.folding(options: .diacriticInsensitive, locale: .current).lowercased()
+
+        return activites.filter { activite in
+            guard let parc = obtenirObjetParcAPartirInfra(pour: activite.infraId),
+                  let nom = parc.nom else { return false }
+            
+            let nomNormalise = nom.folding(options: .diacriticInsensitive, locale: .current) .lowercased()
+            
+            let titre = activite.titre
+            let titreNormalise = titre.folding(options: .diacriticInsensitive, locale: .current) .lowercased()
+
+            return nomNormalise.contains(texteNormalise) || titreNormalise.contains(texteNormalise)
+        }
+    }
+    
+    private func filtrer(par sports: Set<String>, pour date: Date, activites: [Activite]) -> [Activite] {
+        var resultat = activites
+
+        // Filtrage par sport
+        if !sports.isEmpty {
+            resultat = resultat.filter { sports.contains($0.sport.lowercased()) }
+        }
+
+        // Filtrage par date (même jour)
+        let calendrier = Calendar.current
+        resultat = resultat.filter {
+            calendrier.isDate($0.date.debut, inSameDayAs: date)
+        }
+
+        return resultat
     }
     
     private func trier(par option: OptionTri, activites: [Activite]) -> [Activite] {
@@ -44,25 +124,6 @@ class ExplorerListeVM: ObservableObject {
         case .dateInv: return activites.sorted { $0.date.debut > $1.date.debut }
         case .distance: return activites.sorted { calculerDistance(activite: $0) < calculerDistance(activite: $1) }
         case .distanceInv: return activites.sorted { calculerDistance(activite: $0) > calculerDistance(activite: $1) }
-        }
-    }
-    
-    private func filtrer(pour texte: String, activites: [Activite]) -> [Activite] {
-        guard !texte.isEmpty else { return activites }
-
-        let texteNormalise = texte
-            .folding(options: .diacriticInsensitive, locale: .current)
-            .lowercased()
-
-        return activites.filter { activite in
-            guard let parc = obtenirObjetParcAPartirInfra(pour: activite.infraId),
-                  let nom = parc.nom else { return false }
-
-            let nomNormalise = nom
-                .folding(options: .diacriticInsensitive, locale: .current)
-                .lowercased()
-
-            return nomNormalise.contains(texteNormalise)
         }
     }
     

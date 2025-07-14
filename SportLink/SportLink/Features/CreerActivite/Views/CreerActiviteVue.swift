@@ -23,73 +23,23 @@ struct CreerActiviteVue: View {
     @EnvironmentObject var emplacementsVM: DonneesEmplacementService
     @Environment(\.dismiss) var dismiss
     @StateObject var vm = CreerActiviteVM()
-    @State private var titre: String = ""
-    @State private var sportSelectionne: Sport = .soccer
     @State private var sportSelectionTemporaire: Sport? = .soccer
-    @State private var dateSelectionnee: Date
-    @State private var dateSelectionneeSelectionTemporaire: Date?
-    @State private var tempsDebut: Date
-    @State private var tempsDebutSelectionTemporaire: Date?
-    @State private var tempsFin: Date
-    @State private var tempsFinSelectionTemporaire: Date?
-    @State private var nbParticipants: Int = 0
     @State private var nbParticipantsSelectionTemporaire: Int? = 0
-    @State private var description: String = ""
-    @State private var permettreInvitations: Bool = true
     @State private var permettreInvitationsSelectionTemporaire: Bool = true
     @State private var overlayActif: ActiveOverlay = .none
     @State private var sportChoisis: Set<String> = [Sport.soccer.nom.capitalized]
-    @State private var infraChoisie: Infrastructure? = nil
-    @State private var dateMin: Date
-    @State private var dateMax: Date
+    @State private var montrerAlerteChevauchement = false
     private let titreLimite = 30
     private let descriptionLimite = 420
-    @State private var montrerAlerteChevauchement = false
-    
-    init() {
-        let maintenant = Date.now
-        let calendrier = Calendar.current
-        let heureActuelle = calendrier.component(.hour, from: maintenant)
-        let valeurDeBase: Date
-        
-        if heureActuelle >= 22 || heureActuelle < 6 {
-            let debutAujourdhui = calendrier.startOfDay(for: maintenant)
-            let debutDemain = calendrier.date(
-                byAdding: .day,
-                value: 1,
-                to: debutAujourdhui
-            )!
-            valeurDeBase = calendrier.date(
-                bySettingHour: 6,
-                minute: 0,
-                second: 0,
-                of: debutDemain
-            )!
-        } else {
-            valeurDeBase = maintenant
-        }
-        _dateSelectionnee = State(initialValue: valeurDeBase)
-        _dateSelectionneeSelectionTemporaire = State(initialValue: valeurDeBase)
-        _dateMin = State(initialValue: valeurDeBase)
-        _tempsDebut = State(initialValue: valeurDeBase)
-        _tempsDebutSelectionTemporaire = State(initialValue: valeurDeBase)
-        
-        let fin = Calendar.current.date(byAdding: .hour, value: 1, to: valeurDeBase)!
-        _tempsFin = State(initialValue: fin)
-        _tempsFinSelectionTemporaire = State(initialValue: fin)
-        
-        let max = Calendar.current.date(byAdding: .weekOfYear, value: 4, to: valeurDeBase)!
-        _dateMax = State(initialValue: max)
-    }
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 contenuPrincipal
             }
-            .onChange(of: tempsDebut) { _, nv in
-                if tempsFin < nv {
-                    tempsFin = Calendar.current.date(byAdding: .hour, value: 1, to: nv)!
+            .onChange(of: vm.tempsDebut) { _, nv in
+                if vm.tempsFin < nv {
+                    vm.tempsFin = Calendar.current.date(byAdding: .hour, value: 1, to: nv)!
                 }
             }
             .toolbar { contenuToolbar }
@@ -101,7 +51,7 @@ struct CreerActiviteVue: View {
     private var contenuPrincipal: some View {
         VStack(spacing: 20) {
             BoiteTitre(
-                titre: $titre,
+                titre: $vm.titre,
                 overlayActif: $overlayActif,
                 titreLimite: titreLimite
             )
@@ -113,7 +63,7 @@ struct CreerActiviteVue: View {
             sectionParticipantsEtInvitations
             
             BoiteDescription(
-                description: $description,
+                description: $vm.description,
                 overlayActif: $overlayActif,
                 descriptionLimite: descriptionLimite
             )
@@ -130,20 +80,20 @@ struct CreerActiviteVue: View {
     private var boutonsOption: some View {
         VStack(spacing: 20) {
             BoutonOptionOverlay(
-                icon: sportSelectionne.icone,
-                text: sportSelectionne.nom.capitalized,
+                icon: vm.sportSelectionne.icone,
+                text: vm.sportSelectionne.nom.capitalized,
                 action: { overlayActif = .sport }
             )
             
             BoutonOptionOverlay(
                 icon: "calendar",
-                text: dateEnString,
+                text: vm.dateEnString,
                 action: { overlayActif = .date }
             )
             
             BoutonOptionOverlay(
                 icon: "clock",
-                text: "\(debutDuTempsEnString) to \(finDuTempsEnString)",
+                text: "\(vm.debutDuTempsEnString) to \(vm.finDuTempsEnString)",
                 action: { overlayActif = .temps }
             )
         }
@@ -151,11 +101,11 @@ struct CreerActiviteVue: View {
     
     private var sectionCarte: some View {
         VStack(spacing: 8) {
-            BoutonAvecApercuCarte(sportChoisis: $sportChoisis, infraChoisie: $infraChoisie)
+            BoutonAvecApercuCarte(sportChoisis: $sportChoisis, infraChoisie: $vm.infraChoisie)
                 .padding(.horizontal)
                 .environmentObject(emplacementsVM)
             
-            Text((infraChoisie != nil) ? "A marker has been selected" : "Click on the map to select a marker")
+            Text((vm.infraChoisie != nil) ? "A marker has been selected" : "Click on the map to select a marker")
                 .font(.caption)
                 .foregroundStyle(Color(red: 0.3, green: 0.3, blue: 0.3))
         }
@@ -165,13 +115,13 @@ struct CreerActiviteVue: View {
         VStack(spacing: 20) {
             BoutonOptionOverlay(
                 icon: "person.2",
-                text: texteParticipants,
+                text: vm.texteParticipants,
                 action: { overlayActif = .participants }
             )
             
             BoutonOptionOverlay(
                 icon: "envelope.open",
-                text: texteInvitations,
+                text: vm.texteInvitations,
                 action: { overlayActif = .invites }
             )
         }
@@ -226,25 +176,11 @@ struct CreerActiviteVue: View {
     
     private var boutonCreer: some View {
         Button {
-            vm.infraChoisie = infraChoisie
             Task {
-                if await vm.existeActivitesDejaCreer(
-                    for: infraChoisie!.id, // unwrappable
-                    debutActivite: tempsDebut,
-                    finActivite: tempsFin
-                ) {
+                if await vm.existeActivitesDejaCreer() {
                     montrerAlerteChevauchement = true
                 } else {
-                    await vm.creerActivite(
-                        nbParticipants: nbParticipants,
-                        permettreInvitations: permettreInvitations,
-                        description: description,
-                        tempsDebut: tempsDebut,
-                        tempsFin: tempsFin,
-                        dateSelectionnee: dateSelectionnee,
-                        titre: titre,
-                        sportSelectionne: sportSelectionne
-                    )
+                    await vm.creerActivite()
                     dismiss()
                 }
             }
@@ -273,7 +209,7 @@ struct CreerActiviteVue: View {
     }
 
     private var estDesactiver: Bool {
-        titre.isEmpty || nbParticipants == 0 || infraChoisie == nil || montrerAlerteChevauchement
+        vm.titre.isEmpty || vm.nbParticipants == 0 || vm.infraChoisie == nil || montrerAlerteChevauchement
     }
     
     struct BoiteTitre: View {
@@ -402,7 +338,7 @@ struct CreerActiviteVue: View {
 
                       HStack(spacing: 0) {
                         Button(action: {
-                            sportSelectionTemporaire = sportSelectionne
+                            sportSelectionTemporaire = vm.sportSelectionne
                             overlayActif = .none
                         }) {
                           Text("Close")
@@ -416,7 +352,7 @@ struct CreerActiviteVue: View {
 
                         Button(action: {
                           if let sportConfirme = sportSelectionTemporaire {
-                              sportSelectionne = sportConfirme
+                              vm.sportSelectionne = sportConfirme
                               sportChoisis = [sportConfirme.nom.capitalized]
                           }
                           overlayActif = .none
@@ -432,7 +368,6 @@ struct CreerActiviteVue: View {
         }
     }
 
-
     private var pickerPourDate: some View {
         FenetreModaleFlottante(estPresente: Binding(
             get: { overlayActif == .date },
@@ -447,10 +382,10 @@ struct CreerActiviteVue: View {
                     DatePicker(
                         "",
                         selection: Binding(
-                            get: { dateSelectionneeSelectionTemporaire ?? dateSelectionnee },
-                            set: { dateSelectionneeSelectionTemporaire = $0 }
+                            get: { vm.dateSelectionneeSelectionTemporaire ?? vm.dateSelectionnee },
+                            set: { vm.dateSelectionneeSelectionTemporaire = $0 }
                         ),
-                        in: dateMin...dateMax,
+                        in: vm.dateMin...vm.dateMax,
                         displayedComponents: .date
                     )
                     .datePickerStyle(.graphical)
@@ -466,7 +401,7 @@ struct CreerActiviteVue: View {
                     
                     HStack(spacing: 0) {
                         Button("Close") {
-                            dateSelectionneeSelectionTemporaire = dateSelectionnee
+                            vm.dateSelectionneeSelectionTemporaire = vm.dateSelectionnee
                             overlayActif = .none
                         }
                         .frame(maxWidth: .infinity, maxHeight: 60)
@@ -477,8 +412,8 @@ struct CreerActiviteVue: View {
                             .frame(width: 1, height: 60)
 
                         Button("OK") {
-                            if let d = dateSelectionneeSelectionTemporaire {
-                                dateSelectionnee = d
+                            if let d = vm.dateSelectionneeSelectionTemporaire {
+                                vm.dateSelectionnee = d
                             }
                             overlayActif = .none
                         }
@@ -500,29 +435,30 @@ struct CreerActiviteVue: View {
             VStack(spacing: 0) {
                 // Calcul des bornes 06:00 et 22:00 du même jour
                 let calendrier = Calendar.current
-                let debutDeJournee = calendrier.startOfDay(for: dateSelectionnee)
+                let debutDeJournee = calendrier.startOfDay(for: vm.dateSelectionnee)
                 let tempsMin = calendrier.date(byAdding: .hour, value: 6,  to: debutDeJournee)!
                 let tempsMax = calendrier.date(byAdding: .hour, value: 22, to: debutDeJournee)!
 
                 // Initialisation des temporaires à l’apparition
                 Color.clear.onAppear {
-                    tempsDebutSelectionTemporaire = tempsDebut
-                    tempsFinSelectionTemporaire = tempsFin
+                    vm.tempsDebutSelectionTemporaire = vm.tempsDebut
+                    vm.tempsFinSelectionTemporaire = vm.tempsFin
                 }
 
                 let startBinding = Binding<Date>(
-                    get: { tempsDebutSelectionTemporaire! },
+                    get: { vm.tempsDebutSelectionTemporaire! },
                     set: { new in
-                        tempsDebutSelectionTemporaire = new
+                        vm.tempsDebutSelectionTemporaire = new
                         // maintien de fin ≥ début
-                        if new > tempsFinSelectionTemporaire! {
-                            tempsFinSelectionTemporaire = new
+                        if new > vm.tempsFinSelectionTemporaire! {
+                            vm.tempsFinSelectionTemporaire = new
                         }
                     }
                 )
+                
                 let endBinding = Binding<Date>(
-                    get: { tempsFinSelectionTemporaire! },
-                    set: { tempsFinSelectionTemporaire = $0 }
+                    get: { vm.tempsFinSelectionTemporaire! },
+                    set: { vm.tempsFinSelectionTemporaire = $0 }
                 )
 
                 // Roulettes avec restriction
@@ -562,8 +498,8 @@ struct CreerActiviteVue: View {
                 HStack(spacing: 0) {
                     Button("Close") {
                         // on annule les temporaires
-                        tempsDebutSelectionTemporaire = tempsDebut
-                        tempsFinSelectionTemporaire = tempsFin
+                        vm.tempsDebutSelectionTemporaire = vm.tempsDebut
+                        vm.tempsFinSelectionTemporaire = vm.tempsFin
                         overlayActif = .none
                     }
                     .frame(maxWidth: .infinity, maxHeight: 60)
@@ -574,14 +510,14 @@ struct CreerActiviteVue: View {
 
                     Button("OK") {
                         // on commit en veillant à ne jamais sortir des bornes
-                        let sd = tempsDebutSelectionTemporaire!
-                        var ef = tempsFinSelectionTemporaire!
+                        let sd = vm.tempsDebutSelectionTemporaire!
+                        var ef = vm.tempsFinSelectionTemporaire!
 
                         // si ef < sd, recaler ef = sd
                         if ef < sd { ef = sd }
 
-                        tempsDebut = sd
-                        tempsFin = ef
+                        vm.tempsDebut = sd
+                        vm.tempsFin = ef
                         overlayActif = .none
                     }
                     .frame(maxWidth: .infinity, maxHeight: 60)
@@ -604,11 +540,16 @@ struct CreerActiviteVue: View {
                     Text("Select number")
                         .font(.title3)
                         .fontWeight(.semibold)
+                        .padding(.bottom, 6)
+                    
+                    Text("This number does not include you.")
+                        .font(.caption)
+                        .foregroundStyle(.gray)
 
                     Picker(
                         "",
                         selection: Binding(
-                            get: { nbParticipantsSelectionTemporaire ?? nbParticipants },
+                            get: { nbParticipantsSelectionTemporaire ?? vm.nbParticipants },
                             set: { nbParticipantsSelectionTemporaire = $0 }
                         )
                     ) {
@@ -627,7 +568,7 @@ struct CreerActiviteVue: View {
                 Divider()
                 HStack(spacing: 0) {
                     Button("Close") {
-                        nbParticipantsSelectionTemporaire = nbParticipants
+                        nbParticipantsSelectionTemporaire = vm.nbParticipants
                         overlayActif = .none
                     }
                     .frame(maxWidth: .infinity, maxHeight: 60)
@@ -638,7 +579,7 @@ struct CreerActiviteVue: View {
                         .frame(width: 1, height: 60)
 
                     Button("OK") {
-                        nbParticipants = nbParticipantsSelectionTemporaire!
+                        vm.nbParticipants = nbParticipantsSelectionTemporaire!
                         overlayActif = .none
                     }
                     .frame(maxWidth: .infinity, maxHeight: 60)
@@ -695,9 +636,9 @@ struct CreerActiviteVue: View {
               Divider()
               HStack(spacing: 0) {
                   Button("Close") {
-                      if permettreInvitationsSelectionTemporaire && !permettreInvitations {
+                      if permettreInvitationsSelectionTemporaire && !vm.permettreInvitations {
                           permettreInvitationsSelectionTemporaire = false
-                      } else if !permettreInvitationsSelectionTemporaire && permettreInvitations {
+                      } else if !permettreInvitationsSelectionTemporaire && vm.permettreInvitations {
                           permettreInvitationsSelectionTemporaire = true
                       }
                       overlayActif = .none
@@ -709,7 +650,7 @@ struct CreerActiviteVue: View {
                   Divider().frame(width: 1, height: 60)
 
                   Button("OK") {
-                      permettreInvitations = permettreInvitationsSelectionTemporaire
+                      vm.permettreInvitations = permettreInvitationsSelectionTemporaire
                       overlayActif = .none
                   }
                   .frame(maxWidth: .infinity, maxHeight: 60)
@@ -719,28 +660,6 @@ struct CreerActiviteVue: View {
           }
           .frame(width: 300)
         }
-    }
-
-
-    // MARK: - Helpers
-    private var dateEnString: String {
-        let f = DateFormatter(); f.dateStyle = .medium; return f.string(from: dateSelectionnee)
-    }
-    private var debutDuTempsEnString: String {
-        let f = DateFormatter(); f.timeStyle = .short; return f.string(from: tempsDebut)
-    }
-    private var finDuTempsEnString: String {
-        let f = DateFormatter(); f.timeStyle = .short; return f.string(from: tempsFin)
-    }
-    private var texteParticipants: String {
-        if nbParticipants > 0 {
-            return "\(nbParticipants) participant\(nbParticipants > 1 ? "s" : "")"
-        } else {
-            return "Number of participants"
-        }
-    }
-    private var texteInvitations: String {
-        return permettreInvitations ? "Open to guests invitations" : "Close to guests invitations"
     }
 }
 

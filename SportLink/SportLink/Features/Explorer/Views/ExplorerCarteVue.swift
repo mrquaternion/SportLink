@@ -62,7 +62,7 @@ struct ExplorerCarteVue: View {
                 BarreTemporelle(dateSelectionnee: $dateSelectionnee)
                     .padding(.horizontal, 14)
                     .frame(width: 380, height: 125, alignment: .center)
-                    .background(couleurDeFond)
+                    .background(.thickMaterial)
                     .cornerRadius(16)
                     .shadow(color: .black.opacity(0.4), radius: 2, x: 0, y: 2)
                 
@@ -84,7 +84,7 @@ struct ExplorerCarteVue: View {
                         Image(systemName: "square.2.layers.3d")
                             .font(.title2)
                             .padding(10)
-                            .background(couleurDeFond)
+                            .background(.thickMaterial)
                             .clipShape(Circle())
                             .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)
                     }
@@ -112,7 +112,7 @@ struct ExplorerCarteVue: View {
                             Spacer()
                             
                             HStack(spacing: 60) {
-                                // MARK: Types de carte
+                                // Types de carte
                                 ForEach(TypeDeCarte.allCases, id: \.self) { type in
                                     Button {
                                         typeDeCarteSelectionne = type
@@ -157,7 +157,7 @@ struct ExplorerCarteVue: View {
                         Image(systemName: "location.fill")
                             .font(.title2)
                             .padding(10)
-                            .background(couleurDeFond)
+                            .background(.thickMaterial)
                             .clipShape(Circle())
                             .shadow(color: .black.opacity(0.4), radius: 1.5, x: 0, y: 1)
                     }
