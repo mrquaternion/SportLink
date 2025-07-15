@@ -13,6 +13,7 @@ struct ActiviteBoite: View {
     let activite: Activite
     let parc: Parc
     let infra: Infrastructure
+    let onSeeMore: () -> Void
 
     let couleur = Color(red: 0.784, green: 0.231, blue: 0.216)
     @State private var afficherInfo = false
@@ -116,13 +117,11 @@ struct ActiviteBoite: View {
 
             VStack(spacing: 0) {
                 Divider()
-                Button {
-                    // Action "See more"
-                } label: {
+                Button(action: onSeeMore) {
                     Text("See more")
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
-                        .foregroundColor(.primary)
+                        .foregroundColor(.red)
                 }
             }
         }
@@ -164,6 +163,3 @@ struct ActiviteBoite: View {
         return formatter.string(from: activite.date.fin)
     }
 }
-
-
-
