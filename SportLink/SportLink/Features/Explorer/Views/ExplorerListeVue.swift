@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ExplorerListeVue: View {
+    @Namespace private var namespaceAnimation
     @Binding var utilisateur: Utilisateur
     @StateObject var serviceActivites = ServiceActivites()
     @StateObject var gestionnaire = GestionnaireLocalisation()
@@ -22,43 +23,51 @@ struct ExplorerListeVue: View {
     }
     
     var body: some View {
-        ZStack {
-            if vm.activitesTriees.isEmpty {
-                VStack(alignment: .center, spacing: 12) {
-                    Image(systemName: "figure.run")
-                        .font(.system(size: 60))
-                    Text("No activity has been organized \n for the selected settings")
-                        .font(.title2)
-                        .multilineTextAlignment(.center)
-                }
-                .foregroundColor(.gray)
-            }
-            
-            ScrollView {
-                sectionFiltreEtTri
-                
-                if afficherFiltreOverlay {
-                    boiteFiltrage
-                        .padding(.bottom, 10)
-                        .padding(.horizontal, 20)
-                        .transition(.scale(scale: 1, anchor: .top).combined(with: .opacity))
+        NavigationStack {
+            ZStack {
+                if vm.activitesTriees.isEmpty {
+                    VStack(alignment: .center, spacing: 12) {
+                        Image(systemName: "figure.run")
+                            .font(.system(size: 60))
+                        Text("No activity has been organized \n for the selected settings")
+                            .font(.title2)
+                            .multilineTextAlignment(.center)
+                    }
+                    .foregroundColor(.gray)
                 }
                 
-                sectionActivites
-            }
-            .animation(.easeInOut, value: afficherFiltreOverlay)
-            .onAppear {
-                Task {
-                    await serviceActivites.fetchTousActivites()
-                    vm.activites = serviceActivites.activites
+                ScrollView {
+                    sectionFiltreEtTri
+                    
+                    if afficherFiltreOverlay {
+                        boiteFiltrage
+                            .padding(.bottom, 10)
+                            .padding(.horizontal, 20)
+                            .transition(.scale(scale: 1, anchor: .top).combined(with: .opacity))
+                    }
+                    
+                    sectionActivites
+                }
+                .animation(.easeInOut, value: afficherFiltreOverlay)
+                .onAppear {
+                    Task {
+                        await serviceActivites.fetchTousActivites()
+                        vm.activites = serviceActivites.activites
+                    }
+                }
+                .onTapGesture {
+                    // Dès qu'on tape dans la vue, on ferme toute info
+                    if activiteAffichantInfo != nil {
+                        withAnimation { activiteAffichantInfo = nil }
+                    }
                 }
             }
-            .onTapGesture {
-                // Dès qu'on tape dans la vue, on ferme toute info
-                if activiteAffichantInfo != nil {
-                    withAnimation { activiteAffichantInfo = nil }
-                }
+            .navigationTitle("Explorer")
+            .navigationDestination(for: Activite.self) { activite in
+                DetailsActivite(activite: activite, namespace: namespaceAnimation)
             }
+            .navigationBarBackButtonHidden(true)
+            .navigationBarHidden(true)
         }
     }
     
@@ -71,18 +80,13 @@ struct ExplorerListeVue: View {
                 ForEach(Sport.allCases, id: \.self) { sport in
                     HStack {
                         Button {
-                            if vm.sportsChoisis.contains(sport.nom) {
-                                vm.sportsChoisis.remove(sport.nom)
-                            } else {
-                                vm.sportsChoisis.insert(sport.nom)
-                            }
+                            if vm.sportsChoisis.contains(sport.nom) { vm.sportsChoisis.remove(sport.nom) }
+                            else { vm.sportsChoisis.insert(sport.nom) }
                         } label: {
                             HStack {
                                 Image(systemName: sport.icone)
                                 Text(sport.nom.capitalized)
-                                
                                 Spacer()
-                                
                                 Image(systemName: vm.sportsChoisis.contains(sport.nom) ? "checkmark.square.fill" : "square")
                             }
                             .foregroundColor(.black)
@@ -129,24 +133,57 @@ struct ExplorerListeVue: View {
     @ViewBuilder
     private var sectionActivites: some View {
         if !vm.activites.isEmpty {
-            VStack(spacing: 20) {
-                ForEach(vm.activitesTriees, id: \.id) { activite in
-                    RangeeActivite(
-                        afficherInfo: Binding(
-                            get: { activiteAffichantInfo == activite.id },
-                            set: { newValue in
-                                activiteAffichantInfo = newValue ? activite.id : nil
-                            }
-                        ),
-                        estSelectionnee: $estSelectionnee,
-                        activite: activite,
-                        geolocalisation: gestionnaire.location?.coordinate
-                    )
-                    .environmentObject(vm)
+            VStack(alignment: .leading) {
+                Text(dateAAffichee(vm.dateAFiltree))
+                    .font(.title2)
+                    .foregroundStyle(Color(.gray))
+                Divider()
+                    .padding(.bottom, 10)
+                LazyVStack(spacing: 20) {
+                    ForEach(vm.activitesTriees, id: \.id) { activite in
+                        RangeeActivite(
+                            namespace: namespaceAnimation,
+                            afficherInfo: Binding(
+                                get: { activiteAffichantInfo == activite.id },
+                                set: { newValue in
+                                    activiteAffichantInfo = newValue ? activite.id : nil
+                                }
+                            ),
+                            estSelectionnee: $estSelectionnee,
+                            activite: activite,
+                            geolocalisation: gestionnaire.location?.coordinate
+                        )
+                        .environmentObject(vm)
+                    }
                 }
+                .padding(.bottom, 80) // faire de la place par rapport a le switcher
             }
             .padding(.horizontal, 20)
         }
+    }
+    
+    private func dateAAffichee(_ date: Date) -> String {
+        let calendrier = Calendar.current
+        
+        let jourDeSemaineFormat = DateFormatter()
+        jourDeSemaineFormat.locale = Locale.current
+        jourDeSemaineFormat.dateFormat = "EEEE"
+        
+        let jourDuMoisFormat = DateFormatter()
+        jourDuMoisFormat.locale = Locale.current
+        jourDuMoisFormat.dateFormat = "MMMM d"
+ 
+        let jourDeSemaine: String
+        if calendrier.isDateInToday(date) {
+            jourDeSemaine = "Today"
+        } else if calendrier.isDateInTomorrow(date) {
+            jourDeSemaine = "Tomorrow"
+        } else {
+            jourDeSemaine = jourDeSemaineFormat.string(from: date)
+        }
+        
+        let jourDuMois = jourDuMoisFormat.string(from: date)
+        return "\(jourDeSemaine), \(jourDuMois)"
     }
 }
 

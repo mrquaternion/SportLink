@@ -10,6 +10,7 @@ import MapKit
 
 struct RangeeActivite: View {
     @EnvironmentObject var vm: ExplorerListeVM
+    let namespace: Namespace.ID
     @State private var estFavoris = false
     @Binding var afficherInfo: Bool
     @Binding var estSelectionnee: Bool
@@ -166,18 +167,18 @@ struct RangeeActivite: View {
                 }
             }
             .padding([.top, .trailing, .leading])
+            .padding(.bottom, 10)
             
             VStack(spacing: 0) {
                 Divider()
                 
                 HStack(spacing: 0) {
-                    Button {
-
-                    } label: {
+                    NavigationLink(value: activite) {
                         Text("See more")
                             .frame(maxWidth: .infinity)
                             .foregroundColor(.primary)
                     }
+                    .navigationTransition(.zoom(sourceID: activite.id, in: namespace))
                    
                     Divider()
                         .frame(width: 1, height: 50)
@@ -205,45 +206,43 @@ struct RangeeActivite: View {
     }
 }
 
-#Preview(traits: .sizeThatFitsLayout) {
-    let mockUtilisateur1 = Utilisateur(
-        nomUtilisateur: "mathias13",
-        courriel: "",
-        photoProfil: "",
-        disponibilites: [:],
-        sportsFavoris: [],
-        activitesFavoris: [],
-        partenairesRecents: []
-    )
+#Preview {
+    PreviewWrapper()
+}
+
+private struct PreviewWrapper: View {
+    @Namespace private var ns
     
-    let mockUtilisateur2 = Utilisateur(
-        nomUtilisateur: "michel02",
-        courriel: "",
-        photoProfil: "",
-        disponibilites: [:],
-        sportsFavoris: [],
-        activitesFavoris: [],
-        partenairesRecents: []
-    )
+    private var mockActivite: Activite {
+        Activite(
+            titre: "Soccer for amateurs",
+            organisateurId: UtilisateurID(valeur: "demo"),
+            infraId: "081-0090",
+            sport: .soccer,
+            date: DateInterval(start: .now, duration: 3600),
+            nbJoueursRecherches: 4,
+            participants: [],
+            description: "Venez vous amuser !",
+            statut: .ouvert,
+            invitationsOuvertes: true,
+            messages: []
+        )
+    }
     
-    let mockActivite = Activite(
-        titre: "Soccer for amateurs",
-        organisateurId: UtilisateurID(valeur: "mockID"),
-        infraId: "081-0090",
-        sport: .soccer,
-        date: DateInterval(start: .now, duration: 3600),
-        nbJoueursRecherches: 4,
-        participants: [],
-        description: "",
-        statut: .ouvert,
-        invitationsOuvertes: true,
-        messages: []
-    )
-    
-    RangeeActivite(afficherInfo: .constant(false), estSelectionnee: .constant(false), activite: mockActivite, geolocalisation: CLLocationCoordinate2D(latitude: 45.508888, longitude: -73.561668))
+    var body: some View {
+        RangeeActivite(
+            namespace: ns,
+            afficherInfo: .constant(false),
+            estSelectionnee: .constant(false),
+            activite: mockActivite,
+            geolocalisation: CLLocationCoordinate2D(latitude: 45.508888, longitude: -73.561668)
+        )
         .environmentObject({
-          let s = DonneesEmplacementService()
-            s.chargerDonnees()
-            return s
+            let service = DonneesEmplacementService()
+            service.chargerDonnees()
+            return ExplorerListeVM(service: service)
         }())
+        .previewLayout(.sizeThatFits)
+        .padding()
+    }
 }

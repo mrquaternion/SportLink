@@ -37,7 +37,7 @@ struct BarreDeRecherche: View {
                 .fill(Color(.systemGray6))
                 .shadow(
                     color: .black.opacity(0.15),
-                    radius: 10, x: 0, y: 0
+                    radius: 8, x: 0, y: 0
                 )
         )
     }

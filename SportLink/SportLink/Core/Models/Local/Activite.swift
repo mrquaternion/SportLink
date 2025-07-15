@@ -107,7 +107,7 @@ struct Activite: Identifiable, Codable {
     }
 }
 
-extension Activite {
+extension Activite: Hashable {
     func versDTO() -> ActiviteDTO {
         ActiviteDTO(
             id: id,
@@ -135,5 +135,12 @@ extension Activite {
         
         return (heureDebut, heureFin)
     }
+    
+    static func ==(lhs: Activite, rhs: Activite) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
-
