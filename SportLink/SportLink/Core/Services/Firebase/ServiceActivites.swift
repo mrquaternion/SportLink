@@ -95,7 +95,10 @@ class ServiceActivites: ObservableObject {
                 var activiteMutable = activite
                 activiteMutable.id = UUID().uuidString
                 return activiteMutable
-            }
+            } // empêche SwiftUI d’identifier correctement chaque élément dans le ForEach ?
+            
+            // self.activites = activitesConverties
+            
             
             self.activites = activites
         } catch {

@@ -17,20 +17,20 @@ struct HostedVue: View {
                 ForEach(serviceActivites.activites) { activite in
                     if let infra = emplacementsVM.infrastructures.first(where: { $0.id == activite.infraId }),
                        let parc = emplacementsVM.parcs.first(where: { $0.index == infra.indexParc }) {
+                        
                         ActiviteBoite(
-                            titre: activite.titre,
-                            sport: Sport.depuisNom(activite.sport),
-                            infraNom: parc.nom ?? "Nom inconnu", 
-                            date: activite.date.interval,
-                            nbPlacesRestantes: activite.nbJoueursRecherches,
-                            imageApercu: nil
+                            activite: activite,
+                            parc: parc,
+                            infra: infra
                         )
+
                     }
                 }
             }
             .padding()
         }
         .onAppear {
+            emplacementsVM.chargerDonnees()
             Task {
                 await serviceActivites.fetchActivitesParOrganisateur(organisateurId: "mockID")
             }
@@ -42,4 +42,5 @@ struct HostedVue: View {
     HostedVue()
         .environmentObject(DonneesEmplacementService())
 }
+
 

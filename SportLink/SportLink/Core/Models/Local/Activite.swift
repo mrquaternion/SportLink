@@ -79,6 +79,7 @@ struct Activite: Identifiable, Codable {
     var messages: [MessageID]
     
     init(
+
         titre: String,
         organisateurId: UtilisateurID,
         infraId: String,
@@ -90,7 +91,8 @@ struct Activite: Identifiable, Codable {
         statut: StatutActivite,
         invitationsOuvertes: Bool,
         messages: [MessageID]
-    ) {        
+    ) {
+
         self.titre = titre
         self.organisateurId = organisateurId
         self.infraId = infraId
