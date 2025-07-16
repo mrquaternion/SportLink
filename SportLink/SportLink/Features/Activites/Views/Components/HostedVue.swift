@@ -13,6 +13,8 @@ struct HostedVue: View {
     @State private var afficherSeeMore = false
     @State private var titreActiviteSelectionnee: String = ""
     @State private var sportActiviteSelectionne: Sport = .soccer
+    @State private var debutActivite: Date = Date()
+    @State private var finActivite: Date = Date()
 
     var listeActivites: some View {
         ForEach(serviceActivites.activites) { activite in
@@ -26,6 +28,9 @@ struct HostedVue: View {
                         titreActiviteSelectionnee = activite.titre
                         sportActiviteSelectionne = Sport.depuisNom(activite.sport)
                         afficherSeeMore = true
+                        debutActivite = activite.date.debut
+                        finActivite = activite.date.fin
+                        
                     }
                 )
             }
@@ -49,7 +54,12 @@ struct HostedVue: View {
         }
         
         .fullScreenCover(isPresented: $afficherSeeMore) {
-            SeeMoreVueHosted(titre: titreActiviteSelectionnee, sport: sportActiviteSelectionne)
+            SeeMoreVueHosted(
+                titre: titreActiviteSelectionnee,
+                sport: sportActiviteSelectionne,
+                debut: debutActivite,
+                fin: finActivite
+            )
         }
     }
 }

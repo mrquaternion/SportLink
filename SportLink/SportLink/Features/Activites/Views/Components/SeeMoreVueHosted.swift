@@ -10,7 +10,23 @@ import SwiftUI
 struct SeeMoreVueHosted: View {
     let titre: String
     let sport: Sport
+    let debut: Date
+    let fin: Date
     @Environment(\.dismiss) var dismiss
+    
+    private var dateFormatter: DateFormatter {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "fr_CA") // ou "en_CA" si tu veux anglais
+        f.dateStyle = .full  // Ex. : "mardi 16 juillet 2025"
+        f.timeStyle = .none
+        return f
+    }
+    
+    private var formatter: DateFormatter {
+        let f = DateFormatter()
+        f.dateFormat = "HH:mm"
+        return f
+    }
 
     var body: some View {
         ZStack {
@@ -52,6 +68,16 @@ struct SeeMoreVueHosted: View {
                 }
                 .padding(.horizontal)
                 .padding(.top, 4)
+                
+                Text("Date : \(dateFormatter.string(from: debut))")
+                    .font(.title3)
+                    .foregroundColor(.gray)
+                    .padding(.horizontal)
+                
+                Text("Plage horaire : \(formatter.string(from: debut)) - \(formatter.string(from: fin))")
+                    .font(.title3)
+                    .foregroundColor(.gray)
+                    .padding(.horizontal)
 
                 Spacer()
             }
@@ -65,6 +91,11 @@ struct SeeMoreVueHosted: View {
 
 #Preview {
     NavigationStack {
-        SeeMoreVueHosted(titre: "Tournoi de soccer", sport: .soccer)
+        SeeMoreVueHosted(
+            titre: "Tournoi de soccer",
+            sport: .soccer,
+            debut: Calendar.current.date(bySettingHour: 18, minute: 0, second: 0, of: Date())!,
+            fin: Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date())!
+        )
     }
 }
