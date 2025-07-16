@@ -20,17 +20,22 @@ struct TripleDates: Equatable {
 }
 
 struct CreerActiviteVue: View {
-    @EnvironmentObject var emplacementsVM: DonneesEmplacementService
     @Environment(\.dismiss) var dismiss
-    @StateObject var vm = CreerActiviteVM()
+    @StateObject var vm: CreerActiviteVM
+    
     @State private var sportSelectionTemporaire: Sport? = .soccer
     @State private var nbParticipantsSelectionTemporaire: Int? = 0
     @State private var permettreInvitationsSelectionTemporaire: Bool = true
     @State private var overlayActif: ActiveOverlay = .none
     @State private var sportChoisis: Set<String> = [Sport.soccer.nom.capitalized]
     @State private var montrerAlerteChevauchement = false
+    
     private let titreLimite = 30
     private let descriptionLimite = 420
+    
+    init(serviceEmplacements: DonneesEmplacementService) {
+        self._vm = StateObject(wrappedValue: CreerActiviteVM(serviceActivites: ServiceActivites(), serviceEmplacements: serviceEmplacements))
+    }
     
     var body: some View {
         NavigationStack {
@@ -46,6 +51,12 @@ struct CreerActiviteVue: View {
             .safeAreaInset(edge: .bottom, alignment: .center) { barAction }
         }
         .overlay(vueOverlay)
+        .onChange(of: vm.sportSelectionne) { _, nvValeur in
+            if let infraChoisie = vm.infraChoisie,
+               !infraChoisie.sport.contains(nvValeur) {
+                vm.infraChoisie = nil
+            }
+        }
     }
     
     private var contenuPrincipal: some View {
@@ -101,9 +112,12 @@ struct CreerActiviteVue: View {
     
     private var sectionCarte: some View {
         VStack(spacing: 8) {
-            BoutonAvecApercuCarte(sportChoisis: $sportChoisis, infraChoisie: $vm.infraChoisie)
-                .padding(.horizontal)
-                .environmentObject(emplacementsVM)
+            BoutonAvecApercuCarte(
+                vm: vm,
+                sportChoisis: $sportChoisis,
+                infraChoisie: $vm.infraChoisie
+            )
+            .padding(.horizontal)
             
             Text((vm.infraChoisie != nil) ? "A marker has been selected" : "Click on the map to select a marker")
                 .font(.caption)
@@ -283,7 +297,6 @@ struct CreerActiviteVue: View {
         }
     }
 
-
     @ViewBuilder
     private var vueOverlay: some View {
         switch overlayActif {
@@ -330,8 +343,9 @@ struct CreerActiviteVue: View {
                     }
                     .padding(.top, 20)
                 }
-                .padding([.top, .trailing, .leading], 30)
+                .padding(.top, 30)
                 .padding(.bottom, 10)
+                .padding(.horizontal, 20)
                 
                 VStack(spacing: 0) {
                     Divider()
@@ -680,7 +694,7 @@ struct BoutonOptionOverlay: View {
 }
 
 #Preview {
-    CreerActiviteVue()
+    CreerActiviteVue(serviceEmplacements: DonneesEmplacementService())
         .environmentObject(DonneesEmplacementService())
 }
 

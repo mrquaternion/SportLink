@@ -8,26 +8,43 @@
 import SwiftUI
 
 struct DetailsActivite: View {
+    @Environment(\.dismiss) private var dismiss
+    
     let activite: Activite
-    let namespace: Namespace.ID
     
     var body: some View {
+        contenu
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left.circle.fill")
+                            .font(.title3)
+                            .foregroundColor(Color("CouleurParDefaut"))
+                            .padding(3)
+                            .background(.thinMaterial, in: Circle())
+                    }
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    Text("\(activite.sport.capitalized) activity")
+                        .font(.headline)
+                }
+            }
+            .navigationBarBackButtonHidden(true)
+    }
+    
+    private var contenu: some View {
         VStack {
             Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
         }
-        .matchedTransitionSource(id: activite.id, in: namespace)
     }
+    
 }
 
 #Preview {
-    PreviewWrapper()
-}
-
-private struct PreviewWrapper: View {
-    @Namespace private var ns
-
-    // Exemple minimal d'Activite (à adapter à votre modèle)
-    private var mockActivite: Activite {
+    let mockActivite =
         Activite(
             titre: "Match amical",
             organisateurId: UtilisateurID(valeur: "demo"),
@@ -41,14 +58,6 @@ private struct PreviewWrapper: View {
             invitationsOuvertes: true,
             messages: []
         )
-    }
-
-    var body: some View {
-        DetailsActivite(
-            activite: mockActivite,
-            namespace: ns
-        )
-        .previewLayout(.sizeThatFits)
-        .padding()
-    }
+    
+    DetailsActivite(activite: mockActivite)
 }

@@ -9,8 +9,8 @@ import SwiftUI
 import MapKit
 
 struct ApercuCarte: View {
-    @StateObject var vm = CreerActiviteVM()
-    var infraChoisie: Infrastructure? = nil
+    @ObservedObject var vm: CreerActiviteVM
+    @State private var imageApercu: UIImage?
     
     var body: some View {
         Group {
@@ -25,14 +25,20 @@ struct ApercuCarte: View {
                     .frame(height: 150)
             }
         }
-        .onAppear {
-            vm.infraChoisie = infraChoisie
-            vm.genererApercu()
-        }
-        .onChange(of: infraChoisie?.id) {
-            vm.imageApercu = nil
-            vm.infraChoisie = infraChoisie
-            vm.genererApercu()
+        .onAppear { rafraichir() }
+        .onReceive(vm.$infraChoisie) { _ in rafraichir() }
+    }
+    
+    private func rafraichir() {
+        imageApercu = nil
+        vm.genererApercu()
+        
+        Task {
+            imageApercu = vm.imageApercu
         }
     }
+}
+
+#Preview {
+    ApercuCarte(vm: CreerActiviteVM(serviceActivites: ServiceActivites(), serviceEmplacements: DonneesEmplacementService()))
 }

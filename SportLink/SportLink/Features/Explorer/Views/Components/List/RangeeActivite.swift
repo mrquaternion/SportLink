@@ -10,38 +10,12 @@ import MapKit
 
 struct RangeeActivite: View {
     @EnvironmentObject var vm: ExplorerListeVM
-    let namespace: Namespace.ID
+    
     @State private var estFavoris = false
     @Binding var afficherInfo: Bool
-    @Binding var estSelectionnee: Bool
 
     let activite: Activite
     let couleur = Color(red: 0.784, green: 0.231, blue: 0.216)
-    let geolocalisation: CLLocationCoordinate2D?
-
-    // Distance en kilomètres, ou nil si la géoloc n'est pas fournie
-    private var distanceStr: String {
-        guard
-            let userLoc = geolocalisation,
-            let infraCoords = vm.obtenirObjetInfrastructure(
-                pour: activite.infraId
-            )?.coordonnees
-        else {
-            return ""
-        }
-        
-        let dist = calculerDistanceEntreCoordonnees(
-            position1: userLoc,
-            position2: infraCoords
-        )
-        
-        if dist < 1 {
-            let distConvertie = dist * 1000
-            return String(format: "%d m", Int(distConvertie))
-        } else {
-            return String(format: "%.1f km", dist)
-        }
-    }
     
     private var nomParc: String {
         guard let nom = vm.obtenirObjetParcAPartirInfra(pour: activite.infraId)?.nom
@@ -95,7 +69,7 @@ struct RangeeActivite: View {
                         
                         HStack {
                             Image(systemName: "mappin.and.ellipse")
-                            Text("\(distanceStr) away")
+                            Text("\(vm.obtenirDistanceDeUtilisateur(pour: activite)) away")
                         }
                         .font(.caption)
                         .foregroundStyle(.white)
@@ -178,13 +152,12 @@ struct RangeeActivite: View {
                             .frame(maxWidth: .infinity)
                             .foregroundColor(.primary)
                     }
-                    .navigationTransition(.zoom(sourceID: activite.id, in: namespace))
                    
                     Divider()
                         .frame(width: 1, height: 50)
 
                     Button {
-
+                        // Logique ici
                     } label: {
                         Text("Join Game")
                             .frame(maxWidth: .infinity)
@@ -207,42 +180,31 @@ struct RangeeActivite: View {
 }
 
 #Preview {
-    PreviewWrapper()
-}
-
-private struct PreviewWrapper: View {
-    @Namespace private var ns
+    let mockActivite =
+    Activite(
+        titre: "Soccer for amateurs",
+        organisateurId: UtilisateurID(valeur: "demo"),
+        infraId: "081-0090",
+        sport: .soccer,
+        date: DateInterval(start: .now, duration: 3600),
+        nbJoueursRecherches: 4,
+        participants: [],
+        description: "Venez vous amuser !",
+        statut: .ouvert,
+        invitationsOuvertes: true,
+        messages: []
+    )
     
-    private var mockActivite: Activite {
-        Activite(
-            titre: "Soccer for amateurs",
-            organisateurId: UtilisateurID(valeur: "demo"),
-            infraId: "081-0090",
-            sport: .soccer,
-            date: DateInterval(start: .now, duration: 3600),
-            nbJoueursRecherches: 4,
-            participants: [],
-            description: "Venez vous amuser !",
-            statut: .ouvert,
-            invitationsOuvertes: true,
-            messages: []
+    RangeeActivite(
+        afficherInfo: .constant(false),
+        activite: mockActivite
+    )
+    .environmentObject({
+        let service = DonneesEmplacementService()
+        service.chargerDonnees()
+        return ExplorerListeVM(
+            serviceEmplacements: DonneesEmplacementService(),
+            serviceActivites: ServiceActivites()
         )
-    }
-    
-    var body: some View {
-        RangeeActivite(
-            namespace: ns,
-            afficherInfo: .constant(false),
-            estSelectionnee: .constant(false),
-            activite: mockActivite,
-            geolocalisation: CLLocationCoordinate2D(latitude: 45.508888, longitude: -73.561668)
-        )
-        .environmentObject({
-            let service = DonneesEmplacementService()
-            service.chargerDonnees()
-            return ExplorerListeVM(service: service)
-        }())
-        .previewLayout(.sizeThatFits)
-        .padding()
-    }
+    }())
 }

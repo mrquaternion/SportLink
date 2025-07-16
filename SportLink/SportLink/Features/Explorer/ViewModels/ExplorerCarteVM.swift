@@ -80,7 +80,7 @@ func centrePolygone(for arr: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D
     return CLLocationCoordinate2D(latitude: centroidLat, longitude: centroidLon)
 }
 
-func regionEnglobantPolygone(_ coords: [CLLocationCoordinate2D]) -> MKCoordinateRegion {
+func regionEnglobantPolygone(_ coords: [CLLocationCoordinate2D], facteur: Double = 1.2) -> MKCoordinateRegion? {
     guard !coords.isEmpty else {
         return MKCoordinateRegion()
     }
@@ -103,8 +103,8 @@ func regionEnglobantPolygone(_ coords: [CLLocationCoordinate2D]) -> MKCoordinate
     )
     
     let span = MKCoordinateSpan(
-        latitudeDelta: (maxLat - minLat) * 1.2,
-        longitudeDelta: (maxLon - minLon) * 1.2
+        latitudeDelta: (maxLat - minLat) * facteur,
+        longitudeDelta: (maxLon - minLon) * facteur
     )
     
     return MKCoordinateRegion(center: center, span: span)

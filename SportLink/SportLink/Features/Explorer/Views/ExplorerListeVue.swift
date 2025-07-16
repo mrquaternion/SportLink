@@ -8,66 +8,63 @@
 import SwiftUI
 
 struct ExplorerListeVue: View {
-    @Namespace private var namespaceAnimation
+    @StateObject private var vm: ExplorerListeVM
+    
     @Binding var utilisateur: Utilisateur
-    @StateObject var serviceActivites = ServiceActivites()
-    @StateObject var gestionnaire = GestionnaireLocalisation()
-    @StateObject var vm: ExplorerListeVM
+    @Binding var cacherBoutonSwitch: Bool
     @State private var afficherFiltreOverlay = false
-    @State private var estSelectionnee = false
     @State private var activiteAffichantInfo: Activite.ID? = nil
     
-    init(utilisateur: Binding<Utilisateur>, emplacementsVM: DonneesEmplacementService) {
+    init(
+        utilisateur: Binding<Utilisateur>,
+        cacherBoutonSwitch: Binding<Bool>,
+        serviceEmplacements: DonneesEmplacementService
+    ) {
         self._utilisateur = utilisateur
-        self._vm = StateObject(wrappedValue: ExplorerListeVM(service: emplacementsVM))
+        self._cacherBoutonSwitch = cacherBoutonSwitch
+        self._vm = StateObject(wrappedValue: ExplorerListeVM(
+            serviceEmplacements: serviceEmplacements,
+            serviceActivites: ServiceActivites()
+        ))
     }
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                if vm.activitesTriees.isEmpty {
-                    VStack(alignment: .center, spacing: 12) {
-                        Image(systemName: "figure.run")
-                            .font(.system(size: 60))
-                        Text("No activity has been organized \n for the selected settings")
-                            .font(.title2)
-                            .multilineTextAlignment(.center)
+            sectionFiltreEtTri
+            
+            if afficherFiltreOverlay {
+                boiteFiltrage
+                    .padding(.horizontal, 20)
+                    .transition(.scale(scale: 1, anchor: .top).combined(with: .opacity))
+            }
+            
+            VStack(spacing: 8) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(dateAAffichee(vm.dateAFiltree))
+                        .font(.title2)
+                        .foregroundStyle(Color(.gray))
+                    Divider()
+                }
+                .padding(.horizontal, 20)
+                .contentShape(Rectangle())
+
+                ScrollView { sectionActivites }
+                    .animation(.easeInOut, value: afficherFiltreOverlay)
+                    .task { await vm.chargerActivites() }
+                    .refreshable { await vm.chargerActivites() }
+                    .navigationDestination(for: Activite.self) { activite in
+                        DetailsActivite(activite: activite)
+                            .onAppear { cacherBoutonSwitch = true }
+                            .onDisappear { cacherBoutonSwitch = false }
                     }
-                    .foregroundColor(.gray)
+            }
+            .onTapGesture {
+                if activiteAffichantInfo != nil {
+                    withAnimation { activiteAffichantInfo = nil }
                 }
                 
-                ScrollView {
-                    sectionFiltreEtTri
-                    
-                    if afficherFiltreOverlay {
-                        boiteFiltrage
-                            .padding(.bottom, 10)
-                            .padding(.horizontal, 20)
-                            .transition(.scale(scale: 1, anchor: .top).combined(with: .opacity))
-                    }
-                    
-                    sectionActivites
-                }
-                .animation(.easeInOut, value: afficherFiltreOverlay)
-                .onAppear {
-                    Task {
-                        await serviceActivites.fetchTousActivites()
-                        vm.activites = serviceActivites.activites
-                    }
-                }
-                .onTapGesture {
-                    // Dès qu'on tape dans la vue, on ferme toute info
-                    if activiteAffichantInfo != nil {
-                        withAnimation { activiteAffichantInfo = nil }
-                    }
-                }
+                if afficherFiltreOverlay { afficherFiltreOverlay = false }
             }
-            .navigationTitle("Explorer")
-            .navigationDestination(for: Activite.self) { activite in
-                DetailsActivite(activite: activite, namespace: namespaceAnimation)
-            }
-            .navigationBarBackButtonHidden(true)
-            .navigationBarHidden(true)
         }
     }
     
@@ -100,12 +97,7 @@ struct ExplorerListeVue: View {
             
             DatePicker(
                 "Date",
-                selection: Binding(
-                    get: { vm.dateAFiltree },
-                    set: { nvValeur in
-                        vm.dateAFiltree = nvValeur
-                    }
-                ),
+                selection: $vm.dateAFiltree,
                 in: vm.dateMin...vm.dateMax,
                 displayedComponents: .date
             )
@@ -130,35 +122,49 @@ struct ExplorerListeVue: View {
         .padding(.bottom, afficherFiltreOverlay ? 10 : 20)
     }
     
-    @ViewBuilder
     private var sectionActivites: some View {
-        if !vm.activites.isEmpty {
-            VStack(alignment: .leading) {
-                Text(dateAAffichee(vm.dateAFiltree))
-                    .font(.title2)
-                    .foregroundStyle(Color(.gray))
-                Divider()
-                    .padding(.bottom, 10)
+        Group {
+            if vm.estEnChargement {
+                GeometryReader { geometry in
+                    VStack {
+                        Spacer()
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .progressViewStyle(CircularProgressViewStyle())
+                        Spacer()
+                    }
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                }
+                .frame(minHeight: 550)
+            } else if !vm.activitesTriees.isEmpty {
                 LazyVStack(spacing: 20) {
                     ForEach(vm.activitesTriees, id: \.id) { activite in
                         RangeeActivite(
-                            namespace: namespaceAnimation,
                             afficherInfo: Binding(
                                 get: { activiteAffichantInfo == activite.id },
                                 set: { newValue in
                                     activiteAffichantInfo = newValue ? activite.id : nil
                                 }
                             ),
-                            estSelectionnee: $estSelectionnee,
-                            activite: activite,
-                            geolocalisation: gestionnaire.location?.coordinate
+                            activite: activite
                         )
                         .environmentObject(vm)
                     }
                 }
-                .padding(.bottom, 80) // faire de la place par rapport a le switcher
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+                .padding(.bottom, 90) // faire de la place par rapport a le switcher
+            } else {
+                GeometryReader { geometry in
+                    VStack {
+                        Spacer()
+                        MessageAucuneActivite()
+                        Spacer()
+                    }
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                }
+                .frame(minHeight: 550)
             }
-            .padding(.horizontal, 20)
         }
     }
     
@@ -200,7 +206,7 @@ struct ExplorerListeVue: View {
     
     ExplorerListeVue(
         utilisateur: .constant(mockUtilisateur),
-        emplacementsVM: DonneesEmplacementService()
+        cacherBoutonSwitch: .constant(false),
+        serviceEmplacements: DonneesEmplacementService()
     )
-
 }

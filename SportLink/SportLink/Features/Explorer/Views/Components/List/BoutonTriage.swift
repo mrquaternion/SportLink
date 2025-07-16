@@ -35,11 +35,11 @@ struct BoutonTriage: View {
                 .padding(14)
                 .background(Color(.systemGray5))
                 .clipShape(Circle())
-                .shadow(
-                    color: .black.opacity(0.1),
-                    radius: 10, x: 0, y: 0
-                )
         }
+        .shadow(
+            color: .black.opacity(0.1),
+            radius: 10, x: 0, y: 0
+        )
     }
 }
 

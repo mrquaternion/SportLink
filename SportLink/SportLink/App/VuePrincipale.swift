@@ -17,7 +17,7 @@ enum Onglets: Int {
 }
 
 struct VuePrincipale: View {
-    @EnvironmentObject var emplacementsVM: DonneesEmplacementService
+    @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
     
     @State var estPresente = false
     @State private var ongletSelectionne: Onglets = .accueil
@@ -59,7 +59,7 @@ struct VuePrincipale: View {
                     Text("Browse")
                 }
                 .tag(Onglets.explorer)
-                .environmentObject(emplacementsVM)
+                .environmentObject(serviceEmplacements)
             
             
             Text("")
@@ -99,8 +99,8 @@ struct VuePrincipale: View {
         .fullScreenCover(isPresented: $estPresente) {
             self.ongletSelectionne = self.ancienOngletSelectionne
         } content: {
-            CreerActiviteVue()
-                .environmentObject(emplacementsVM)
+            CreerActiviteVue(serviceEmplacements: serviceEmplacements)
+                .environmentObject(serviceEmplacements)
         }
     }
 }

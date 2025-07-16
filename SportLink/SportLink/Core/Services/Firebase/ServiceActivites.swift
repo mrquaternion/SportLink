@@ -13,11 +13,21 @@ import FirebaseFirestore
 @MainActor
 class ServiceActivites: ObservableObject {
     @Published var activites: [Activite] = []
+    let timestampMinuit: Timestamp
+    
+    init() {
+        let calendrier = Calendar.current
+        let maintenant = Date()
+
+        let minuitAujourdHui = calendrier.startOfDay(for: maintenant)
+        self.timestampMinuit = Timestamp(date: minuitAujourdHui)
+    }
     
     func fetchTousActivites() async {
         do {
             let requeteSnapshot = try await Firestore.firestore()
                 .collection("activites")
+                .whereField("date.debut", isGreaterThanOrEqualTo: timestampMinuit) // éviter de fetch les activiteé passées
                 .getDocuments()
             
             let dtos = try requeteSnapshot.documents.map { document in
@@ -63,6 +73,7 @@ class ServiceActivites: ObservableObject {
             let requeteSnapshot = try await Firestore.firestore()
                 .collection("activites")
                 .whereField("infraId", isEqualTo: infraId)
+                .whereField("date.debut", isGreaterThanOrEqualTo: timestampMinuit)
                 .getDocuments()
 
             let dtos = try requeteSnapshot.documents.map { document in
@@ -83,6 +94,7 @@ class ServiceActivites: ObservableObject {
             let requeteSnapshot = try await Firestore.firestore()
                 .collection("activites")
                 .whereField("organisateurId", isEqualTo: organisateurId)
+                .whereField("date.debut", isGreaterThanOrEqualTo: timestampMinuit) // on peut instorer une archive plus tard
                 .getDocuments()
 
             let dtos = try requeteSnapshot.documents.map { doc in
@@ -90,15 +102,13 @@ class ServiceActivites: ObservableObject {
             }
 
             let activitesConverties = dtos.map { $0.versActivite() }
+            print("Number of activites fetched: \(activitesConverties.count)")
             
             let activites = activitesConverties.map { activite in
                 var activiteMutable = activite
                 activiteMutable.id = UUID().uuidString
                 return activiteMutable
-            } // empêche SwiftUI d’identifier correctement chaque élément dans le ForEach ?
-            
-            // self.activites = activitesConverties
-            
+            }
             
             self.activites = activites
         } catch {

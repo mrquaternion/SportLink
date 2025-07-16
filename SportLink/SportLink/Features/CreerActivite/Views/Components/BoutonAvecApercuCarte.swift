@@ -9,26 +9,47 @@ import SwiftUI
 import MapKit
 
 struct BoutonAvecApercuCarte: View {
-    @EnvironmentObject var emplacementsVM: DonneesEmplacementService
+    private let vm: CreerActiviteVM
+    
     @State private var montrerCarte = false
     @Binding var sportChoisis: Set<String>
     @Binding var infraChoisie: Infrastructure?
+    
+    init(
+        vm: CreerActiviteVM,
+        sportChoisis: Binding<Set<String>>,
+        infraChoisie: Binding<Infrastructure?>
+    ) {
+        self.vm = vm
+        self._sportChoisis = sportChoisis
+        self._infraChoisie = infraChoisie
+    }
 
     var body: some View {
-        Button {
-            montrerCarte = true
-        } label: {
-            ApercuCarte(infraChoisie: infraChoisie)
+        ZStack(alignment: .topTrailing) {
+            ApercuCarte(vm: vm)
+           
+            if infraChoisie != nil {
+                Text("\(vm.obtenirDistanceDeUtilisateur(pour: infraChoisie)) away")
+                    .font(.caption)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8) // padding INTERNE
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .background(.ultraThinMaterial)
+                    )
+                    .padding([.trailing, .top], 10) // padding EXTERNE
+            }
         }
+        .onTapGesture { montrerCarte = true }
         .sheet(isPresented: $montrerCarte) {
             NavigationView {
                 // Carte
-                VStack {
-                    CarteSelectionInfrastructure(
-                        sportChoisis: $sportChoisis,
-                        infraChoisie: $infraChoisie
-                    )
-                }
+                CarteSelectionInfrastructure(
+                    sportChoisis: $sportChoisis,
+                    infraChoisie: $infraChoisie
+                )
                 .navigationTitle("Select a marker")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -44,13 +65,16 @@ struct BoutonAvecApercuCarte: View {
                 .toolbarBackground(.visible, for: .navigationBar)
             }
             .presentationDetents([.large])
-            .presentationCornerRadius(30)
+            .presentationCornerRadius(24)
         }
     }
 }
 
 #Preview {
-    BoutonAvecApercuCarte(sportChoisis: .constant(["All"]), infraChoisie: .constant(nil))
-        .environmentObject(DonneesEmplacementService())
+    BoutonAvecApercuCarte(
+        vm: CreerActiviteVM(serviceActivites: ServiceActivites(), serviceEmplacements: DonneesEmplacementService()),
+        sportChoisis: .constant(["All"]),
+        infraChoisie: .constant(nil)
+    )
 }
 

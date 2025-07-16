@@ -20,7 +20,7 @@ class RecherchePOIVM: ObservableObject {
     
     func ouvrirParcDansMaps(for parc: Parc, completion: @escaping (MKMapItem?) -> Void)  {
         let entree = parc.nom!
-        let region = regionEnglobantPolygone(parc.limites)
+        let region = regionEnglobantPolygone(parc.limites)! // unwrappable
         let recherche = trouverParc(entree: entree, region: region)
         
         recherche.start { reponse, erreur in

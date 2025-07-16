@@ -149,7 +149,7 @@ struct CarteVue: UIViewRepresentable {
                 .map { ParcAnnotation(parc: $0) }
             uiVue.addAnnotations(parcAnnotations)
             
-            let region = regionEnglobantPolygone(parc.limites)
+            let region = regionEnglobantPolygone(parc.limites)! // unwrappable
             uiVue.setRegion(region, animated: true)
             
             let polygon = MKPolygon(coordinates: parc.limites, count: parc.limites.count)
@@ -220,7 +220,8 @@ struct CarteVue: UIViewRepresentable {
             guard parent.parcSelectionne != nil else { return }
 
             let liveSpan = mapVue.region.span.latitudeDelta
-            let parcSpan = regionEnglobantPolygone(parent.parcSelectionne!.limites).span.longitudeDelta
+            let parcRegion = regionEnglobantPolygone(parent.parcSelectionne!.limites)! // unwrappable
+            let parcSpan = parcRegion.span.longitudeDelta
             if liveSpan > parcSpan * 3 {
                 parent.parcSelectionne = nil
             }
@@ -274,7 +275,7 @@ struct CarteVue: UIViewRepresentable {
                 let coordinates = cluster.memberAnnotations.map { $0.coordinate }
 
                 // Calculer la région englobante de tous les membres du cluster
-                let region = regionEnglobantPolygone(coordinates)
+                let region = regionEnglobantPolygone(coordinates)! // unwrappable
                 mapVue.setRegion(region, animated: true)
                 return
             }
@@ -282,7 +283,7 @@ struct CarteVue: UIViewRepresentable {
             if let parcAnnotation = vue.annotation as? ParcAnnotation {
                 parent.parcSelectionne = parcAnnotation.parc
 
-                let region = regionEnglobantPolygone(parcAnnotation.parc.limites)
+                let region = regionEnglobantPolygone(parcAnnotation.parc.limites)! // unwrappable
                 mapVue.setRegion(region, animated: true)
 
                 mapVue.removeAnnotation(parcAnnotation)
