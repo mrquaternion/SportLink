@@ -15,6 +15,7 @@ struct HostedVue: View {
     @State private var sportActiviteSelectionne: Sport = .soccer
     @State private var debutActivite: Date = Date()
     @State private var finActivite: Date = Date()
+    @State private var infraActiviteSelectionnee: Infrastructure?
 
     var listeActivites: some View {
         ForEach(serviceActivites.activites) { activite in
@@ -27,10 +28,20 @@ struct HostedVue: View {
                     onSeeMore: {
                         titreActiviteSelectionnee = activite.titre
                         sportActiviteSelectionne = Sport.depuisNom(activite.sport)
-                        afficherSeeMore = true
                         debutActivite = activite.date.debut
                         finActivite = activite.date.fin
+                        infraActiviteSelectionnee = emplacementsVM.infraPour(id: activite.infraId)
                         
+                        /* let infraTrouvee = emplacementsVM.infraPour(id: activite.infraId)
+                        print("🧭 ID recherché : \(activite.infraId)")
+                        print("🏗️ Infrastructure trouvée : \(String(describing: infraTrouvee))")
+                        
+                        infraActiviteSelectionnee = infraTrouvee */
+                        
+                        // ➤ Attendre un "tick" d'UI avant d'afficher le fullScreen
+                        DispatchQueue.main.async {
+                            afficherSeeMore = true
+                        }
                     }
                 )
             }
@@ -53,12 +64,13 @@ struct HostedVue: View {
             }
         }
         
-        .fullScreenCover(isPresented: $afficherSeeMore) {
+        .fullScreenCover(item: $infraActiviteSelectionnee) { infra in
             SeeMoreVueHosted(
                 titre: titreActiviteSelectionnee,
                 sport: sportActiviteSelectionne,
                 debut: debutActivite,
-                fin: finActivite
+                fin: finActivite,
+                infrastructure: infra
             )
         }
     }

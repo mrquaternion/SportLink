@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct SeeMoreVueHosted: View {
     let titre: String
     let sport: Sport
     let debut: Date
     let fin: Date
+    let infrastructure: Infrastructure
     @Environment(\.dismiss) var dismiss
     
     private var dateFormatter: DateFormatter {
@@ -78,6 +80,9 @@ struct SeeMoreVueHosted: View {
                     .font(.title3)
                     .foregroundColor(.gray)
                     .padding(.horizontal)
+                
+                CarteParcSeeMore(coordonneesParc: infrastructure.coordonnees)
+                
 
                 Spacer()
             }
@@ -95,7 +100,8 @@ struct SeeMoreVueHosted: View {
             titre: "Tournoi de soccer",
             sport: .soccer,
             debut: Calendar.current.date(bySettingHour: 18, minute: 0, second: 0, of: Date())!,
-            fin: Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date())!
+            fin: Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date())!,
+            infrastructure: Infrastructure(id: "mock", indexParc: "0", coordonnees: CLLocationCoordinate2D(latitude: 45.5, longitude: -73.56), sport: [.soccer])
         )
     }
 }

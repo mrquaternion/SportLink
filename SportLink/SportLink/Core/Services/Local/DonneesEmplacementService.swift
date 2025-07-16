@@ -103,3 +103,10 @@ extension DonneesEmplacementService {
         )
     }
 }
+
+extension DonneesEmplacementService {
+    /// Retourne l'infrastructure correspondant à l'identifiant fourni, ou nil si introuvable.
+    func infraPour(id: String) -> Infrastructure? {
+        infrastructures.first { $0.id == id }
+    }
+}
