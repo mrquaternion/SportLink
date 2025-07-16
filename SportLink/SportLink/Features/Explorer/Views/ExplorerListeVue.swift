@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct ExplorerListeVue: View {
+    @EnvironmentObject var tabBarEtat: TabBarEtat
+    
     @StateObject private var vm: ExplorerListeVM
     
     @Binding var utilisateur: Utilisateur
     @Binding var cacherBoutonSwitch: Bool
+    
     @State private var afficherFiltreOverlay = false
     @State private var activiteAffichantInfo: Activite.ID? = nil
     
@@ -41,9 +44,10 @@ struct ExplorerListeVue: View {
             VStack(spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(dateAAffichee(vm.dateAFiltree))
-                        .font(.title2)
-                        .foregroundStyle(Color(.gray))
+                        .font(.title3)
+                        .foregroundStyle(Color(.black).opacity(0.8))
                     Divider()
+                        .background(Color(.black).opacity(0.8))
                 }
                 .padding(.horizontal, 20)
                 .contentShape(Rectangle())
@@ -54,8 +58,14 @@ struct ExplorerListeVue: View {
                     .refreshable { await vm.chargerActivites() }
                     .navigationDestination(for: Activite.self) { activite in
                         DetailsActivite(activite: activite)
-                            .onAppear { cacherBoutonSwitch = true }
-                            .onDisappear { cacherBoutonSwitch = false }
+                            .onAppear {
+                                cacherBoutonSwitch = true
+                                tabBarEtat.estVisible = false
+                            }
+                            .onDisappear {
+                                cacherBoutonSwitch = false
+                                tabBarEtat.estVisible = true
+                            }
                     }
             }
             .onTapGesture {

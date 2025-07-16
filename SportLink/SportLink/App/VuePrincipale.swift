@@ -1,112 +1,65 @@
-//
-//  ContentView.swift
-//  SportLink
-//
-//  Created by Mathias La Rochelle on 2025-06-01.
-//
-
 import SwiftUI
 import MapKit
 
 enum Onglets: Int {
-    case accueil = 0
-    case explorer = 1
-    case creer = 2
-    case activites = 3
-    case profil = 4
+    case accueil, explorer, creer, activites, profil
 }
 
 struct VuePrincipale: View {
     @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
-    
-    @State var estPresente = false
+    @EnvironmentObject var tabBarEtat: TabBarEtat
     @State private var ongletSelectionne: Onglets = .accueil
-    @State private var ancienOngletSelectionne: Onglets = .accueil
-    // MARK: Mock
-    @State private var utilisateur = Utilisateur(
-        nomUtilisateur: "mathias13",
-        courriel: "",
-        photoProfil: "",
-        disponibilites: [:],
-        sportsFavoris: [],
-        activitesFavoris: [],
-        partenairesRecents: []
-    )
+    @State private var estPresente = false
+    @State private var afficherTabBar = true
 
-    init() {
-        let tabBarAppearance = UITabBarAppearance()
-        tabBarAppearance.configureWithOpaqueBackground()
-        tabBarAppearance.backgroundColor = UIColor.white
-        UITabBar.appearance().standardAppearance = tabBarAppearance
-
-        if #available(iOS 15.0, *) {
-            UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
-        }
-    }
-    
     var body: some View {
-        TabView(selection: $ongletSelectionne) {
-            AccueilVue()
-                .tabItem {
-                    Image(ongletSelectionne == .accueil ? "home_fill" : "home")
-                    Text("Home")
+        ZStack(alignment: .bottom) {
+            Group {
+                switch ongletSelectionne {
+                case .accueil:
+                    AccueilVue()
+                case .explorer:
+                    ExplorerVue(utilisateur: .constant(mockUtilisateur))
+                        .environmentObject(serviceEmplacements)
+                case .creer:
+                    Color.clear // ne sera jamais directement visible
+                case .activites:
+                    ActivitesVue()
+                case .profil:
+                    ProfilVue()
                 }
-                .tag(Onglets.accueil)
-            
-            ExplorerVue(utilisateur: $utilisateur)
-                .tabItem {
-                    Image(ongletSelectionne == .explorer ? "browse_fill" : "browse")
-                    Text("Browse")
-                }
-                .tag(Onglets.explorer)
-                .environmentObject(serviceEmplacements)
-            
-            
-            Text("")
-                .tabItem {
-                    Image(ongletSelectionne == .creer ? "create_fill" : "create")
-                    Text("Create")
-                }
-                .tag(Onglets.creer)
-            
-            
-            ActivitesVue()
-                .tabItem {
-                    Image(ongletSelectionne == .activites ? "activities_fill" : "activities")
-                    Text("Activities")
-                }
-                .tag(Onglets.activites)
-            
-            
-            ProfilVue()
-                .tabItem {
-                    Image(ongletSelectionne == .profil ? "profile_fill" : "profile")
-                    Text("Profil")
-                }
-                .tag(Onglets.profil)
-        }
-        .tint(Color("CouleurParDefaut"))
-        .onChange(of: ongletSelectionne) { oldValue, newValue in // source : https://stackoverflow.com/questions/64103934/swiftui-tab-view-display-sheet
-            if ongletSelectionne == .creer {
-                self.estPresente = true
-                DispatchQueue.main.async {
-                    self.ongletSelectionne = oldValue
-                }
-            } else {
-                self.ancienOngletSelectionne = newValue
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    
+        
+            TabBarPersonnalisee(
+                ongletSelectionnee: $ongletSelectionne,
+                estPresente: $estPresente
+            )
+            .offset(y: tabBarEtat.estVisible ? 0 : UIScreen.main.bounds.height)
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .fullScreenCover(isPresented: $estPresente) {
-            self.ongletSelectionne = self.ancienOngletSelectionne
-        } content: {
             CreerActiviteVue(serviceEmplacements: serviceEmplacements)
                 .environmentObject(serviceEmplacements)
         }
     }
+
+    private var mockUtilisateur: Utilisateur {
+        Utilisateur(
+            nomUtilisateur: "mathias13",
+            courriel: "",
+            photoProfil: "",
+            disponibilites: [:],
+            sportsFavoris: [],
+            activitesFavoris: [],
+            partenairesRecents: []
+        )
+    }
 }
+
 
 #Preview {
     VuePrincipale()
         .environmentObject(DonneesEmplacementService())
 }
-

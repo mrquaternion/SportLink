@@ -56,7 +56,7 @@ struct ExplorerCarteVue: View {
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
             }
-            .edgesIgnoringSafeArea(.all)
+            .ignoresSafeArea(.all)
             
             VStack {
                 BarreTemporelle(dateSelectionnee: $dateSelectionnee)
@@ -163,7 +163,7 @@ struct ExplorerCarteVue: View {
                     }
                     .buttonStyle(.plain)
                     .padding([.top, .leading, .trailing])
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 70)
                 }
             }
         }
