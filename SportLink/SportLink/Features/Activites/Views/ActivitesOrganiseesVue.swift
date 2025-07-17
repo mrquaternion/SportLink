@@ -33,7 +33,8 @@ struct ActivitesOrganiseesVue: View {
             }
             .navigationDestination(for: Activite.self) { activite in
                 DetailsActivite(activite: activite)
-                    .environmentObject(activitesVM) // navigationDestination brise la chaine des environemments donc on doit le redonner
+                    .environmentObject(activitesVM)// navigationDestination brise la chaine des environemments donc on doit le redonner
+                    .environmentObject(vm)
             }
     }
     

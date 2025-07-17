@@ -10,7 +10,7 @@ import Foundation
 
 @MainActor
 class ActivitesOrganiseesVM: ObservableObject {
-    private let serviceActivites: ServiceActivites
+    let serviceActivites: ServiceActivites
     private let serviceEmplacements: DonneesEmplacementService
     private let gestionnaireLocalisation = GestionnaireLocalisation.instance
     
@@ -28,5 +28,13 @@ class ActivitesOrganiseesVM: ObservableObject {
         await serviceActivites.fetchActivitesParOrganisateur(organisateurId: organisateurId)
         self.activites = serviceActivites.activites
         estEnChargement = false
+    }
+    
+    func mettreAJourTitreLocalement(idActivite: String, nouveauTitre: String) {
+        if let index = activites.firstIndex(where: { $0.id == idActivite }) {
+            activites[index].titre = nouveauTitre
+        } else {
+            print("⚠️ Activité avec ID \(idActivite) non trouvée localement.")
+        }
     }
 }
