@@ -78,7 +78,7 @@ struct DetailsActivite: View {
                             .padding()
                     }
                     .sheet(isPresented: $afficherVueEdition) {
-                        ModifierVue()
+                        ModifierVue(activite: activite)
                     }
                 }
             }
