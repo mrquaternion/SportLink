@@ -20,8 +20,8 @@ struct TabBarPersonnalisee: View {
             ) { ongletSelectionnee = .accueil }
             Spacer()
             TabBarButton(
-                imageName: ongletSelectionnee == .explorer ? "browse_fill" : "browse",
-                title: "Browse",
+                imageName: ongletSelectionnee == .explorer ? "discover_fill" : "discover",
+                title: "Discover",
                 isSelected: ongletSelectionnee == .explorer
             ) { ongletSelectionnee = .explorer }
             Spacer()
@@ -32,8 +32,8 @@ struct TabBarPersonnalisee: View {
             ) {  estPresente = true }
             Spacer()
             TabBarButton(
-                imageName: ongletSelectionnee == .activites ? "activities_fill" : "activities",
-                title: "Activities",
+                imageName: ongletSelectionnee == .activites ? "dashboard_fill" : "dashboard",
+                title: "Dashboard",
                 isSelected: ongletSelectionnee == .activites
             ) { ongletSelectionnee = .activites }
             Spacer()
@@ -66,10 +66,10 @@ struct TabBarPersonnalisee: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(isSelected ? Color("CouleurParDefaut") : Color.black)
+                        .foregroundColor(isSelected ? Color("CouleurParDefaut") : Color.gray)
                     Text(title)
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(isSelected ? Color("CouleurParDefaut") : Color.black)
+                        .foregroundColor(isSelected ? Color("CouleurParDefaut") : Color.gray)
                 }
             }
             .frame(maxWidth: .infinity)

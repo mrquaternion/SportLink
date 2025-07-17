@@ -10,6 +10,8 @@ import SwiftUI
 struct BoutonTriage: View {
     @Binding var optionTri: OptionTri
     
+    let cercleDim: CGFloat = 22
+    
     var body: some View {
         Menu {
             Button { optionTri = .date } label: {
@@ -30,16 +32,21 @@ struct BoutonTriage: View {
             }
         } label: {
             Image(systemName: "arrow.up.arrow.down")
-                .font(.title3)
+                .resizable()
+                .scaledToFit()
+                .frame(width: cercleDim, height: cercleDim)
                 .foregroundStyle(.black)
-                .padding(14)
-                .background(Color(.systemGray5))
+                .padding(10)
+                .background(
+                    Circle()
+                        .fill(Color.white)
+                )
                 .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Color(.systemGray4), lineWidth: 1)
+                )
         }
-        .shadow(
-            color: .black.opacity(0.1),
-            radius: 10, x: 0, y: 0
-        )
     }
 }
 

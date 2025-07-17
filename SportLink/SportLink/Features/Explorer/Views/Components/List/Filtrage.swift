@@ -10,26 +10,24 @@ import SwiftUI
 struct BoutonFiltrage: View {
     @Binding var afficherFiltreOverlay: Bool
     @Binding var dateAFiltree: Date
-    let cercleDim: CGFloat = 26
+    let cercleDim: CGFloat = 18
     
     var body: some View {
         Button {
+            UIApplication.shared.terminerEditage()
             withAnimation(.linear(duration: 0.2)) { afficherFiltreOverlay.toggle() }
         } label: {
             Image("filter_map")
                 .resizable()
                 .scaledToFit()
                 .frame(width: cercleDim, height: cercleDim)
-                .font(.title3)
                 .foregroundStyle(.black)
-                .padding(14)
-                .background(Color(.systemGray5))
-                .clipShape(Circle())
+                .padding(8)
+                .background(
+                    Circle()
+                        .strokeBorder(Color(.systemGray4), lineWidth: 1)
+                )
         }
-        .shadow(
-            color: .black.opacity(0.1),
-            radius: 10, x: 0, y: 0
-        )
         .opacity(afficherFiltreOverlay ? 0.2 : 1.0)
         .buttonStyle(.plain)
     }
@@ -76,7 +74,7 @@ struct BoiteFiltrage: View {
             .padding(.top, 20)
         }
         .padding()
-        .background(Color(red: 0.96, green: 0.96, blue: 0.96))
+        .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }

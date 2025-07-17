@@ -229,4 +229,5 @@ struct RangeeActivite: View {
             serviceActivites: ServiceActivites()
         )
     }())
+    .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
 }

@@ -16,6 +16,9 @@ struct ActivitesVue: View {
 
     var body: some View {
         ZStack(alignment: .top) {
+            Color(.systemGray6)
+                .ignoresSafeArea()
+            
             Group {
                 switch selection {
                 case .hosted:
@@ -30,6 +33,8 @@ struct ActivitesVue: View {
             
             OngletsActivites(selection: $selection)
                 .padding(.top, 40)
+                .padding(.bottom, 15)
+                .background(Color(.systemGray6))
         }
     }
 }

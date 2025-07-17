@@ -188,4 +188,5 @@ struct DetailsActivite: View {
         )
     
     DetailsActivite(activite: mockActivite)
+        .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
 }

@@ -14,6 +14,8 @@ struct ExplorerListeVue: View {
     
     @Binding var utilisateur: Utilisateur
     
+    @FocusState private var estEnTrainDeChercher: Bool
+    
     @State private var afficherFiltreOverlay = false
     @State private var activiteAffichantInfo: Activite.ID? = nil
     
@@ -29,41 +31,50 @@ struct ExplorerListeVue: View {
     }
     
     var body: some View {
-        NavigationStack {
-            sectionFiltreEtTri
+        ZStack {
+            Color(.systemGray6)
+                .ignoresSafeArea()
             
-            if afficherFiltreOverlay {
-                BoiteFiltrage()
-                    .padding(.horizontal, 20)
-                    .transition(.scale(scale: 1, anchor: .top).combined(with: .opacity))
-            }
-            
-            VStack(spacing: 8) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(vm.dateAAffichee(vm.dateAFiltree))
-                        .font(.title3)
-                        .foregroundStyle(Color(.black).opacity(0.8))
-                    Divider()
-                        .background(Color(.black).opacity(0.8))
-                }
-                .padding(.horizontal, 20)
-                .contentShape(Rectangle())
-
-                ScrollView { sectionActivites }
-                    .animation(.easeInOut, value: afficherFiltreOverlay)
-                    .task { await vm.chargerActivites() }
-                    .refreshable { await vm.chargerActivites() }
-                    .navigationDestination(for: Activite.self) { activite in
-                        DetailsActivite(activite: activite)
-                            .environmentObject(activitesVM) // navigationDestination brise la chaine des environemments donc on doit le redonner
-                    }
-            }
-            .onTapGesture {
-                if activiteAffichantInfo != nil {
-                    withAnimation { activiteAffichantInfo = nil }
+            VStack {
+                sectionFiltreEtTri
+                
+                if afficherFiltreOverlay {
+                    BoiteFiltrage()
+                        .padding(.horizontal, 20)
+                        .transition(.scale(scale: 1, anchor: .top).combined(with: .opacity))
                 }
                 
-                if afficherFiltreOverlay { afficherFiltreOverlay = false }
+                VStack(spacing: 8) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(vm.dateAAffichee(vm.dateAFiltree))
+                            .font(.title3)
+                            .foregroundStyle(Color(.black).opacity(0.8))
+                        Divider()
+                            .background(Color(.black).opacity(0.8))
+                    }
+                    .padding(.horizontal, 20)
+                    .contentShape(Rectangle())
+
+                    ScrollView { sectionActivites }
+                        .animation(.easeInOut, value: afficherFiltreOverlay)
+                        .task { await vm.chargerActivites() }
+                        .refreshable { await vm.chargerActivites() }
+                        .navigationDestination(for: Activite.self) { activite in
+                            DetailsActivite(activite: activite)
+                                .environmentObject(activitesVM) // navigationDestination brise la chaine des environemments donc on doit le redonner
+                        }
+                }
+                .onTapGesture {
+                    if activiteAffichantInfo != nil {
+                        withAnimation { activiteAffichantInfo = nil }
+                    }
+                    
+                    if afficherFiltreOverlay { afficherFiltreOverlay = false }
+                    
+                    estEnTrainDeChercher = false
+                }
+                
+             
             }
         }
         .environmentObject(vm)
@@ -71,9 +82,12 @@ struct ExplorerListeVue: View {
     
     private var sectionFiltreEtTri: some View {
         HStack(spacing: 8) {
-            BarreDeRecherche(texteDeRecherche: $vm.texteDeRecherche)
-            
-            BoutonFiltrage(afficherFiltreOverlay: $afficherFiltreOverlay, dateAFiltree: $vm.dateAFiltree)
+            BarreDeRecherche(
+                texteDeRecherche: $vm.texteDeRecherche,
+                afficherFiltreOverlay: $afficherFiltreOverlay,
+                dateAFiltree: $vm.dateAFiltree
+            )
+            .focused($estEnTrainDeChercher)
             
             BoutonTriage(optionTri: $vm.optionTri)
         }
