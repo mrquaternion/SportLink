@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-final class TabBarEtat: ObservableObject {
-    @Published var estVisible: Bool = true
-}
-
 struct TabBarPersonnalisee: View {
     @Binding var ongletSelectionnee: Onglets
     @Binding var estPresente: Bool

@@ -8,45 +8,33 @@
 import SwiftUI
 
 struct ActivitesOrganiseesVue: View {
-    @EnvironmentObject var tabBarEtat: TabBarEtat
+    @EnvironmentObject var activitesVM: ActivitesVM
     
     @StateObject private var vm: ActivitesOrganiseesVM
     
     @State private var activiteAffichantInfo: Activite.ID? = nil
     @State private var activiteSelectionnee: Activite? = nil
     
-    @Binding var cacherOnglets: Bool
-    
-    init(serviceEmplacements: DonneesEmplacementService, cacherOnglets: Binding<Bool>) {
+    init(serviceEmplacements: DonneesEmplacementService) {
         self._vm = StateObject(wrappedValue: ActivitesOrganiseesVM(
             serviceActivites: ServiceActivites(),
             serviceEmplacements: serviceEmplacements
         ))
-        self._cacherOnglets = cacherOnglets
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView { sectionActivites }
-                .task { await vm.chargerActivitesParOrganisateur(organisateurId: "mockID") }
-                .refreshable { await vm.chargerActivitesParOrganisateur(organisateurId: "mockID") }
-                .onTapGesture {
-                    if activiteAffichantInfo != nil {
-                        withAnimation { activiteAffichantInfo = nil }
-                    }
+        ScrollView { sectionActivites }
+            .task { await vm.chargerActivitesParOrganisateur(organisateurId: "mockID") }
+            .refreshable { await vm.chargerActivitesParOrganisateur(organisateurId: "mockID") }
+            .onTapGesture {
+                if activiteAffichantInfo != nil {
+                    withAnimation { activiteAffichantInfo = nil }
                 }
-                .navigationDestination(for: Activite.self) { activite in
-                    DetailsActivite(activite: activite)
-                        .onAppear {
-                            tabBarEtat.estVisible = false
-                            cacherOnglets = true
-                        }
-                        .onDisappear {
-                            tabBarEtat.estVisible = true
-                            cacherOnglets = false
-                        }
-                }
-        }
+            }
+            .navigationDestination(for: Activite.self) { activite in
+                DetailsActivite(activite: activite)
+                    .environmentObject(activitesVM) // navigationDestination brise la chaine des environemments donc on doit le redonner
+            }
     }
     
     var sectionActivites: some View {
@@ -71,10 +59,7 @@ struct ActivitesOrganiseesVue: View {
 }
 
 #Preview {
-    ActivitesOrganiseesVue(
-        serviceEmplacements: DonneesEmplacementService(),
-        cacherOnglets: .constant(false)
-    )
-    .environmentObject(DonneesEmplacementService())
-    .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
+    ActivitesOrganiseesVue(serviceEmplacements: DonneesEmplacementService())
+        .environmentObject(DonneesEmplacementService())
+        .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
 }

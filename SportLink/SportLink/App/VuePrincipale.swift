@@ -7,7 +7,6 @@ enum Onglets: Int {
 
 struct VuePrincipale: View {
     @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
-    @EnvironmentObject var tabBarEtat: TabBarEtat
     @StateObject private var activitesVM: ActivitesVM
     @State private var ongletSelectionne: Onglets = .accueil
     @State private var estPresente = false
@@ -18,39 +17,38 @@ struct VuePrincipale: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Group {
-                switch ongletSelectionne {
-                case .accueil:
-                    AccueilVue()
-                case .explorer:
-                    ExplorerVue(utilisateur: .constant(mockUtilisateur))
-                        .environmentObject(serviceEmplacements)
-                        .environmentObject(activitesVM)
-                case .creer:
-                    Color.clear // ne sera jamais directement visible
-                case .activites:
-                    ActivitesVue()
-                        .environmentObject(serviceEmplacements)
-                        .environmentObject(activitesVM)
-                case .profil:
-                    ProfilVue()
+        NavigationStack {
+            ZStack(alignment: .bottom) {
+                Group {
+                    switch ongletSelectionne {
+                    case .accueil:
+                        AccueilVue()
+                    case .explorer:
+                        ExplorerVue(utilisateur: .constant(mockUtilisateur))
+                            .environmentObject(serviceEmplacements)
+                            .environmentObject(activitesVM)
+                    case .creer:
+                        Color.clear // ne sera jamais directement visible
+                    case .activites:
+                        ActivitesVue()
+                            .environmentObject(serviceEmplacements)
+                            .environmentObject(activitesVM)
+                    case .profil:
+                        ProfilVue()
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                TabBarPersonnalisee(
+                    ongletSelectionnee: $ongletSelectionne,
+                    estPresente: $estPresente
+                )
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    
-            TabBarPersonnalisee(
-                ongletSelectionnee: $ongletSelectionne,
-                estPresente: $estPresente
-            )
-            .opacity(!tabBarEtat.estVisible ? 0.0 : 1.0)
-            .allowsHitTesting(tabBarEtat.estVisible)
-            .animation(.easeInOut(duration: 0.2), value: tabBarEtat.estVisible)
-        }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
-        .fullScreenCover(isPresented: $estPresente) {
-            CreerActiviteVue(serviceEmplacements: serviceEmplacements)
-                .environmentObject(serviceEmplacements)
+            .ignoresSafeArea(.keyboard, edges: .bottom)
+            .fullScreenCover(isPresented: $estPresente) {
+                CreerActiviteVue(serviceEmplacements: serviceEmplacements)
+                    .environmentObject(serviceEmplacements)
+            }
         }
     }
 
@@ -71,5 +69,4 @@ struct VuePrincipale: View {
 #Preview {
     VuePrincipale(serviceEmplacements: DonneesEmplacementService())
         .environmentObject(DonneesEmplacementService())
-        .environmentObject(TabBarEtat())
 }

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ExplorerVue: View {
     @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
+    @EnvironmentObject var activitesVM: ActivitesVM
     @State private var modeAffichage: ModeAffichage = .liste
-    @State private var cacherBoutonSwitch = false
     @Binding var utilisateur: Utilisateur
 
     var body: some View {
@@ -19,10 +19,10 @@ struct ExplorerVue: View {
                 if modeAffichage == .liste {
                     ExplorerListeVue(
                         utilisateur: $utilisateur,
-                        cacherBoutonSwitch: $cacherBoutonSwitch,
                         serviceEmplacements: serviceEmplacements
                     )
                     .environmentObject(serviceEmplacements)
+                    .environmentObject(activitesVM)
                 } else {
                     ExplorerCarteVue(utilisateur: $utilisateur)
                         .environmentObject(serviceEmplacements)
@@ -33,10 +33,6 @@ struct ExplorerVue: View {
                 Spacer()
                 BoutonSwitchExplorer(modeAffichage: $modeAffichage)
                     .padding(.bottom, 70)
-                    .opacity(cacherBoutonSwitch ? 0.0 : 1.0)
-                    .allowsHitTesting(!cacherBoutonSwitch)
-                    .animation(.easeInOut(duration: 0.2), value: cacherBoutonSwitch)
-                
             }
         }
         .ignoresSafeArea(.keyboard)

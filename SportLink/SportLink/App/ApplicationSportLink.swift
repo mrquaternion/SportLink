@@ -25,13 +25,11 @@ struct ApplicationSportLink: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     @StateObject private var emplacementsVM = DonneesEmplacementService()
-    @StateObject private var tabBarEtat = TabBarEtat()
     
     var body: some Scene {
         WindowGroup {
             VuePrincipale(serviceEmplacements: emplacementsVM)
                 .environmentObject(emplacementsVM)
-                .environmentObject(tabBarEtat)
                 .onAppear {
                     emplacementsVM.chargerDonnees()
                 }

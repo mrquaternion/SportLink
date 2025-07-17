@@ -8,23 +8,20 @@
 import SwiftUI
 
 struct ExplorerListeVue: View {
-    @EnvironmentObject var tabBarEtat: TabBarEtat
+    @EnvironmentObject var activitesVM: ActivitesVM
     
     @StateObject private var vm: ExplorerListeVM
     
     @Binding var utilisateur: Utilisateur
-    @Binding var cacherBoutonSwitch: Bool
     
     @State private var afficherFiltreOverlay = false
     @State private var activiteAffichantInfo: Activite.ID? = nil
     
     init(
         utilisateur: Binding<Utilisateur>,
-        cacherBoutonSwitch: Binding<Bool>,
         serviceEmplacements: DonneesEmplacementService
     ) {
         self._utilisateur = utilisateur
-        self._cacherBoutonSwitch = cacherBoutonSwitch
         self._vm = StateObject(wrappedValue: ExplorerListeVM(
             serviceEmplacements: serviceEmplacements,
             serviceActivites: ServiceActivites()
@@ -58,14 +55,7 @@ struct ExplorerListeVue: View {
                     .refreshable { await vm.chargerActivites() }
                     .navigationDestination(for: Activite.self) { activite in
                         DetailsActivite(activite: activite)
-                            .onAppear {
-                                cacherBoutonSwitch = true
-                                tabBarEtat.estVisible = false
-                            }
-                            .onDisappear {
-                                cacherBoutonSwitch = false
-                                tabBarEtat.estVisible = true
-                            }
+                            .environmentObject(activitesVM) // navigationDestination brise la chaine des environemments donc on doit le redonner
                     }
             }
             .onTapGesture {
@@ -151,7 +141,6 @@ struct ExplorerListeVue: View {
     
     ExplorerListeVue(
         utilisateur: .constant(mockUtilisateur),
-        cacherBoutonSwitch: .constant(false),
         serviceEmplacements: DonneesEmplacementService()
     )
     .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
