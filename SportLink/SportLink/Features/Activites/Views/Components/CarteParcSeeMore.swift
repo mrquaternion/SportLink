@@ -5,41 +5,64 @@
 //  Created by Michel Lamothe on 2025-07-16.
 //
 
-//
-//  CarteParcSeeMore.swift
-//  SportLink
-//
-//  Created by [TonNom] on [Date].
-//
-
 import SwiftUI
 import MapKit
 
-struct CarteParcSeeMore: View {
-    let coordonneesParc: CLLocationCoordinate2D
-    @State private var region: MKCoordinateRegion
+struct CarteParcSeeMore: UIViewRepresentable {
+    let infrastructure: Infrastructure
 
-    init(coordonneesParc: CLLocationCoordinate2D) {
-        self.coordonneesParc = coordonneesParc
-        _region = State(initialValue: MKCoordinateRegion(
-            center: coordonneesParc,
-            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-        ))
-    }
+    class Coordinator: NSObject, MKMapViewDelegate {
+        let parent: CarteParcSeeMore
 
-    var body: some View {
-        Map(coordinateRegion: $region, annotationItems: [coordonneesParc]) { coord in
-            MapMarker(coordinate: coord, tint: .blue)
+        init(parent: CarteParcSeeMore) {
+            self.parent = parent
         }
-        .frame(height: 300)
-        .cornerRadius(12)
-        .padding(.horizontal)
-    }
-}
 
-// Extension pour rendre CLLocationCoordinate2D conforme à Identifiable
-extension CLLocationCoordinate2D: Identifiable {
-    public var id: String {
-        "\(latitude)-\(longitude)"
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            if annotation is MKUserLocation { return nil }
+
+            if let infraAnnotation = annotation as? InfraAnnotation {
+                let id = "infraSeeMore"
+                var infraView = mapView.dequeueReusableAnnotationView(withIdentifier: id) as? MKMarkerAnnotationView
+                infraView = infraView ?? MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
+                infraView?.annotation = annotation
+                infraView?.markerTintColor = UIColor(named: "CouleurParDefaut")
+                infraView?.glyphImage = imagePourSports(infraAnnotation.typeDeSport)
+                return infraView
+            }
+
+            return nil
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
+    }
+
+    func makeUIView(context: Context) -> MKMapView {
+        let map = MKMapView()
+        map.delegate = context.coordinator
+        map.showsUserLocation = false
+        map.isScrollEnabled = false
+        map.isZoomEnabled = false
+        map.isPitchEnabled = false
+        map.isRotateEnabled = false
+
+        map.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: "infraSeeMore")
+
+        let annotation = InfraAnnotation(infra: infrastructure)
+        map.addAnnotation(annotation)
+
+        let region = MKCoordinateRegion(
+            center: infrastructure.coordonnees,
+            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        )
+        map.setRegion(region, animated: false)
+
+        return map
+    }
+
+    func updateUIView(_ uiView: MKMapView, context: Context) {
+        // Pas besoin de mise à jour dynamique pour l'instant
     }
 }

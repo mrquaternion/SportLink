@@ -16,6 +16,9 @@ struct HostedVue: View {
     @State private var debutActivite: Date = Date()
     @State private var finActivite: Date = Date()
     @State private var infraActiviteSelectionnee: Infrastructure?
+    @State private var nomParcSelectionne: String = ""
+    @State private var placesDisponibles: Int = 0
+    @State private var activiteSelectionnee: Activite? = nil
 
     var listeActivites: some View {
         ForEach(serviceActivites.activites) { activite in
@@ -30,13 +33,12 @@ struct HostedVue: View {
                         sportActiviteSelectionne = Sport.depuisNom(activite.sport)
                         debutActivite = activite.date.debut
                         finActivite = activite.date.fin
+                        nomParcSelectionne = parc.nom ?? ""
+                        placesDisponibles = activite.nbJoueursRecherches
+                        activiteSelectionnee = activite
+                        
                         infraActiviteSelectionnee = emplacementsVM.infraPour(id: activite.infraId)
-                        
-                        /* let infraTrouvee = emplacementsVM.infraPour(id: activite.infraId)
-                        print("🧭 ID recherché : \(activite.infraId)")
-                        print("🏗️ Infrastructure trouvée : \(String(describing: infraTrouvee))")
-                        
-                        infraActiviteSelectionnee = infraTrouvee */
+                    
                         
                         // ➤ Attendre un "tick" d'UI avant d'afficher le fullScreen
                         DispatchQueue.main.async {
@@ -64,14 +66,21 @@ struct HostedVue: View {
             }
         }
         
-        .fullScreenCover(item: $infraActiviteSelectionnee) { infra in
-            SeeMoreVueHosted(
-                titre: titreActiviteSelectionnee,
-                sport: sportActiviteSelectionne,
-                debut: debutActivite,
-                fin: finActivite,
-                infrastructure: infra
-            )
+        .fullScreenCover(item: $activiteSelectionnee) { activite in
+            if let infra = emplacementsVM.infraPour(id: activite.infraId),
+               let parc = emplacementsVM.parcs.first(where: { $0.index == infra.indexParc }) {
+
+                SeeMoreVueHosted(
+                    titre: activite.titre,
+                    sport: Sport.depuisNom(activite.sport),
+                    debut: activite.date.debut,
+                    fin: activite.date.fin,
+                    nomParc: parc.nom ?? "",
+                    infrastructure: infra,
+                    nbPlacesDisponibles: activite.nbJoueursRecherches,
+                    invitationsOuvertes: activite.invitationsOuvertes
+                )
+            }
         }
     }
 }
