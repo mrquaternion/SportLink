@@ -8,8 +8,27 @@
 import SwiftUI
 import MapKit
 
+private struct CacherBoutonJoinKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    var cacherBoutonJoin: Bool {
+        get { self[CacherBoutonJoinKey.self] }
+        set { self[CacherBoutonJoinKey.self] = newValue }
+    }
+}
+
+extension View {
+    func cacherBoutonJoin(_ cacher: Bool = true) -> some View {
+        environment(\.cacherBoutonJoin, cacher)
+    }
+}
+
 struct RangeeActivite: View {
     @EnvironmentObject var vm: ExplorerListeVM
+    @EnvironmentObject var activitesVM: ActivitesVM
+    @Environment(\.cacherBoutonJoin) private var cacherBoutonJoin
     
     @State private var estFavoris = false
     @Binding var afficherInfo: Bool
@@ -17,10 +36,11 @@ struct RangeeActivite: View {
     let activite: Activite
     let couleur = Color(red: 0.784, green: 0.231, blue: 0.216)
     
-    private var nomParc: String {
-        guard let nom = vm.obtenirObjetParcAPartirInfra(pour: activite.infraId)?.nom
-        else { return "" }
-        return nom
+    private var nomDuParc: String {
+        let (_, parcOpt) = activitesVM.obtenirInfraEtParc(infraId: activite.infraId)
+        guard let parc = parcOpt else { return "" }
+        
+        return parc.nom!
     }
     
     private var nbPlacesRestantes: String {
@@ -54,6 +74,7 @@ struct RangeeActivite: View {
                                 // Info bulle au centre de l'image
                                 Text("Image for illustration only, not actual representation of the \(activite.sport) infrastructure.")
                                     .multilineTextAlignment(.center)
+                                    .frame(width: 280)
                                     .font(.footnote)
                                     .foregroundColor(.black)
                                     .padding(.horizontal)
@@ -64,12 +85,11 @@ struct RangeeActivite: View {
                                     .transition(.opacity.combined(with: .scale))
                             }
                         }
-                        .frame(height: 140)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         
                         HStack {
                             Image(systemName: "mappin.and.ellipse")
-                            Text("\(vm.obtenirDistanceDeUtilisateur(pour: activite)) away")
+                            Text("\(activitesVM.obtenirDistanceDeUtilisateur(pour: activite)) away")
                         }
                         .font(.caption)
                         .foregroundStyle(.white)
@@ -124,7 +144,7 @@ struct RangeeActivite: View {
                                     .fontWeight(.semibold)
                                 
                                 VStack(alignment: .leading, spacing: 12) {
-                                    Text(nomParc)
+                                    Text(nomDuParc)
                                         .lineLimit(1)
                                         .font(.callout)
                                         .fontWeight(.light)
@@ -153,16 +173,18 @@ struct RangeeActivite: View {
                             .foregroundColor(.primary)
                     }
                    
-                    Divider()
-                        .frame(width: 1, height: 50)
+                    if !cacherBoutonJoin {
+                        Divider()
+                            .frame(width: 1, height: 50)
 
-                    Button {
-                        // Logique ici
-                    } label: {
-                        Text("Join Game")
-                            .frame(maxWidth: .infinity)
-                            .foregroundColor(couleur)
-                            .fontWeight(.semibold)
+                        Button {
+                            // Logique ici
+                        } label: {
+                            Text("Join Game")
+                                .frame(maxWidth: .infinity)
+                                .foregroundColor(couleur)
+                                .fontWeight(.semibold)
+                        }
                     }
                 }
                 .frame(height: 50)

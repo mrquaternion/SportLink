@@ -102,11 +102,15 @@ extension DonneesEmplacementService {
                 .flatMap { $0.sport }
         )
     }
-}
-
-extension DonneesEmplacementService {
-    /// Retourne l'infrastructure correspondant à l'identifiant fourni, ou nil si introuvable.
-    func infraPour(id: String) -> Infrastructure? {
-        infrastructures.first { $0.id == id }
+    
+    func obtenirObjetInfrastructure(pour infraId: String) -> Infrastructure? {
+        guard let infra = infrastructures.first(where: { $0.id == infraId })
+        else { return nil }
+        return infra
+    }
+    
+    func obtenirObjetParcAPartirInfra(pour infraId: String) -> Parc? {
+        guard let infra = obtenirObjetInfrastructure(pour: infraId) else { return nil }
+        return parcs.first { $0.index == infra.indexParc }
     }
 }

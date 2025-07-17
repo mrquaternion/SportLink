@@ -29,7 +29,7 @@ struct ApplicationSportLink: App {
     
     var body: some Scene {
         WindowGroup {
-            VuePrincipale()
+            VuePrincipale(serviceEmplacements: emplacementsVM)
                 .environmentObject(emplacementsVM)
                 .environmentObject(tabBarEtat)
                 .onAppear {

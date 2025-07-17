@@ -82,6 +82,6 @@ struct TabBarPersonnalisee: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sizeThatFitsLayout) {
     TabBarPersonnalisee(ongletSelectionnee: .constant(.accueil), estPresente: .constant(false))
 }

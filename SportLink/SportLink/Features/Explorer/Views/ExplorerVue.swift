@@ -15,7 +15,7 @@ struct ExplorerVue: View {
 
     var body: some View {
         ZStack {
-            VStack {
+            Group {
                 if modeAffichage == .liste {
                     ExplorerListeVue(
                         utilisateur: $utilisateur,
@@ -56,4 +56,5 @@ struct ExplorerVue: View {
     
     ExplorerVue(utilisateur: .constant(mockUtilisateur))
         .environmentObject(DonneesEmplacementService())
+        .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
 }

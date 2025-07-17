@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct BookmarkedVue: View {
+struct ActivitesFavoritesVue: View {
     var body: some View {
         VStack {
             Text("Contenu Bookmarked")
@@ -19,6 +19,6 @@ struct BookmarkedVue: View {
 }
 
 #Preview {
-    BookmarkedVue()
+    ActivitesFavoritesVue()
 }
 

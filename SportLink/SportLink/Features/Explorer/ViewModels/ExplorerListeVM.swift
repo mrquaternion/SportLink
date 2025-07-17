@@ -86,7 +86,7 @@ class ExplorerListeVM: ObservableObject {
         let texteNormalise = texte.folding(options: .diacriticInsensitive, locale: .current).lowercased()
 
         return activites.filter { activite in
-            guard let parc = obtenirObjetParcAPartirInfra(pour: activite.infraId),
+            guard let parc = serviceEmplacements.obtenirObjetParcAPartirInfra(pour: activite.infraId),
                   let nom = parc.nom else { return false }
             
             let nomNormalise = nom.folding(options: .diacriticInsensitive, locale: .current) .lowercased()
@@ -127,7 +127,7 @@ class ExplorerListeVM: ObservableObject {
     private func calculerDistance(activite: Activite) -> Double {
         guard
             let userLoc = gestionnaireLocalisation.location?.coordinate,
-            let infraCoords = obtenirObjetInfrastructure(pour: activite.infraId)?.coordonnees
+            let infraCoords = serviceEmplacements.obtenirObjetInfrastructure(pour: activite.infraId)?.coordonnees
         else { return 0.0 }
         
         let dist = calculerDistanceEntreCoordonnees(
@@ -156,35 +156,27 @@ class ExplorerListeVM: ObservableObject {
         return (dateMin, dateMax, valeurDeBase)
     }
     
-    func obtenirObjetInfrastructure(pour infraId: String) -> Infrastructure? {
-        guard let infra = serviceEmplacements.infrastructures.first(where: { $0.id == infraId })
-        else { return nil }
-        return infra
-    }
-    
-    func obtenirObjetParcAPartirInfra(pour infraId: String) -> Parc? {
-        guard let infra = obtenirObjetInfrastructure(pour: infraId) else { return nil }
-        return serviceEmplacements.parcs.first { $0.index == infra.indexParc }
-    }
-    
-    func obtenirDistanceDeUtilisateur(pour activite: Activite) -> String {
-        guard
-            let userLoc = gestionnaireLocalisation.location?.coordinate,
-            let infraCoords = obtenirObjetInfrastructure(pour: activite.infraId)?.coordonnees
-        else {
-            return ""
-        }
+    func dateAAffichee(_ date: Date) -> String {
+        let calendrier = Calendar.current
         
-        let dist = calculerDistanceEntreCoordonnees(
-            position1: userLoc,
-            position2: infraCoords
-        )
+        let jourDeSemaineFormat = DateFormatter()
+        jourDeSemaineFormat.locale = Locale.current
+        jourDeSemaineFormat.dateFormat = "EEEE"
         
-        if dist < 1 {
-            let distConvertie = dist * 1000
-            return String(format: "%d m", Int(distConvertie))
+        let jourDuMoisFormat = DateFormatter()
+        jourDuMoisFormat.locale = Locale.current
+        jourDuMoisFormat.dateFormat = "MMMM d"
+ 
+        let jourDeSemaine: String
+        if calendrier.isDateInToday(date) {
+            jourDeSemaine = "Today"
+        } else if calendrier.isDateInTomorrow(date) {
+            jourDeSemaine = "Tomorrow"
         } else {
-            return String(format: "%.1f km", dist)
+            jourDeSemaine = jourDeSemaineFormat.string(from: date)
         }
+        
+        let jourDuMois = jourDuMoisFormat.string(from: date)
+        return "\(jourDeSemaine), \(jourDuMois)"
     }
 }

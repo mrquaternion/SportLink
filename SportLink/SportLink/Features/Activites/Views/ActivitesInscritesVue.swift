@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GoingVue: View {
+struct ActivitesInscritesVue: View {
     var body: some View {
         VStack {
             Text("Contenu Going")
@@ -21,5 +21,5 @@ struct GoingVue: View {
 }
 
 #Preview {
-    GoingVue()
+    ActivitesInscritesVue()
 }

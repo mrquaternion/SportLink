@@ -36,14 +36,14 @@ struct ExplorerListeVue: View {
             sectionFiltreEtTri
             
             if afficherFiltreOverlay {
-                boiteFiltrage
+                BoiteFiltrage()
                     .padding(.horizontal, 20)
                     .transition(.scale(scale: 1, anchor: .top).combined(with: .opacity))
             }
             
             VStack(spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(dateAAffichee(vm.dateAFiltree))
+                    Text(vm.dateAAffichee(vm.dateAFiltree))
                         .font(.title3)
                         .foregroundStyle(Color(.black).opacity(0.8))
                     Divider()
@@ -76,48 +76,7 @@ struct ExplorerListeVue: View {
                 if afficherFiltreOverlay { afficherFiltreOverlay = false }
             }
         }
-    }
-    
-    private var boiteFiltrage: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Sports")
-                .font(.headline)
-            Divider()
-            VStack(alignment: .leading, spacing: 12) {
-                ForEach(Sport.allCases, id: \.self) { sport in
-                    HStack {
-                        Button {
-                            if vm.sportsChoisis.contains(sport.nom) { vm.sportsChoisis.remove(sport.nom) }
-                            else { vm.sportsChoisis.insert(sport.nom) }
-                        } label: {
-                            HStack {
-                                Image(systemName: sport.icone)
-                                Text(sport.nom.capitalized)
-                                Spacer()
-                                Image(systemName: vm.sportsChoisis.contains(sport.nom) ? "checkmark.square.fill" : "square")
-                            }
-                            .foregroundColor(.black)
-                        }
-                    }
-                    
-                    Divider()
-                }
-            }
-            .frame(maxWidth: .infinity)
-            
-            DatePicker(
-                "Date",
-                selection: $vm.dateAFiltree,
-                in: vm.dateMin...vm.dateMax,
-                displayedComponents: .date
-            )
-            .datePickerStyle(.compact)
-            .font(.headline)
-            .padding(.top, 20)
-        }
-        .padding()
-        .background(Color(red: 0.96, green: 0.96, blue: 0.96))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .environmentObject(vm)
     }
     
     private var sectionFiltreEtTri: some View {
@@ -158,12 +117,12 @@ struct ExplorerListeVue: View {
                             ),
                             activite: activite
                         )
-                        .environmentObject(vm)
+                        .cacherBoutonJoin(false)
                     }
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 10)
-                .padding(.bottom, 90) // faire de la place par rapport a le switcher
+                .padding(.bottom, 130) // faire de la place par rapport a le switch
             } else {
                 GeometryReader { geometry in
                     VStack {
@@ -176,30 +135,6 @@ struct ExplorerListeVue: View {
                 .frame(minHeight: 550)
             }
         }
-    }
-    
-    private func dateAAffichee(_ date: Date) -> String {
-        let calendrier = Calendar.current
-        
-        let jourDeSemaineFormat = DateFormatter()
-        jourDeSemaineFormat.locale = Locale.current
-        jourDeSemaineFormat.dateFormat = "EEEE"
-        
-        let jourDuMoisFormat = DateFormatter()
-        jourDuMoisFormat.locale = Locale.current
-        jourDuMoisFormat.dateFormat = "MMMM d"
- 
-        let jourDeSemaine: String
-        if calendrier.isDateInToday(date) {
-            jourDeSemaine = "Today"
-        } else if calendrier.isDateInTomorrow(date) {
-            jourDeSemaine = "Tomorrow"
-        } else {
-            jourDeSemaine = jourDeSemaineFormat.string(from: date)
-        }
-        
-        let jourDuMois = jourDuMoisFormat.string(from: date)
-        return "\(jourDeSemaine), \(jourDuMois)"
     }
 }
 
@@ -219,4 +154,5 @@ struct ExplorerListeVue: View {
         cacherBoutonSwitch: .constant(false),
         serviceEmplacements: DonneesEmplacementService()
     )
+    .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
 }

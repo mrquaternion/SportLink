@@ -19,9 +19,9 @@ struct BoutonOuvrirDansPlans: View {
     let coordonnees: CLLocationCoordinate2D
 
     var body: some View {
-        Button(action: {
-            ouvrirDansPlans()
-        }) {
+        Button {
+            ouvrirRouteDansAppleMaps()
+        } label: {
             HStack {
                 Image(systemName: "map")
                 Text("Ouvrir dans Plans")
@@ -35,14 +35,15 @@ struct BoutonOuvrirDansPlans: View {
             .padding(.horizontal)
         }
     }
-
-    private func ouvrirDansPlans() {
-        let latitude = coordonnees.latitude
-        let longitude = coordonnees.longitude
-        let urlString = "http://maps.apple.com/?daddr=\(latitude),\(longitude)&dirflg=d"
-
-        if let url = URL(string: urlString) {
-            UIApplication.shared.open(url)
-        }
+    
+    func ouvrirRouteDansAppleMaps() {
+        let coordonneesDestination = coordonnees
+        let repereDestination = MKPlacemark(coordinate: coordonneesDestination)
+        let itemMapDestination = MKMapItem(placemark: repereDestination)
+        itemMapDestination.name = "Infrastructure XXXX"
+        
+        itemMapDestination.openInMaps(launchOptions: [
+            MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving
+        ])
     }
 }

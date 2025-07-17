@@ -10,33 +10,36 @@
 import SwiftUI
 
 struct ActivitesVue: View {
+    @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
     @State private var selection: OngletsActivites.Onglet = .hosted
+    @State private var cacherOnglets = false
 
     var body: some View {
-        VStack {
-            OngletsActivites(selection: $selection)
-                .padding(.top, 40)
-                .zIndex(1)
-            
+        ZStack(alignment: .top) {
             Group {
                 switch selection {
                 case .hosted:
-                    HostedVue()
+                    ActivitesOrganiseesVue(serviceEmplacements: serviceEmplacements, cacherOnglets: $cacherOnglets)
                 case .going:
-                    GoingVue()
+                    ActivitesInscritesVue()
                 case .bookmarked:
-                    BookmarkedVue()
+                    ActivitesFavoritesVue()
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+           
+            OngletsActivites(selection: $selection)
+                .padding(.top, 40)
+                .opacity(cacherOnglets ? 0.0 : 1.0)
+                .allowsHitTesting(!cacherOnglets)
+                .animation(.easeInOut(duration: 0.2), value: cacherOnglets)
         }
-        .edgesIgnoringSafeArea(.bottom)
     }
 }
 
 #Preview {
     ActivitesVue()
         .environmentObject(DonneesEmplacementService())
+        .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
 }
 
 

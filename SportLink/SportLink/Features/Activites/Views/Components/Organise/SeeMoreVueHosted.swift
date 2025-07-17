@@ -10,17 +10,12 @@ import SwiftUI
 import MapKit
 
 struct SeeMoreVueHosted: View {
-    let titre: String
-    let sport: Sport
-    let debut: Date
-    let fin: Date
-    let nomParc: String
-    let infrastructure: Infrastructure
-    let nbPlacesDisponibles: Int
-    let invitationsOuvertes: Bool
+    @EnvironmentObject var vm: ActivitesOrganiseesVM
+    @EnvironmentObject var activitesVM: ActivitesVM
+    @Environment(\.dismiss) var dismiss
     @State private var afficherVueEdition = false
 
-    @Environment(\.dismiss) var dismiss
+    let activite: Activite
 
     private var dateFormatter: DateFormatter {
         let f = DateFormatter()
@@ -34,6 +29,27 @@ struct SeeMoreVueHosted: View {
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
         return f
+    }
+    
+    private var nbPlacesRestantes: String {
+        let diff = activite.nbJoueursRecherches - activite.participants.count
+        
+        if diff == 0 { return "No spot left" }
+        return String(format: "%d spots left", diff)
+    }
+    
+    private var nomDuParc: String {
+        let (_, parcOpt) = activitesVM.obtenirInfraEtParc(infraId: activite.infraId)
+        guard let parc = parcOpt else { return "" }
+        
+        return parc.nom!
+    }
+    
+    private var infra: Infrastructure? {
+        let (infraOpt, _) = activitesVM.obtenirInfraEtParc(infraId: activite.infraId)
+        guard let infra = infraOpt else { return nil }
+        
+        return infra
     }
 
     var body: some View {
@@ -65,18 +81,18 @@ struct SeeMoreVueHosted: View {
 
             VStack(alignment: .leading, spacing: 16) {
                 // Titre
-                Text(titre)
+                Text(activite.titre)
                     .font(.title)
                     .bold()
                     .padding(.horizontal)
 
                 // Sport
                 HStack(spacing: 8) {
-                    Image(systemName: sport.icone)
+                    Image(systemName: Sport.depuisNom(activite.sport).icone)
                         .foregroundColor(.red)
                         .font(.title2)
 
-                    Text(sport.nom.capitalized)
+                    Text(Sport.depuisNom(activite.sport).nom.capitalized)
                         .font(.title2)
                         .fontWeight(.medium)
                 }
@@ -88,7 +104,7 @@ struct SeeMoreVueHosted: View {
                     Image(systemName: "calendar")
                         .foregroundColor(Color("CouleurParDefaut"))
                         .font(.title3)
-                    Text("\(dateFormatter.string(from: debut).capitalizedFirstLetter())")
+                    Text("\(dateFormatter.string(from: activite.date.debut).capitalizedFirstLetter())")
                         .font(.title3)
                         .foregroundColor(.black)
                 }
@@ -100,7 +116,7 @@ struct SeeMoreVueHosted: View {
                         .foregroundColor(Color("CouleurParDefaut"))
                         .font(.title3)
 
-                    Text("\(formatter.string(from: debut)) - \(formatter.string(from: fin))")
+                    Text("\(formatter.string(from: activite.date.debut)) - \(formatter.string(from: activite.date.debut))")
                         .font(.title3)
                         .foregroundColor(.black)
                 }
@@ -108,17 +124,17 @@ struct SeeMoreVueHosted: View {
 
                 // ➤ Bloc sans espacement vertical entre ses éléments
                 Group {
-                    Text(nomParc)
+                    Text(nomDuParc)
                         .font(.title3)
                         .padding(.horizontal)
                         .padding(.bottom, -12)
                         
-                    CarteParcSeeMore(infrastructure: infrastructure)
+                    CarteParcSeeMore(infrastructure: infra!)
                         .frame(height: 300)
                         .cornerRadius(12)
                         .padding(.horizontal)
 
-                    BoutonOuvrirDansPlans(coordonnees: infrastructure.coordonnees)
+                    BoutonOuvrirDansPlans(coordonnees: infra!.coordonnees)
                 }
 
                 // Places disponibles
@@ -126,7 +142,7 @@ struct SeeMoreVueHosted: View {
                     Image(systemName: "person.2")
                         .foregroundColor(Color("CouleurParDefaut"))
                         .font(.headline)
-                    Text("Places disponibles : \(nbPlacesDisponibles)")
+                    Text("Places disponibles : \(nbPlacesRestantes)")
                         .foregroundColor(.black)
                         .font(.title3)
                 }
@@ -135,10 +151,10 @@ struct SeeMoreVueHosted: View {
 
                 // Invitations invité.e.s
                 HStack(spacing: 8) {
-                    Image(systemName: invitationsOuvertes ? "envelope.open" : "figure.child.and.lock.fill")
+                    Image(systemName: activite.invitationsOuvertes ? "envelope.open" : "figure.child.and.lock.fill")
                         .foregroundColor(Color("CouleurParDefaut"))
 
-                    Text(invitationsOuvertes ? "Open to guests invitations" : "Close to guests invitations")
+                    Text(activite.invitationsOuvertes ? "Open to guests invitations" : "Close to guests invitations")
                         .foregroundColor(.black)
                 }
                 .font(.title3)
@@ -162,21 +178,21 @@ extension String {
 }
 
 #Preview {
-    NavigationStack {
-        SeeMoreVueHosted(
-            titre: "Tournoi de soccer",
-            sport: .soccer,
-            debut: Calendar.current.date(bySettingHour: 18, minute: 0, second: 0, of: Date())!,
-            fin: Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date())!,
-            nomParc: "Parc Laurier",
-            infrastructure: Infrastructure(
-                id: "mock",
-                indexParc: "0",
-                coordonnees: CLLocationCoordinate2D(latitude: 45.5, longitude: -73.56),
-                sport: [.soccer]
-            ),
-            nbPlacesDisponibles: 5,
-            invitationsOuvertes : true
-        )
-    }
+    let mockActivite =
+    Activite(
+        titre: "Soccer for amateurs",
+        organisateurId: UtilisateurID(valeur: "demo"),
+        infraId: "081-0090",
+        sport: .soccer,
+        date: DateInterval(start: .now, duration: 3600),
+        nbJoueursRecherches: 4,
+        participants: [],
+        description: "Venez vous amuser !",
+        statut: .ouvert,
+        invitationsOuvertes: true,
+        messages: []
+    )
+    
+    SeeMoreVueHosted(activite: mockActivite)
+        .environmentObject(ActivitesOrganiseesVM(serviceActivites: ServiceActivites(), serviceEmplacements: DonneesEmplacementService()))
 }
