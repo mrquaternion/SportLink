@@ -1,5 +1,5 @@
 //
-//  HostedVue.swift
+//  ActivitesOrganiseesVue.swift
 //  SportLink
 //
 //  Created by Michel Lamothe on 2025-07-09.
@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ActivitesOrganiseesVue: View {
+
     @EnvironmentObject var activitesVM: ActivitesVM
     
     @StateObject private var vm: ActivitesOrganiseesVM
@@ -32,9 +33,11 @@ struct ActivitesOrganiseesVue: View {
                 }
             }
             .navigationDestination(for: Activite.self) { activite in
-                DetailsActivite(activite: activite)
-                    .environmentObject(activitesVM)// navigationDestination brise la chaine des environemments donc on doit le redonner
-                    .environmentObject(vm)
+                if let binding = vm.bindingActivite(id: activite.id!) {
+                    DetailsActivite(activite: binding)
+                        .environmentObject(activitesVM)
+                        .environmentObject(vm)
+                }
             }
     }
     

@@ -5,7 +5,7 @@
 //  Created by Michel Lamothe on 2025-07-10.
 //
 
-
+import SwiftUI
 import Foundation
 
 @MainActor
@@ -15,7 +15,7 @@ class ActivitesOrganiseesVM: ObservableObject {
     private let gestionnaireLocalisation = GestionnaireLocalisation.instance
     
     @Published var estEnChargement = false
-    
+    @Published var activiteSelectionnee: Activite?
     @Published private(set) var activites: [Activite] = []
     
     init(serviceActivites: ServiceActivites, serviceEmplacements: DonneesEmplacementService) {
@@ -34,7 +34,14 @@ class ActivitesOrganiseesVM: ObservableObject {
         if let index = activites.firstIndex(where: { $0.id == idActivite }) {
             activites[index].titre = nouveauTitre
         } else {
-            print("⚠️ Activité avec ID \(idActivite) non trouvée localement.")
+            print("Activité avec ID \(idActivite) non trouvée localement.")
         }
+    }
+    func bindingActivite(id: String) -> Binding<Activite>? {
+        guard let index = activites.firstIndex(where: { $0.id == id }) else { return nil }
+        return Binding(
+            get: { self.activites[index] },
+            set: { self.activites[index] = $0 }
+        )
     }
 }

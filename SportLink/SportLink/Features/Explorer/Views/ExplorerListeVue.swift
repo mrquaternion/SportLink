@@ -60,7 +60,7 @@ struct ExplorerListeVue: View {
                         .task { await vm.chargerActivites() }
                         .refreshable { await vm.chargerActivites() }
                         .navigationDestination(for: Activite.self) { activite in
-                            DetailsActivite(activite: activite)
+                            DetailsActivite(activite: .constant(activite))
                                 .environmentObject(activitesVM) // navigationDestination brise la chaine des environemments donc on doit le redonner
                         }
                 }
