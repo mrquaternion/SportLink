@@ -127,4 +127,34 @@ class ServiceActivites: ObservableObject {
             print("Erreur lors de la sauvegarde de l’activité :", error)
         }
     }
+    
+    // Modifier le titre de l'activité
+    func modifierTitreActivite(idActivite: String, nouveauTitre: String, completion: @escaping (Error?) -> Void) {
+        let reference = Firestore.firestore().collection("activites").document(idActivite)
+        
+        reference.updateData([
+            "titre": nouveauTitre
+        ]) { error in
+            completion(error)
+        }
+    }
+    
+    func recupererIdActiviteParInfraId(_ infraId: String, completion: @escaping (String?, Error?) -> Void) {
+        Firestore.firestore().collection("activites")
+            .whereField("infraId", isEqualTo: infraId)
+            .limit(to: 1)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(nil, error)
+                    return
+                }
+
+                guard let doc = snapshot?.documents.first else {
+                    completion(nil, nil) // Aucun document trouvé
+                    return
+                }
+
+                completion(doc.documentID, nil)
+            }
+    }
 }

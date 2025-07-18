@@ -76,6 +76,8 @@ struct SeeMoreVueHosted: View {
                 }
                 .sheet(isPresented: $afficherVueEdition) {
                     ModifierVue(activite: activite)
+                        .environmentObject(vm) // vm = ActivitesOrganiseesVM
+                        .environmentObject(activitesVM)
                 }
             }
 

@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct DetailsActivite: View {
+    
     @EnvironmentObject var activitesVM: ActivitesVM
+    @EnvironmentObject var vm: ActivitesOrganiseesVM
     @Environment(\.dismiss) private var dismiss
     @State private var afficherVueEdition = false
     
     let activite: Activite
+
     
     private var formatDate: DateFormatter {
         let f = DateFormatter()
@@ -79,6 +82,8 @@ struct DetailsActivite: View {
                     }
                     .sheet(isPresented: $afficherVueEdition) {
                         ModifierVue(activite: activite)
+                            .environmentObject(activitesVM)
+                            .environmentObject(vm)
                     }
                 }
             }
@@ -171,22 +176,30 @@ struct DetailsActivite: View {
     
 }
 
+
 #Preview {
-    let mockActivite =
-        Activite(
-            titre: "Match amical",
-            organisateurId: UtilisateurID(valeur: "demo"),
-            infraId: "081-0090",
-            sport: .soccer,
-            date: DateInterval(start: .now, duration: 3600),
-            nbJoueursRecherches: 6,
-            participants: [],
-            description: "Venez vous amuser !",
-            statut: .ouvert,
-            invitationsOuvertes: true,
-            messages: []
-        )
-    
+    let mockActivite = Activite(
+        titre: "Match amical",
+        organisateurId: UtilisateurID(valeur: "demo"),
+        infraId: "081-0090",
+        sport: .soccer,
+        date: DateInterval(start: .now, duration: 3600),
+        nbJoueursRecherches: 6,
+        participants: [],
+        description: "Venez vous amuser !",
+        statut: .ouvert,
+        invitationsOuvertes: true,
+        messages: []
+    )
+
+    let serviceEmplacements = DonneesEmplacementService()
+
     DetailsActivite(activite: mockActivite)
-        .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
+        .environmentObject(ActivitesOrganiseesVM(
+            serviceActivites: ServiceActivites(),
+            serviceEmplacements: serviceEmplacements
+        ))
+        .environmentObject(
+            ActivitesVM(serviceEmplacements: serviceEmplacements)
+        )
 }
