@@ -133,7 +133,7 @@ struct ModifierVue: View {
                         Image(systemName: "calendar")
                             .foregroundColor(Color("CouleurParDefaut"))
                             .font(.title3)
-                        Text("\(dateFormatter.string(from: activite.date.debut).capitalizedFirstLetter())")
+                        Text("\(dateFormatter.string(from: activite.date.debut).capitalized)")
                             .font(.title3)
                             .foregroundColor(.black)
                     }

@@ -35,9 +35,7 @@ struct BoutonSwitchExplorer: View {
 
             HStack(spacing: 15) {
                 Button {
-                    withAnimation(.linear(duration: 0.2).delay(0.1)) {
-                        modeAffichage = .liste
-                    }
+                    modeAffichage = .liste
                 } label: {
                     Text("List")
                         .frame(width: buttonWidth, height: buttonHeight)
@@ -46,9 +44,7 @@ struct BoutonSwitchExplorer: View {
                 }
 
                 Button {
-                    withAnimation(.linear(duration: 0.2).delay(0.1)) {
-                        modeAffichage = .carte
-                    }
+                    modeAffichage = .carte
                 } label: {
                     Text("Map")
                         .frame(width: buttonWidth, height: buttonHeight)
