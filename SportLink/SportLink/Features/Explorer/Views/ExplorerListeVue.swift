@@ -91,7 +91,7 @@ struct ExplorerListeVue: View {
             
             BoutonTriage(optionTri: $vm.optionTri)
         }
-        .padding([.leading, .trailing, .top], 20)
+        .padding([.leading, .trailing], 20)
         .padding(.bottom, afficherFiltreOverlay ? 10 : 20)
     }
     

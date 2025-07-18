@@ -23,6 +23,8 @@ struct ExplorerVue: View {
                     )
                     .environmentObject(serviceEmplacements)
                     .environmentObject(activitesVM)
+                    .navigationTitle("Discover")
+                    .navigationBarTitleDisplayMode(.inline)
                 } else {
                     ExplorerCarteVue(utilisateur: $utilisateur)
                         .environmentObject(serviceEmplacements)

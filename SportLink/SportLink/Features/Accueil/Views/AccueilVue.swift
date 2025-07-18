@@ -10,10 +10,13 @@ import SwiftUI
 struct AccueilVue: View {
     var body: some View {
         ZStack {
-            
+            Color(.systemGray6)
+                .ignoresSafeArea()
             
             Text("Vue de l'accueil")
         }
+        .navigationTitle("Home")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

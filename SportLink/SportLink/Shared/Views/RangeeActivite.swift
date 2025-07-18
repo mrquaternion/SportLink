@@ -74,8 +74,8 @@ struct RangeeActivite: View {
                                 // Info bulle au centre de l'image
                                 Text("Image for illustration only, not actual representation of the \(activite.sport) infrastructure.")
                                     .multilineTextAlignment(.center)
-                                    .frame(width: 280)
-                                    .font(.footnote)
+                                    .frame(width: 260)
+                                    .font(.system(size: 12))
                                     .foregroundColor(.black)
                                     .padding(.horizontal)
                                     .padding(.vertical, 10)
