@@ -48,3 +48,50 @@ func sauvegarderDate(
         }
     }
 }
+
+@MainActor
+func sauvegarderParticipants(
+    activite: Activite,
+    vm: ActivitesOrganiseesVM,
+    onSuccess: @escaping () -> Void
+) {
+    vm.serviceActivites.recupererIdActiviteParInfraId(activite.infraId) { idRecupere, erreur in
+        guard erreur == nil, let id = idRecupere else { return }
+
+        let db = Firestore.firestore()
+        db.collection("activites").document(id).updateData([
+            "nbJoueursRecherches": activite.nbJoueursRecherches
+        ]) { error in
+            guard error == nil else {
+                print("Erreur lors de la mise à jour du nombre de participants : \(error!)")
+                return
+            }
+
+            // ➕ Mettre à jour localement aussi
+            vm.mettreAJourNbJoueursRecherchesLocalement(idActivite: id, nb: activite.nbJoueursRecherches)
+            onSuccess()
+        }
+    }
+}
+
+@MainActor
+func sauvegarderAutorisationInvitations(
+    activite: Activite,
+    vm: ActivitesOrganiseesVM,
+    onSuccess: @escaping () -> Void
+) {
+    vm.serviceActivites.recupererIdActiviteParInfraId(activite.infraId) { idRecupere, erreur in
+        guard erreur == nil, let id = idRecupere else { return }
+
+        let db = Firestore.firestore()
+        db.collection("activites").document(id).updateData([
+            "invitationsOuvertes": activite.invitationsOuvertes
+        ]) { error in
+            guard error == nil else {
+                print("Erreur lors de la mise à jour des invitations ouvertes : \(error!)")
+                return
+            }
+            onSuccess()
+        }
+    }
+}

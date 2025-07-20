@@ -21,6 +21,8 @@ struct ModifierVue: View {
     @State private var modaleHeureActive: Bool = false
     @State private var heureDebutTemporaire: Date = Date()
     @State private var heureFinTemporaire: Date = Date()
+    @State private var overlayActif: ActiveOverlay = .none
+    @State private var invitationsOuvertesTemporaire: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -35,6 +37,7 @@ struct ModifierVue: View {
                     sectionCarte
                     sectionPlaces
                     sectionInvitations
+                   
                 }
             }
 
@@ -43,6 +46,8 @@ struct ModifierVue: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.white)
         .overlay(overlaySauvegarde)
+        .overlay(vueOverlayParticipants)
+        .overlay(vueOverlayInvitations)
         .overlay(overlayModaleHeure)
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
@@ -66,13 +71,17 @@ struct ModifierVue: View {
             Button("Save") {
                 let nouvelleDate = PlageHoraire(debut: heureDebutTemporaire, fin: heureFinTemporaire)
                 activite.date = nouvelleDate
-                
+
                 sauvegarderTitre(titre: activite.titre, activite: activite, vm: vm) {
                     sauvegarderDate(activite: activite, vm: vm) {
-                        withAnimation { sauvegardeReussie = true }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            vm.objectWillChange.send()
-                            dismiss()
+                        sauvegarderParticipants(activite: activite, vm: vm) {
+                            sauvegarderAutorisationInvitations(activite: activite, vm: vm) {
+                                withAnimation { sauvegardeReussie = true }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                    vm.objectWillChange.send()
+                                    dismiss()
+                                }
+                            }
                         }
                     }
                 }
@@ -180,29 +189,58 @@ struct ModifierVue: View {
     }
 
     private var sectionPlaces: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "person.2")
-                .foregroundColor(Color("CouleurParDefaut"))
-                .font(.headline)
-            Text("Places disponibles : \(nbPlacesRestantes)")
-                .foregroundColor(.black)
-                .font(.title3)
+        Button {
+            overlayActif = .participants
+        } label: {
+            BoiteAvecChevron(showChevron: false) {
+                HStack {
+                    Image(systemName: "person.2")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(Color("CouleurParDefaut"))
+
+                    Text("\(activite.nbJoueursRecherches) players")
+
+                    Spacer()
+
+                    Image(systemName: "pencil")
+                        .foregroundColor(.gray)
+                }
+                .frame(maxWidth: .infinity)
+            }
         }
-        .padding(.horizontal)
-        .padding(.top, 4)
+        .buttonStyle(.plain)
     }
 
     private var sectionInvitations: some View {
-        HStack(spacing: 8) {
-            Image(systemName: activite.invitationsOuvertes ? "envelope.open" : "figure.child.and.lock.fill")
-                .foregroundColor(Color("CouleurParDefaut"))
-            Text(activite.invitationsOuvertes ? "Open to guests invitations" : "Close to guests invitations")
-                .foregroundColor(.black)
-        }
-        .font(.title3)
-        .padding(.horizontal)
-    }
+        Button {
+            invitationsOuvertesTemporaire = activite.invitationsOuvertes
+            overlayActif = .invitations
+        } label: {
+            BoiteAvecChevron(showChevron: false) {
+                HStack {
+                    Image(systemName: "envelope.open")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(Color("CouleurParDefaut"))
 
+                    Text(activite.invitationsOuvertes ? "Open to guest invitations" : "Closed to guest invitations")
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+
+                    Spacer()
+
+                    Image(systemName: "pencil")
+                        .foregroundColor(.gray)
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.plain)
+    }
+    
     private var overlaySauvegarde: some View {
         Group {
             if sauvegardeReussie {
@@ -256,7 +294,111 @@ struct ModifierVue: View {
             }
         }
     }
+    
+    private var vueOverlayParticipants: some View {
+        FenetreModaleFlottante(estPresente: Binding(
+            get: { overlayActif == .participants },
+            set: { if !$0 { overlayActif = .none } }
+        )) {
+            VStack(spacing: 0) {
+                Text("Nombre de joueurs recherchés")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .padding(.top, 20)
 
+                Picker("Joueurs", selection: $activite.nbJoueursRecherches) {
+                    ForEach(1..<21, id: \.self) { Text("\($0)") }
+                }
+                .pickerStyle(.wheel)
+                .frame(height: 150)
+
+                Divider()
+
+                HStack(spacing: 0) {
+                    Button("Fermer") {
+                        overlayActif = .none
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 60)
+
+                    Divider().frame(width: 1, height: 60)
+
+                    Button("OK") {
+                        overlayActif = .none
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 60)
+                    .foregroundColor(Color("CouleurParDefaut"))
+                }
+            }
+            .frame(width: 300)
+            .background(Color.white)
+            .cornerRadius(12)
+        }
+    }
+    
+    private var vueOverlayInvitations: some View {
+        FenetreModaleFlottante(estPresente: Binding(
+            get: { overlayActif == .invitations },
+            set: { if !$0 { overlayActif = .none } }
+        )) {
+            VStack(spacing: 0) {
+                VStack(spacing: 0) {
+                    Text("Guests invitations")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+
+                    VStack(spacing: 10) {
+                        Button {
+                            activite.invitationsOuvertes = true
+                        } label: {
+                            Label("Open to guests invitations", systemImage: "figure.child.and.lock.open.fill")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .foregroundColor(activite.invitationsOuvertes ? Color("CouleurParDefaut") : .black)
+                                .cornerRadius(8)
+                        }
+                        .buttonStyle(.plain)
+
+                        Button {
+                            activite.invitationsOuvertes = false
+                        } label: {
+                            Label("Close to guests invitations", systemImage: "figure.child.and.lock.fill")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .foregroundColor(!activite.invitationsOuvertes ? Color("CouleurParDefaut") : .black)
+                                .cornerRadius(8)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.top, 20)
+                }
+                .padding([.top, .leading, .trailing], 20)
+                .padding(.bottom, 25)
+
+                Divider()
+                HStack(spacing: 0) {
+                    Button("Close") {
+                        overlayActif = .none
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 60)
+                    .foregroundColor(.primary)
+                    .fontWeight(.semibold)
+
+                    Divider().frame(width: 1, height: 60)
+
+                    Button("OK") {
+                        overlayActif = .none
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 60)
+                    .foregroundColor(Color("CouleurParDefaut"))
+                    .fontWeight(.semibold)
+                }
+            }
+            .frame(width: 300)
+        }
+    }
+    
     // MARK: - Utils
 
     private var dateFormatter: DateFormatter {
@@ -287,5 +429,10 @@ struct ModifierVue: View {
     private var infra: Infrastructure? {
         let (infraOpt, _) = activitesVM.obtenirInfraEtParc(infraId: activite.infraId)
         return infraOpt
+    }
+    enum ActiveOverlay {
+        case none
+        case participants
+        case invitations
     }
 }

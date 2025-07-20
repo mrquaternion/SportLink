@@ -52,4 +52,20 @@ class ActivitesOrganiseesVM: ObservableObject {
             print("Activité avec ID \(idActivite) non trouvée localement.")
         }
     }
+    
+    func mettreAJourNbJoueursRecherchesLocalement(idActivite: String, nb: Int) {
+        if let index = activites.firstIndex(where: { $0.id == idActivite }) {
+            activites[index].nbJoueursRecherches = nb
+        } else {
+            print("Activité avec ID \(idActivite) non trouvée localement pour maj joueurs.")
+        }
+    }
+    
+    func mettreAJourAutorisationInvitationsLocalement(idActivite: String, autorise: Bool) {
+        if let index = activites.firstIndex(where: { $0.id == idActivite }) {
+            activites[index].invitationsOuvertes = autorise
+        } else {
+            print("Activité avec ID \(idActivite) non trouvée localement.")
+        }
+    }
 }
