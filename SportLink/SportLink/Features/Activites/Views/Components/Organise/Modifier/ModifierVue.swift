@@ -17,6 +17,10 @@ struct ModifierVue: View {
     @Environment(\.dismiss) var dismiss
 
     @State private var sauvegardeReussie: Bool = false
+    @State private var heureSelectionnee: Date = Date()
+    @State private var modaleHeureActive: Bool = false
+    @State private var heureDebutTemporaire: Date = Date()
+    @State private var heureFinTemporaire: Date = Date()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -39,8 +43,13 @@ struct ModifierVue: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.white)
         .overlay(overlaySauvegarde)
+        .overlay(overlayModaleHeure)
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
+        .onAppear {
+            heureDebutTemporaire = activite.date.debut
+            heureFinTemporaire = activite.date.fin
+        }
     }
 
     // MARK: - Sous-vues
@@ -55,11 +64,16 @@ struct ModifierVue: View {
             Spacer()
 
             Button("Save") {
+                let nouvelleDate = PlageHoraire(debut: heureDebutTemporaire, fin: heureFinTemporaire)
+                activite.date = nouvelleDate
+                
                 sauvegarderTitre(titre: activite.titre, activite: activite, vm: vm) {
-                    withAnimation { sauvegardeReussie = true }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        vm.objectWillChange.send()
-                        dismiss()
+                    sauvegarderDate(activite: activite, vm: vm) {
+                        withAnimation { sauvegardeReussie = true }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            vm.objectWillChange.send()
+                            dismiss()
+                        }
                     }
                 }
             }
@@ -122,17 +136,33 @@ struct ModifierVue: View {
     }
 
     private var sectionHeure: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "clock")
-                .foregroundColor(Color("CouleurParDefaut"))
-                .font(.title3)
-            Text("\(formatter.string(from: activite.date.debut)) - \(formatter.string(from: activite.date.debut))")
-                .font(.title3)
-                .foregroundColor(.black)
-        }
-        .padding(.horizontal)
-    }
+        VStack(spacing: 8) {
+            Button(action: { modaleHeureActive = true }) {
+                BoiteAvecChevron { // on ne met pas `showChevron: true`
+                    HStack(spacing: 8) {
+                        Image(systemName: "clock")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(Color("CouleurParDefaut"))
 
+                        Text("\(formatter.string(from: heureDebutTemporaire)) to \(formatter.string(from: heureFinTemporaire))")
+                            .foregroundColor(.black)
+                            .font(.body)
+
+                        Spacer()
+
+                        Image(systemName: "pencil")
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+            .buttonStyle(.plain)
+            
+        }
+      
+    }
+    
     private var sectionCarte: some View {
         Group {
             Text(nomDuParc)
@@ -180,6 +210,52 @@ struct ModifierVue: View {
             }
         }
     }
+    
+    private var overlayModaleHeure: some View {
+        Group {
+            if modaleHeureActive {
+                FenetreModaleFlottante(estPresente: $modaleHeureActive) {
+                    VStack(spacing: 20) {
+                        Text("Modifier l'heure")
+                            .font(.headline)
+                            .padding(.top)
+
+                        DatePicker("Début", selection: $heureDebutTemporaire, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.wheel)
+                            .labelsHidden()
+
+                        DatePicker("Fin", selection: $heureFinTemporaire, in: heureDebutTemporaire..., displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.wheel)
+                            .labelsHidden()
+
+                        Divider()
+
+                        HStack(spacing: 0) {
+                            Button("Fermer") {
+                                modaleHeureActive = false
+                            }
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.primary)
+
+                            Divider()
+
+                            Button("OK") {
+                                activite.date = PlageHoraire(
+                                    debut: heureDebutTemporaire,
+                                    fin: max(heureDebutTemporaire, heureFinTemporaire)
+                                )
+                                modaleHeureActive = false
+                            }
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(Color("CouleurParDefaut"))
+                        }
+                        .frame(height: 44)
+                    }
+                    .padding()
+                }
+            }
+        }
+    }
 
     // MARK: - Utils
 
@@ -194,6 +270,7 @@ struct ModifierVue: View {
     private var formatter: DateFormatter {
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
+        f.timeZone = TimeZone(identifier: "America/Toronto")
         return f
     }
 

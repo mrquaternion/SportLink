@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import FirebaseFirestore
 
 @MainActor
 class ActivitesOrganiseesVM: ObservableObject {
@@ -43,5 +44,12 @@ class ActivitesOrganiseesVM: ObservableObject {
             get: { self.activites[index] },
             set: { self.activites[index] = $0 }
         )
+    }
+    func mettreAJourDateLocalement(idActivite: String, nouvelleDate: PlageHoraire) {
+        if let index = activites.firstIndex(where: { $0.id == idActivite }) {
+            activites[index].date = nouvelleDate
+        } else {
+            print("Activité avec ID \(idActivite) non trouvée localement.")
+        }
     }
 }

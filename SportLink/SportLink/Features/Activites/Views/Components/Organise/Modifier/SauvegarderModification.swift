@@ -1,0 +1,50 @@
+//
+//  SauvegarderModification.swift
+//  SportLink
+//
+//  Created by Michel Lamothe on 2025-07-17.
+//
+
+import SwiftUI
+import FirebaseFirestore
+
+@MainActor
+func sauvegarderTitre(
+    titre: String,
+    activite: Activite,
+    vm: ActivitesOrganiseesVM,
+    onSuccess: @escaping () -> Void
+) {
+    vm.serviceActivites.recupererIdActiviteParInfraId(activite.infraId) { idRecupere, erreur in
+        guard erreur == nil, let id = idRecupere else { return }
+
+        vm.serviceActivites.modifierTitreActivite(idActivite: id, nouveauTitre: titre) { error in
+            guard error == nil else { return }
+            vm.mettreAJourTitreLocalement(idActivite: id, nouveauTitre: titre)
+            onSuccess()
+        }
+    }
+}
+
+@MainActor
+func sauvegarderDate(
+    activite: Activite,
+    vm: ActivitesOrganiseesVM,
+    onSuccess: @escaping () -> Void
+) {
+    vm.serviceActivites.recupererIdActiviteParInfraId(activite.infraId) { idRecupere, erreur in
+        guard erreur == nil, let id = idRecupere else { return }
+
+        let db = Firestore.firestore()
+        db.collection("activites").document(id).updateData([
+            "date.debut": Timestamp(date: activite.date.debut),
+            "date.fin": Timestamp(date: activite.date.fin)
+        ]) { error in
+            guard error == nil else {
+                print("Erreur lors de la mise à jour : \(error!)")
+                return
+            }
+            onSuccess()
+        }
+    }
+}

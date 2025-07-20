@@ -106,7 +106,7 @@ struct DetailsActivite: View {
                         Image(systemName: "clock")
                             .foregroundColor(Color("CouleurParDefaut"))
                             .font(.title3)
-                        Text("\(formatTemps.string(from: activite.date.debut)) - \(formatTemps.string(from: activite.date.debut))")
+                        Text("\(formatTemps.string(from: activite.date.debut)) - \(formatTemps.string(from: activite.date.fin))")
                             .font(.title3)
                             .foregroundColor(.black)
                     }
