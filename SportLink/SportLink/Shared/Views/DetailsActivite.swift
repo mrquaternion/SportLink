@@ -303,7 +303,7 @@ struct Details: View {
                 bgColor: .systemGray6,
                 cornerRadius: 12
             )
-            .frame(minHeight: 100, maxHeight: 500)
+            .frame(minHeight: 100, maxHeight: 500) // ne pas changer la largeur
         }
     }
     
@@ -414,7 +414,7 @@ struct TexteJustifieeVue: UIViewRepresentable {
     func makeUIView(context: Context) -> UITextView {
         let tv = UITextView()
         tv.isEditable = false
-        tv.isScrollEnabled = false
+        tv.isScrollEnabled = true
         tv.textAlignment = .justified
         tv.backgroundColor = bgColor
         tv.font = font
