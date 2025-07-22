@@ -8,27 +8,12 @@
 import SwiftUI
 import MapKit
 
-private struct CacherBoutonJoinKey: EnvironmentKey {
-    static let defaultValue = false
-}
-
-extension EnvironmentValues {
-    var cacherBoutonJoin: Bool {
-        get { self[CacherBoutonJoinKey.self] }
-        set { self[CacherBoutonJoinKey.self] = newValue }
-    }
-}
-
-extension View {
-    func cacherBoutonJoin(_ cacher: Bool = true) -> some View {
-        environment(\.cacherBoutonJoin, cacher)
-    }
-}
-
 struct RangeeActivite: View {
+    // MARK: Variables et propriétés calculées
     @EnvironmentObject var vm: ExplorerListeVM
     @EnvironmentObject var activitesVM: ActivitesVM
     @Environment(\.cacherBoutonJoin) private var cacherBoutonJoin
+    @Environment(\.dateEtendue) private var dateEtendue
     
     @State private var estFavoris = false
     @Binding var afficherInfo: Bool
@@ -50,60 +35,58 @@ struct RangeeActivite: View {
         return String(format: "%d spots left", diff)
     }
     
+    private var composantesDate: String {
+        let (date, tempsDebut, tempsFin) = activite.date.affichage
+        let temps = "\(tempsDebut) - \(tempsFin)"
+        return dateEtendue ? "\(date), " + temps : temps
+    }
+    
     var body: some View {
         VStack {
-            VStack(alignment: .leading, spacing: 12) {
-                ZStack(alignment: .bottomTrailing) {
-                    ZStack(alignment: .topTrailing) {
-                        ZStack {
-                            Sport.depuisNom(activite.sport).arriereplan
-                                .resizable()
-                                .scaledToFill()
-                                .frame(height: 140)
-                                .clipped()
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .blur(radius: afficherInfo ? 6 : 0)
-                                .contentShape(RoundedRectangle(cornerRadius: 12))
-                                .onTapGesture {
-                                    withAnimation {
-                                        afficherInfo.toggle()
-                                    }
-                                }
-
-                            if afficherInfo {
-                                // Info bulle au centre de l'image
-                                Text("Image for illustration only, not actual representation of the \(activite.sport) infrastructure.")
-                                    .multilineTextAlignment(.center)
-                                    .frame(width: 260)
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.black)
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 10)
-                                    .background(.ultraThinMaterial)
-                                    .cornerRadius(6)
-                                    .padding(.horizontal, 14)
-                                    .transition(.opacity.combined(with: .scale))
+            VStack {
+                ZStack {
+                    Image(Sport.depuisNom(activite.sport).arriereplan)
+                        .resizable()
+                        .scaledToFill()
+                        .blur(radius: afficherInfo ? 6 : 0)
+                        .contentShape(RoundedRectangle(cornerRadius: 20))
+                        .onTapGesture {
+                            withAnimation {
+                                afficherInfo.toggle()
                             }
                         }
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        
-                        HStack {
-                            Image(systemName: "mappin.and.ellipse")
-                            Text("\(activitesVM.obtenirDistanceDeUtilisateur(pour: activite)) away")
-                        }
+
+                    if afficherInfo {
+                        // Info bulle au centre de l'image
+                        Text("Image for illustration only, not actual representation of the \(activite.sport) infrastructure.")
+                            .multilineTextAlignment(.center)
+                            .frame(width: 260)
+                            .font(.system(size: 12))
+                            .foregroundColor(.black)
+                            .padding(.horizontal)
+                            .padding(.vertical, 10)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(6)
+                            .padding(.horizontal, 14)
+                            .transition(.opacity.combined(with: .scale))
+                    }
+                }
+                .frame(height: 150)
+                .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 20, topTrailing: 20), style: .continuous))
+                .overlay(alignment: .topTrailing) {
+                    Label("\(activitesVM.obtenirDistanceDeUtilisateur(pour: activite)) away", systemImage: "mappin.and.ellipse")
                         .font(.caption)
                         .foregroundStyle(.white)
-                        .padding(.horizontal, 8) // padding INTERNE
+                        .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(couleur.opacity(0.9))
                         )
-                        .padding([.trailing, .top], 10) // padding EXTERNE
+                        .padding([.trailing, .top], 10)
                         .blur(radius: afficherInfo ? 6 : 0)
-                        .zIndex(1)
-                    }
-                    
+                }
+                .overlay(alignment: .bottomTrailing) {
                     Image(systemName: estFavoris ? "bookmark.fill" : "bookmark")
                         .font(.system(size: 19  ))
                         .foregroundStyle(estFavoris ? couleur : .white)
@@ -119,7 +102,7 @@ struct RangeeActivite: View {
                         .blur(radius: afficherInfo ? 6 : 0)
                 }
                
-                VStack(alignment: .trailing, spacing: 0) {
+                VStack(alignment: .trailing, spacing: 6) {
                     HStack(spacing: 6) {
                         Circle()
                             .frame(width: 7, height: 7)
@@ -150,7 +133,7 @@ struct RangeeActivite: View {
                                         .fontWeight(.light)
                                         .foregroundStyle(Color(.systemGray))
                                     
-                                    Text(activite.date.affichage)
+                                    Text(composantesDate)
                                         .fontWeight(.medium)
                                 }
                             }
@@ -159,8 +142,9 @@ struct RangeeActivite: View {
                         }
                     }
                 }
+                .padding(.horizontal)
+                .padding(.top, 4)
             }
-            .padding([.top, .trailing, .leading])
             .padding(.bottom, 10)
             
             VStack(spacing: 0) {
@@ -180,7 +164,7 @@ struct RangeeActivite: View {
                         Button {
                             // Logique ici
                         } label: {
-                            Text("Join Game")
+                            Text("Join")
                                 .frame(maxWidth: .infinity)
                                 .foregroundColor(couleur)
                                 .fontWeight(.semibold)
@@ -193,9 +177,9 @@ struct RangeeActivite: View {
         }
         .frame(maxWidth: .infinity)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 20)
                 .fill(Color(.systemBackground))
-                .shadow(color: Color.black.opacity(0.15), radius: 2, x: 0, y: 1)
+                .shadow(color: Color.black.opacity(0.15), radius: 2, x: 0, y: 2)
         )
         .contentShape(Rectangle())
     }

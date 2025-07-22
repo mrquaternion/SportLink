@@ -55,8 +55,8 @@ struct DetailsInfrastructure: View {
                 
                 Spacer()
                 
-                BoutonOuvrirMaps(parc: parcParent)
-                    .scaleEffect(0.8, anchor: .trailing)
+                //BoutonOuvrirMaps(parc: parcParent)
+                //    .scaleEffect(0.8, anchor: .trailing)
             }
             
             Divider()

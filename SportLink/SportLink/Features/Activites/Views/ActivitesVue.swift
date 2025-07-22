@@ -53,36 +53,43 @@ struct ActivitesVue: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                HStack {
-                    ForEach(Tab.allCases, id: \.self) { tab in
-                        VStack {
-                            Button {
-                                withAnimation {
-                                    contexte.selectionnee = tab
+                VStack(alignment: .center) {
+                    Text("Your dashboard")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                        .padding(.top, 10)
+                    
+                    HStack {
+                        ForEach(Tab.allCases, id: \.self) { tab in
+                            VStack {
+                                Button {
+                                    withAnimation {
+                                        contexte.selectionnee = tab
+                                    }
+                                } label: {
+                                    Text(tab.rawValue)
+                                        .font(.headline)
+                                        .foregroundColor(contexte.selectionnee == tab ? .primary : .gray)
                                 }
-                            } label: {
-                                Text(tab.rawValue)
-                                    .font(.headline)
-                                    .foregroundColor(contexte.selectionnee == tab ? .primary : .gray)
-                            }
-                            .frame(maxWidth: .infinity)
-                            
-                            ZStack {
-                                Rectangle().fill(Color("CouleurParDefaut"))
-                                    .frame(height: 1)
-                                    .opacity(0)
+                                .frame(maxWidth: .infinity)
                                 
-                                if contexte.selectionnee == tab {
+                                ZStack {
                                     Rectangle().fill(Color("CouleurParDefaut"))
                                         .frame(height: 1)
-                                        .matchedGeometryEffect(id: "tab", in: line)
+                                        .opacity(0)
+                                    
+                                    if contexte.selectionnee == tab {
+                                        Rectangle().fill(Color("CouleurParDefaut"))
+                                            .frame(height: 1)
+                                            .matchedGeometryEffect(id: "tab", in: line)
+                                    }
                                 }
                             }
                         }
                     }
+                    .padding(.horizontal)
+                    .padding(.top, 10)
                 }
-                .padding(.horizontal)
-                .padding(.top, 10)
                 
                 ZStack {
                     if contexte.trigger == .organise {
@@ -110,8 +117,6 @@ struct ActivitesVue: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .navigationTitle("Your dashboard")
-            .navigationBarTitleDisplayMode(.inline)
             .background(Color(.systemGray6))
         }
     }

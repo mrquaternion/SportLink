@@ -37,6 +37,8 @@ struct ActivitesOrganiseesVue: View {
                     DetailsActivite(activite: binding)
                         .environmentObject(activitesVM)
                         .environmentObject(vm)
+                        .cacherBoutonEditable(false)
+                        .cacherBoutonJoin()
                 }
             }
     }
@@ -54,6 +56,7 @@ struct ActivitesOrganiseesVue: View {
                     activite: activite
                 )
                 .cacherBoutonJoin()
+                .dateEtendue()
             }
         }
         .padding(.horizontal, 20)

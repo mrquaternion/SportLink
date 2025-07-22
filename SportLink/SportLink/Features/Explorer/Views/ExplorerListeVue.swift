@@ -37,6 +37,7 @@ struct ExplorerListeVue: View {
             
             VStack {
                 sectionFiltreEtTri
+                    .padding(.top) // Not to close to Dynamic Island
                 
                 if afficherFiltreOverlay {
                     BoiteFiltrage()
@@ -46,7 +47,7 @@ struct ExplorerListeVue: View {
                 
                 VStack(spacing: 8) {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(vm.dateAAffichee(vm.dateAFiltree))
+                        Text(activitesVM.dateAAffichee(vm.dateAFiltree))
                             .font(.title3)
                             .foregroundStyle(Color(.black).opacity(0.8))
                         Divider()
@@ -62,6 +63,7 @@ struct ExplorerListeVue: View {
                         .navigationDestination(for: Activite.self) { activite in
                             DetailsActivite(activite: .constant(activite))
                                 .environmentObject(activitesVM) // navigationDestination brise la chaine des environemments donc on doit le redonner
+                                .cacherBoutonEditable()
                         }
                 }
                 .onTapGesture {
@@ -73,8 +75,6 @@ struct ExplorerListeVue: View {
                     
                     estEnTrainDeChercher = false
                 }
-                
-             
             }
         }
         .environmentObject(vm)
@@ -122,6 +122,7 @@ struct ExplorerListeVue: View {
                             activite: activite
                         )
                         .cacherBoutonJoin(false)
+                        .dateEtendue(false)
                     }
                 }
                 .padding(.horizontal, 20)

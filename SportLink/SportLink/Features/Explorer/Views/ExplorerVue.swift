@@ -23,11 +23,11 @@ struct ExplorerVue: View {
                     )
                     .environmentObject(serviceEmplacements)
                     .environmentObject(activitesVM)
-                    .navigationTitle("Discover")
-                    .navigationBarTitleDisplayMode(.inline)
+                    .transition(.move(edge: .leading))
                 } else {
                     ExplorerCarteVue(utilisateur: $utilisateur)
                         .environmentObject(serviceEmplacements)
+                        .transition(.move(edge: .trailing))
                 }
             }
             
@@ -38,6 +38,7 @@ struct ExplorerVue: View {
             }
         }
         .ignoresSafeArea(.keyboard)
+        .animation(.easeInOut, value: modeAffichage)
     }
 }
 

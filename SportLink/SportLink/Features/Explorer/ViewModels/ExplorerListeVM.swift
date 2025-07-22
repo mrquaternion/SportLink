@@ -155,28 +155,4 @@ class ExplorerListeVM: ObservableObject {
         let dateMax = calendrier.date(byAdding: .weekOfYear, value: 4, to: valeurDeBase)!
         return (dateMin, dateMax, valeurDeBase)
     }
-    
-    func dateAAffichee(_ date: Date) -> String {
-        let calendrier = Calendar.current
-        
-        let jourDeSemaineFormat = DateFormatter()
-        jourDeSemaineFormat.locale = Locale.current
-        jourDeSemaineFormat.dateFormat = "EEEE"
-        
-        let jourDuMoisFormat = DateFormatter()
-        jourDuMoisFormat.locale = Locale.current
-        jourDuMoisFormat.dateFormat = "MMMM d"
- 
-        let jourDeSemaine: String
-        if calendrier.isDateInToday(date) {
-            jourDeSemaine = "Today"
-        } else if calendrier.isDateInTomorrow(date) {
-            jourDeSemaine = "Tomorrow"
-        } else {
-            jourDeSemaine = jourDeSemaineFormat.string(from: date)
-        }
-        
-        let jourDuMois = jourDuMoisFormat.string(from: date)
-        return "\(jourDeSemaine), \(jourDuMois)"
-    }
 }

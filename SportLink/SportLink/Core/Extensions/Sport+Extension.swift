@@ -61,7 +61,7 @@ enum Sport: String, Decodable, CaseIterable {
         }
     }
     
-    var arriereplan: Image {
+    var arriereplan: String {
         let imageStr: String
         switch self {
         case .soccer: imageStr = "soccer"
@@ -74,7 +74,7 @@ enum Sport: String, Decodable, CaseIterable {
         case .rugby: imageStr = "football"
         case .tennis: imageStr = "tennis"
         }
-        return Image(imageStr + "-min")
+        return imageStr + "-min"
     }
 }
 
