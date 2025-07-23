@@ -68,4 +68,9 @@ class ActivitesOrganiseesVM: ObservableObject {
             print("Activité avec ID \(idActivite) non trouvée localement.")
         }
     }
+    
+    func mettreAJourDescriptionLocalement(idActivite: String, nouvelleDescription: String) {
+        guard let index = activites.firstIndex(where: { $0.id == idActivite }) else { return }
+        activites[index].description = nouvelleDescription
+    }
 }

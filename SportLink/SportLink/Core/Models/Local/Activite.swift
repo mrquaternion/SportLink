@@ -52,6 +52,7 @@ struct PlageHoraire: Codable {
                 let f = DateFormatter()
                 f.locale = Locale(identifier: "en_US_POSIX")
                 f.dateFormat = "MMM d"
+                f.timeZone = TimeZone(identifier: "America/Toronto")
                 return f
             }()
             
@@ -59,6 +60,7 @@ struct PlageHoraire: Codable {
                 let f = DateFormatter()
                 f.locale = Locale(identifier: "en_US_POSIX")
                 f.dateFormat = "h:mm a"   // ex. "9:05 PM"
+                f.timeZone = TimeZone(identifier: "America/Toronto")
                 return f
             }()
         }

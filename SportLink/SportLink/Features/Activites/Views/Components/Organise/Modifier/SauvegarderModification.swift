@@ -95,3 +95,28 @@ func sauvegarderAutorisationInvitations(
         }
     }
 }
+
+@MainActor
+func sauvegarderDescription(
+    activite: Activite,
+    vm: ActivitesOrganiseesVM,
+    onSuccess: @escaping () -> Void
+) {
+    vm.serviceActivites.recupererIdActiviteParInfraId(activite.infraId) { idRecupere, erreur in
+        guard erreur == nil, let id = idRecupere else { return }
+
+        let db = Firestore.firestore()
+        db.collection("activites").document(id).updateData([
+            "description": activite.description
+        ]) { error in
+            guard error == nil else {
+                print("Erreur lors de la mise à jour de la description : \(error!)")
+                return
+            }
+            // Mise à jour locale
+            vm.mettreAJourDescriptionLocalement(idActivite: id, nouvelleDescription: activite.description)
+
+            onSuccess()
+        }
+    }
+}

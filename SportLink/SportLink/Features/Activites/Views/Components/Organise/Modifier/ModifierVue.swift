@@ -37,6 +37,7 @@ struct ModifierVue: View {
                     sectionCarte
                     sectionPlaces
                     sectionInvitations
+                    sectionDescription
                    
                 }
             }
@@ -75,11 +76,13 @@ struct ModifierVue: View {
                 sauvegarderTitre(titre: activite.titre, activite: activite, vm: vm) {
                     sauvegarderDate(activite: activite, vm: vm) {
                         sauvegarderParticipants(activite: activite, vm: vm) {
-                            sauvegarderAutorisationInvitations(activite: activite, vm: vm) {
-                                withAnimation { sauvegardeReussie = true }
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                    vm.objectWillChange.send()
-                                    dismiss()
+                            sauvegarderDescription(activite: activite, vm: vm) {
+                                sauvegarderAutorisationInvitations(activite: activite, vm: vm) {
+                                    withAnimation { sauvegardeReussie = true }
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                        vm.objectWillChange.send()
+                                        dismiss()
+                                    }
                                 }
                             }
                         }
@@ -259,10 +262,17 @@ struct ModifierVue: View {
                             .padding(.top)
 
                         DatePicker("Début", selection: $heureDebutTemporaire, displayedComponents: .hourAndMinute)
+                            .onChange(of: heureDebutTemporaire) { nouvelleHeureDebut in
+                                if heureFinTemporaire < nouvelleHeureDebut {
+                                    heureFinTemporaire = nouvelleHeureDebut.addingTimeInterval(3600) // +1h
+                                }
+                            }
                             .datePickerStyle(.wheel)
                             .labelsHidden()
 
+                        // ⛔ Retirer le `in:` pour tester
                         DatePicker("Fin", selection: $heureFinTemporaire, in: heureDebutTemporaire..., displayedComponents: .hourAndMinute)
+                            .id(heureDebutTemporaire)
                             .datePickerStyle(.wheel)
                             .labelsHidden()
 
@@ -294,7 +304,6 @@ struct ModifierVue: View {
             }
         }
     }
-    
     private var vueOverlayParticipants: some View {
         FenetreModaleFlottante(estPresente: Binding(
             get: { overlayActif == .participants },
@@ -397,6 +406,28 @@ struct ModifierVue: View {
             }
             .frame(width: 300)
         }
+    }
+    
+    private var sectionDescription: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Description")
+                .font(.headline)
+                .padding(.horizontal)
+
+            TextEditor(text: $activite.description)
+                .frame(minHeight: 120)
+                .padding(8)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                        )
+                )
+                .padding(.horizontal)
+        }
+        .padding(.top)
     }
     
     // MARK: - Utils
