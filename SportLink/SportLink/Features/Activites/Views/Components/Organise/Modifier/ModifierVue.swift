@@ -141,9 +141,10 @@ struct ModifierVue: View {
 
     private var champTitreModifiable: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Title of the activity")
-                .font(.headline)
-                .foregroundColor(.black)
+            Text("TITLE OF THE ACTIVITY")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .fontWeight(.bold)
 
             HStack {
                 TextField("Nom de l'activité", text: $activite.titre)
@@ -420,9 +421,11 @@ struct ModifierVue: View {
     
     private var sectionDescription: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Description")
-                .font(.headline)
+            Text("DESCRIPTION")
                 .padding(.horizontal)
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .fontWeight(.bold)
 
             TextEditor(text: $descriptionTemporaire)
                 .frame(minHeight: 120)
