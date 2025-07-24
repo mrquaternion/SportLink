@@ -13,6 +13,7 @@ struct InscriptionVue: View {
 
     @State private var motDePasseVisible = false
     @State private var motDePasseConfirmeVisible = false
+    @State private var allerChoixSport = false
 
     var body: some View {
         VStack {
@@ -71,12 +72,17 @@ struct InscriptionVue: View {
             .padding(.horizontal, 30)
 
             Spacer()
+            
+            NavigationLink(destination: ChoixSportVue(authVM: authVM), isActive: $allerChoixSport) {
+                EmptyView()
+            }
 
             // Bouton SIGN UP
             Button(action: {
-                // Action de création de compte
+                // Tu pourrais valider ici les champs
+                allerChoixSport = true
             }) {
-                Text("SIGN UP")
+                Text("NEXT")
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
