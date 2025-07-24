@@ -17,6 +17,7 @@ struct DetailsActivite: View {
     @State private var montrerVueEdition = false
     @State private var estFavoris = false // Temporaire
     @Binding var activite: Activite
+    @State private var refreshID = UUID()
     
     // MARK: Body
     var body: some View {
@@ -29,6 +30,7 @@ struct DetailsActivite: View {
                 EffetParallax(opaciteEnTete: $opaciteEnTete, sportDeActivite: Sport.depuisNom(activite.sport))
                 Details(estFavoris: $estFavoris, activite: activite)
             }
+            .id(refreshID)
             .ignoresSafeArea()
         }
         .task { _ = await activitesVM.genererApercu(infraId: activite.infraId) }
@@ -38,7 +40,12 @@ struct DetailsActivite: View {
             Button("Cancel", role: .cancel) { }
         }
         .sheet(isPresented: $montrerVueEdition) {
-            ModifierVue(activite: $activite)
+            ModifierVue(activite: $activite) {
+                refreshID = UUID() 
+            }
+        }
+        .onChange(of: activite) { _ in
+            refreshID = UUID()
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)

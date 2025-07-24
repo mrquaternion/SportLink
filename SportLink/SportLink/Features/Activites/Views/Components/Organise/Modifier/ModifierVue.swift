@@ -10,6 +10,7 @@ import MapKit
 
 struct ModifierVue: View {
     @Binding var activite: Activite
+    var onSauvegarde: () -> Void = {}
     @FocusState private var titreEstEnEdition: Bool
 
     @EnvironmentObject var vm: ActivitesOrganiseesVM
@@ -23,6 +24,7 @@ struct ModifierVue: View {
     @State private var heureFinTemporaire: Date = Date()
     @State private var overlayActif: ActiveOverlay = .none
     @State private var invitationsOuvertesTemporaire: Bool = true
+    @State private var descriptionTemporaire: String = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -55,6 +57,12 @@ struct ModifierVue: View {
         .onAppear {
             heureDebutTemporaire = activite.date.debut
             heureFinTemporaire = activite.date.fin
+            descriptionTemporaire = activite.description
+        }
+        .onChange(of: activite.id) { _ in
+            heureDebutTemporaire = activite.date.debut
+            heureFinTemporaire = activite.date.fin
+            descriptionTemporaire = activite.description
         }
     }
 
@@ -72,6 +80,7 @@ struct ModifierVue: View {
             Button("Save") {
                 let nouvelleDate = PlageHoraire(debut: heureDebutTemporaire, fin: heureFinTemporaire)
                 activite.date = nouvelleDate
+                activite.description = descriptionTemporaire
 
                 sauvegarderTitre(titre: activite.titre, activite: activite, vm: vm) {
                     sauvegarderDate(activite: activite, vm: vm) {
@@ -80,6 +89,7 @@ struct ModifierVue: View {
                                 sauvegarderAutorisationInvitations(activite: activite, vm: vm) {
                                     withAnimation { sauvegardeReussie = true }
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                        onSauvegarde()                      
                                         vm.objectWillChange.send()
                                         dismiss()
                                     }
@@ -270,7 +280,6 @@ struct ModifierVue: View {
                             .datePickerStyle(.wheel)
                             .labelsHidden()
 
-                        // ⛔ Retirer le `in:` pour tester
                         DatePicker("Fin", selection: $heureFinTemporaire, in: heureDebutTemporaire..., displayedComponents: .hourAndMinute)
                             .id(heureDebutTemporaire)
                             .datePickerStyle(.wheel)
@@ -414,7 +423,7 @@ struct ModifierVue: View {
                 .font(.headline)
                 .padding(.horizontal)
 
-            TextEditor(text: $activite.description)
+            TextEditor(text: $descriptionTemporaire)
                 .frame(minHeight: 120)
                 .padding(8)
                 .background(
