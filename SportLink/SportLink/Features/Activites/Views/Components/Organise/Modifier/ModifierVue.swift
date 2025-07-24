@@ -31,19 +31,47 @@ struct ModifierVue: View {
             barreSuperieure
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 0) {
                     champTitreModifiable
-                    sectionSport
-                    sectionDate
+
+                    HStack {
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+
                     sectionHeure
-                    sectionCarte
+
+                    HStack {
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+
                     sectionPlaces
+
+                    HStack {
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+
                     sectionInvitations
+
+                    HStack {
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+
                     sectionDescription
-                   
                 }
             }
-
+            
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -76,6 +104,12 @@ struct ModifierVue: View {
                 .font(.headline)
 
             Spacer()
+            
+            Text("Edit")
+                .font(.headline)
+                .foregroundColor(.black)
+
+            Spacer()
 
             Button("Save") {
                 let nouvelleDate = PlageHoraire(debut: heureDebutTemporaire, fin: heureFinTemporaire)
@@ -106,57 +140,39 @@ struct ModifierVue: View {
     }
 
     private var champTitreModifiable: some View {
-        HStack {
-            TextField("Nom de l'activité", text: $activite.titre)
-                .focused($titreEstEnEdition)
-                .submitLabel(.done)
-                .font(.title3)
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Title of the activity")
+                .font(.headline)
                 .foregroundColor(.black)
-                .padding(.leading)
 
-            Image(systemName: "pencil")
-                .foregroundColor(.gray)
-                .padding(.trailing)
-        }
-        .frame(height: 50)
-        .background(Color.white)
-        .cornerRadius(12)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-        )
-        .contentShape(Rectangle())
-        .onTapGesture { titreEstEnEdition = true }
-        .padding(.horizontal)
-        .padding(.top, 4)
-    }
-
-    private var sectionSport: some View {
-        let sport = Sport.depuisNom(activite.sport)
-        return HStack(spacing: 8) {
-            Image(systemName: sport.icone)
-                .foregroundColor(.red)
-                .font(.title2)
-            Text(sport.nom.capitalized)
-                .font(.title2)
-                .fontWeight(.medium)
+            HStack {
+                TextField("Nom de l'activité", text: $activite.titre)
+                    .focused($titreEstEnEdition)
+                    .submitLabel(.done)
+                    .font(.headline)
+                    .foregroundColor(.black)
+                    .fontWeight(.regular)
+                
+                Spacer()
+                Image(systemName: "pencil")
+                    .foregroundColor(.gray)
+            }
+            .frame(height: 50)
+            .padding(.horizontal)
+            .background(Color.white)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+            )
+            .contentShape(Rectangle())
+            .onTapGesture { titreEstEnEdition = true }
         }
         .padding(.horizontal)
-        .padding(.top, 4)
+        .padding(.top, 20)
     }
 
-    private var sectionDate: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "calendar")
-                .foregroundColor(Color("CouleurParDefaut"))
-                .font(.title3)
-            Text(dateFormatter.string(from: activite.date.debut).capitalized)
-                .font(.title3)
-                .foregroundColor(.black)
-        }
-        .padding(.horizontal)
-    }
-
+    
     private var sectionHeure: some View {
         VStack(spacing: 8) {
             Button(action: { modaleHeureActive = true }) {
@@ -185,21 +201,6 @@ struct ModifierVue: View {
       
     }
     
-    private var sectionCarte: some View {
-        Group {
-            Text(nomDuParc)
-                .font(.title3)
-                .padding(.horizontal)
-                .padding(.bottom, -12)
-
-            if let infra = infra {
-                CarteParcSeeMore(infrastructure: infra)
-                    .frame(height: 300)
-                    .cornerRadius(12)
-                    .padding(.horizontal)
-            }
-        }
-    }
 
     private var sectionPlaces: some View {
         Button {
@@ -436,7 +437,6 @@ struct ModifierVue: View {
                 )
                 .padding(.horizontal)
         }
-        .padding(.top)
     }
     
     // MARK: - Utils
