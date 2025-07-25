@@ -19,6 +19,7 @@ struct ChoixDisponibilitesVue: View {
     @State private var joursSelectionnes: Set<String> = []
     @State private var disponibilites: [String: [(Date, Date)]] = [:]
     @State private var overlayJourActif: (jour: String, index: Int)? = nil
+    @State private var allerAjoutPhoto = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -90,12 +91,23 @@ struct ChoixDisponibilitesVue: View {
                     Spacer(minLength: 60) // pour ne pas que le scroll cache le bouton
                 }
             }
+            
+            NavigationLink(
+                destination: AjoutPhotoProfilVue(
+                    authVM: authVM,
+                    sportsChoisis: sportsChoisis,
+                    disponibilites: disponibilites
+                ),
+                isActive: $allerAjoutPhoto
+            ) {
+                EmptyView()
+            }
 
             // Bouton "Continue" fixé en bas
             VStack(spacing: 0) {
                 Divider()
                 Button("Continue") {
-                    // Action ici
+                    allerAjoutPhoto = true
                 }
                 .font(.system(size: 20, weight: .bold))
                 .foregroundColor(.white)
