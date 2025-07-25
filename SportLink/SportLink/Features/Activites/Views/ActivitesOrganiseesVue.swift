@@ -60,7 +60,7 @@ struct ActivitesOrganiseesVue: View {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.bottom, 70) // faire de la place par rapport a le navbar
+        .padding(.bottom, 70) // faire de la place par rapport a le tabbar
         .padding(.top, 20) // faire de la place par rapport a l'onglet
     }
 }
