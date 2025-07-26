@@ -153,6 +153,9 @@ struct ChoixDisponibilitesVue: View {
                                 DatePicker("", selection: bindingDebut, displayedComponents: .hourAndMinute)
                                     .labelsHidden()
                                     .datePickerStyle(.wheel)
+                                    .onChange(of: bindingDebut.wrappedValue) { newValue in
+                                        bindingDebut.wrappedValue = arrondirADateProche15Min(newValue)
+                                    }
                             }
 
                             VStack {
@@ -160,7 +163,9 @@ struct ChoixDisponibilitesVue: View {
                                 DatePicker("", selection: bindingFin, displayedComponents: .hourAndMinute)
                                     .labelsHidden()
                                     .datePickerStyle(.wheel)
-                            }
+                                    .onChange(of: bindingFin.wrappedValue) { newValue in
+                                        bindingFin.wrappedValue = arrondirADateProche15Min(newValue)
+                                    }                            }
                         }
                         .padding(.bottom, 10)
 
@@ -193,6 +198,13 @@ struct ChoixDisponibilitesVue: View {
     // Formatter pour afficher les heures
     func formater(_ date: Date) -> String {
         date.formatted(date: .omitted, time: .shortened)
+    }
+    func arrondirADateProche15Min(_ date: Date) -> Date {
+        let cal = Calendar.current
+        let components = cal.dateComponents([.hour, .minute], from: date)
+        let minute = components.minute ?? 0
+        let minuteArrondi = (minute + 7) / 15 * 15
+        return cal.date(bySettingHour: components.hour ?? 0, minute: minuteArrondi % 60, second: 0, of: date) ?? date
     }
 }
 

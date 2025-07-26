@@ -18,7 +18,7 @@ struct ChoixSportVue: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    Text("Choose Your Favorite Sports")
+                    Text("choose your favorite sports")
                         .font(.title2)
                         .fontWeight(.bold)
                         .padding(.top, 30)
