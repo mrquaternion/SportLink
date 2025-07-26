@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		62579FC82E315851003CAF5A /* VTabView in Frameworks */ = {isa = PBXBuildFile; productRef = 62579FC72E315851003CAF5A /* VTabView */; };
+		6269D67D2E306B75003B6AE9 /* CropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 6269D67C2E306B75003B6AE9 /* CropViewController */; };
 		628E053E2DED1EF700FBED91 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 628E053D2DED1EF700FBED91 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		628E05402DED1EF700FBED91 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 628E053F2DED1EF700FBED91 /* FirebaseAuth */; };
 		628E05422DED1EF700FBED91 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 628E05412DED1EF700FBED91 /* FirebaseFirestore */; };
@@ -76,6 +78,8 @@
 				628E053E2DED1EF700FBED91 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				628E05442DED1EF700FBED91 /* FirebaseStorage in Frameworks */,
 				628E05402DED1EF700FBED91 /* FirebaseAuth in Frameworks */,
+				6269D67D2E306B75003B6AE9 /* CropViewController in Frameworks */,
+				62579FC82E315851003CAF5A /* VTabView in Frameworks */,
 				628E05422DED1EF700FBED91 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -142,6 +146,8 @@
 				628E053F2DED1EF700FBED91 /* FirebaseAuth */,
 				628E05412DED1EF700FBED91 /* FirebaseFirestore */,
 				628E05432DED1EF700FBED91 /* FirebaseStorage */,
+				6269D67C2E306B75003B6AE9 /* CropViewController */,
+				62579FC72E315851003CAF5A /* VTabView */,
 			);
 			productName = SportLink;
 			productReference = 628E05102DED1B7600FBED91 /* SportLink.app */;
@@ -227,6 +233,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				6269D67B2E306B75003B6AE9 /* XCRemoteSwiftPackageReference "TOCropViewController" */,
+				62EE0F562E3157C900A27EC9 /* XCRemoteSwiftPackageReference "swiftui-vertical-tab-view" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 628E05112DED1B7600FBED91 /* Products */;
@@ -599,6 +607,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		6269D67B2E306B75003B6AE9 /* XCRemoteSwiftPackageReference "TOCropViewController" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TimOliver/TOCropViewController.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.4;
+			};
+		};
 		628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -607,9 +623,27 @@
 				minimumVersion = 11.13.0;
 			};
 		};
+		62EE0F562E3157C900A27EC9 /* XCRemoteSwiftPackageReference "swiftui-vertical-tab-view" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-vertical-tab-view.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		62579FC72E315851003CAF5A /* VTabView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 62EE0F562E3157C900A27EC9 /* XCRemoteSwiftPackageReference "swiftui-vertical-tab-view" */;
+			productName = VTabView;
+		};
+		6269D67C2E306B75003B6AE9 /* CropViewController */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6269D67B2E306B75003B6AE9 /* XCRemoteSwiftPackageReference "TOCropViewController" */;
+			productName = CropViewController;
+		};
 		628E053D2DED1EF700FBED91 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
