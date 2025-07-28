@@ -31,24 +31,21 @@ struct Vague: Shape {
 
 struct VaguesVue: View {
     var body: some View {
-        VStack {
-            ZStack(alignment: .top) {
-                Vague(cstMaxX: 0.8, cstMaxY: 1.4)
-                    .fill(Color("CouleurRougeClaire"))
-                    .frame(height: 215)
-                
-                Vague(cstMaxX: 0.8, cstMaxY: 1.35)
-                    .fill(Color("CouleurRougeMedium"))
-                    .frame(height: 185)
-                    .shadow(color: Color.black.opacity(0.6), radius: 10, y: -6)
-                
-                Vague()
-                    .fill(Color("CouleurParDefaut"))
-                    .frame(height: 150)
-                    .shadow(color: Color.black.opacity(0.8), radius: 10, y: -4)
-                
-            }
-        }.ignoresSafeArea(.all)
+        ZStack(alignment: .top) {
+            Vague(cstMaxX: 0.8, cstMaxY: 1.4)
+                .fill(Color("CouleurRougeClaire"))
+                .frame(height: 195)
+            
+            Vague(cstMaxX: 0.8, cstMaxY: 1.35)
+                .fill(Color("CouleurRougeMedium"))
+                .frame(height: 165)
+                .shadow(color: Color.black.opacity(0.6), radius: 10, y: -6)
+            
+            Vague()
+                .fill(Color("CouleurParDefaut"))
+                .frame(height: 130)
+                .shadow(color: Color.black.opacity(0.8), radius: 10, y: -4)
+        }
     }
 }
 

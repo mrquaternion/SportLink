@@ -8,21 +8,40 @@
 import SwiftUI
 
 struct EcranDemarrageVue: View {
-    var body: some View {
-        ZStack {
-            Color("CouleurParDefaut").ignoresSafeArea(.all)
-            
-            VStack {
-                Image("AppIconSansArrierePlan")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 250)
-                    .padding(.bottom, 5)
-                
-                Text("SPORTLINK")
-                    .font(.system(size: 30, weight: .bold, design: .default))
-                    .foregroundStyle(Color(.white))
+    @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
+    @State private var etatAuthentification: EtatAuthentification = .chargement
 
+    var body: some View {
+        Group {
+            switch etatAuthentification {
+            case .chargement:
+                SplashScreen()
+            case .nonAuthentifie:
+                AuthentificationVue { nouvelEtat in
+                    etatAuthentification = nouvelEtat
+                }
+            case .authentifie:
+                VuePrincipale(
+                    serviceEmplacements: serviceEmplacements,
+                    onDeconnexion: {
+                        etatAuthentification = .nonAuthentifie
+                    }
+                )
+            }
+        }
+        .onAppear {
+            verifierAuthentificationAuDemarrage()
+        }
+    }
+    
+    private func verifierAuthentificationAuDemarrage() {
+        Task {
+            try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 secs
+            
+            let nouvelEtat = await GestionnaireAuthentification.partage.verifierEtatAuthentification()
+            
+            await MainActor.run {
+                etatAuthentification = nouvelEtat
             }
         }
     }
@@ -30,4 +49,5 @@ struct EcranDemarrageVue: View {
 
 #Preview {
     EcranDemarrageVue()
+        .environmentObject(DonneesEmplacementService())
 }

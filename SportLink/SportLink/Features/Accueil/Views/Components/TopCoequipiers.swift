@@ -15,7 +15,7 @@ struct CoequipiersInfo: Identifiable {
     var dernierSportJoue: Sport
 }
 
-struct CoequipiersRecents: View {
+struct TopCoequipiers: View {
     let coequipiers: [CoequipiersInfo] = [
         .init(nbPartiesJouees: 15, prenom: "Alexandre", dernierSportJoue: .soccer),
         .init(nbPartiesJouees: 8,  prenom: "Sam",       dernierSportJoue: .basketball),
@@ -33,9 +33,8 @@ struct CoequipiersRecents: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 10) {
             titre
-
             VStack(spacing: 10) {
                 VStack(spacing: 0) {
                     enTeteBoite
@@ -49,13 +48,12 @@ struct CoequipiersRecents: View {
                 boutonUpDown
             }
         }
-        .padding(.horizontal, 20)
     }
     
     @ViewBuilder
     private var titre: some View {
         HStack {
-            Text("Most recent teammates")
+            Text("Top teammates")
                 .font(.title2.weight(.semibold))
             Spacer()
             Image(systemName: "info.circle")
@@ -73,9 +71,9 @@ struct CoequipiersRecents: View {
         VStack(alignment: .leading) {
             HStack {
                 Text("#").frame(width: 65)
-                Text("Player").frame(width: 110)
-                Text("Sport played").frame(width: 140)
-                Text("")
+                Text("Player").frame(width: 130)
+                Text("Sport played").frame(width: 110)
+                Text("").frame(width: 30)
             }
             Divider()
         }
@@ -85,15 +83,18 @@ struct CoequipiersRecents: View {
 
     @ViewBuilder
     private var carrousel: some View {
-        CarouselView(pageCount: pagesTotales, currentIndex: $page) {
+        CarouselView(
+            pageCount: pagesTotales,
+            currentIndex: $page
+        ) {
             ForEach(0..<pagesTotales, id: \.self) { pageIndex in
                 VStack(spacing: 0) {
                     ForEach(pageIndex * lignesParPage ..< min((pageIndex + 1) * lignesParPage, coequipiers.count), id: \.self) { i in
-                        LigneCoequipier(info: coequipiers[i])
+                        CoequipierRangee(info: coequipiers[i])
                     }
                     // fill empty rows
-                    let filled = min(lignesParPage, coequipiers.count - pageIndex * lignesParPage)
-                    ForEach(0..<lignesParPage - filled, id: \.self) { _ in
+                    let pleines = min(lignesParPage, coequipiers.count - pageIndex * lignesParPage)
+                    ForEach(0..<lignesParPage - pleines, id: \.self) { _ in
                         HStack(spacing: 0) {
                             Color.clear.frame(width: 60, height: 70)
                             Color.clear.frame(width: 130, height: 70)
@@ -102,7 +103,7 @@ struct CoequipiersRecents: View {
                         }
                     }
                 }
-                .frame(width: 360, height: 350)
+                .frame(height: 350)
             }
         }
         .frame(height: 350)
@@ -112,15 +113,25 @@ struct CoequipiersRecents: View {
     private var boutonUpDown: some View {
         HStack(spacing: 22) {
             Button {
-                withAnimation { page = max(page - 1, 0) }
-            } label: { Image(systemName: "chevron.left") }.disabled(page == 0)
+                withAnimation(.spring(duration: 0.7)) {
+                    page = max(page - 1, 0)
+                }
+            } label: {
+                Image(systemName: "chevron.left")
+            }
+            .disabled(page == 0)
             
             Text("\(page + 1) / \(pagesTotales)")
                 .font(.headline)
             
             Button {
-                withAnimation { page = min(page + 1, pagesTotales - 1) }
-            } label: { Image(systemName: "chevron.right") }.disabled(page == pagesTotales - 1)
+                withAnimation(.spring(duration: 0.7)) {
+                    page = min(page + 1, pagesTotales - 1)
+                }
+            } label: {
+                Image(systemName: "chevron.right")
+            }
+            .disabled(page == pagesTotales - 1)
         }
         .font(.system(size: 22))
         .padding(.horizontal, 14)
@@ -133,57 +144,58 @@ struct CoequipiersRecents: View {
     }
 }
 
-struct LigneCoequipier: View {
+struct CoequipierRangee: View {
     var info: CoequipiersInfo
-
     @State private var estAppuyee = false
     
     var body: some View {
-        HStack(spacing: 0) {
-            Text("\(info.nbPartiesJouees)")
-                .frame(width: 60, height: 70)
-                .font(.system(size: 16))
-                
-            HStack {
-                Image(info.prenom)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 26, height: 26)
-                    .clipShape(.circle)
-                Text(info.prenom)
-                    .font(.system(size: 14))
-            }
-            .frame(width: 130, height: 70, alignment: .leading)
-            .padding(.leading)
-            
-            Text(info.dernierSportJoue.nom.capitalized)
-                .frame(width: 110, height: 70)
-                .font(.system(size: 15))
-            
-            Image(systemName: "chevron.right")
-                .frame(width: 30, height: 70, alignment: .trailing)
-                .foregroundStyle(.tertiary)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .contentShape(Rectangle())
-        .background(estAppuyee ? Color(.systemGray6) : Color.white)
-        .onLongPressGesture(
-            minimumDuration: 0,
-            maximumDistance: .infinity,
-            pressing: { pressing in     
-                withAnimation(.easeOut(duration: 0.2)) {
-                    estAppuyee = pressing
-                }
+        BoutonGestureScrollView(
+            actionAppui: {
+                withAnimation { estAppuyee = true }
             },
-            perform: {
-                print("Tapped \(info.prenom)")
+            tempsAppuiLong: 0,
+            actionAppuiLong: {},
+            actionFin: {
+                withAnimation { estAppuyee = false }
+                
+            },
+            actionRelachement: {
+                print("Navigation vers le profil de \(info.prenom)")
             }
-        )
+        ) {
+            HStack(spacing: 0) {
+                Text("\(info.nbPartiesJouees)")
+                    .frame(width: 60, height: 70)
+                    .font(.system(size: 16))
+                    
+                HStack {
+                    Image(info.prenom)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 28, height: 28)
+                        .clipShape(.circle)
+                    Text(info.prenom)
+                        .font(.system(size: 14))
+                }
+                .frame(width: 130, height: 70, alignment: .leading)
+                .padding(.leading)
+                
+                Text(info.dernierSportJoue.nom.capitalized)
+                    .frame(width: 110, height: 70)
+                    .font(.system(size: 15))
+                
+                Image(systemName: "chevron.right")
+                    .frame(width: 30, height: 70, alignment: .trailing)
+                    .foregroundStyle(.tertiary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(estAppuyee ? Color(.systemGray6) : .white)
+        }
     }
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    CoequipiersRecents()
+    TopCoequipiers()
         
 }
 
@@ -203,8 +215,35 @@ struct CarouselView<Content: View>: View {
             .frame(width: geometry.size.width, alignment: .leading)
             .offset(x: -CGFloat(currentIndex) * geometry.size.width)
             .offset(x: translation)
-            .animation(.spring(duration: 0.7), value: currentIndex)
-            .animation(.spring(duration: 0.7), value: translation)
         }
+    }
+}
+
+struct BoutonGestureScrollView<Label: View>: View {
+    var style: StyleBoutonGestureScrollView
+    var actionRelachement: () -> Void
+    var etiquette: () -> Label
+    
+    init(
+        actionAppui: @escaping () -> Void = {},
+        tempsAppuiLong: TimeInterval = 1,
+        actionAppuiLong: @escaping () -> Void = {},
+        actionFin: @escaping () -> Void = {},
+        actionRelachement: @escaping () -> Void = {},
+        etiquette: @escaping () -> Label
+    ) {
+        self.style = StyleBoutonGestureScrollView(
+            actionAppui: actionAppui,
+            tempsAppuiLong: tempsAppuiLong,
+            actionAppuiLong: actionAppuiLong,
+            actionFin: actionFin
+        )
+        self.actionRelachement = actionRelachement
+        self.etiquette = etiquette
+    }
+    
+    var body: some View {
+        Button(action: actionRelachement, label: etiquette)
+            .buttonStyle(style)
     }
 }

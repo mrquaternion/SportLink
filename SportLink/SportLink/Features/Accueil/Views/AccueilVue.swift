@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct AccueilVue: View {
+    @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
+    @EnvironmentObject var session: Session
     @State private var nombreDePoints: Double = 70.0
     @State private var seuilDuNiveau: Double = 100.0
-    @State private var imageAvatar: UIImage?
     
     var body: some View {
         ZStack {
@@ -21,8 +23,14 @@ struct AccueilVue: View {
                 zoneStatistiques
                     .padding(.top, 90)
                 
-                CoequipiersRecents()
-                    .padding(.bottom, 70) // faire de l'espace a cause de la tabbar
+                Group {
+                    ActivitesRecommandees(serviceEmplacements: serviceEmplacements)
+                        .padding(.bottom)
+                    
+                    TopCoequipiers()
+                        .padding(.bottom, 70) // faire de l'espace a cause de la tabbar
+                }
+                .padding(.horizontal, 20)
             }
         }
         .background(Color(.systemGray6))
@@ -72,7 +80,7 @@ struct AccueilVue: View {
                 NavigationLink {
                     StatistiquesVue()
                 } label: {
-                    Image(uiImage: imageAvatar ?? UIImage(resource: .hybride))
+                    session.avatar
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 165)
@@ -80,7 +88,7 @@ struct AccueilVue: View {
                 }
                 .buttonStyle(.plain)
                 
-                Text("Level 5: Intermediate")
+                Text("level 5: intermediate".localizedCapitalized)
                     .font(.subheadline.weight(.light))
             }
             
@@ -99,4 +107,7 @@ struct AccueilVue: View {
 
 #Preview {
     AccueilVue()
+        .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
+        .environmentObject(DonneesEmplacementService())
+        .environmentObject(Session())
 }

@@ -7,42 +7,29 @@ enum Onglets: Int {
 
 struct VuePrincipale: View {
     @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
+    @StateObject private var session = Session()
     @StateObject private var activitesVM: ActivitesVM
     @State private var ongletSelectionne: Onglets = .accueil
     @State private var estPresente = false
     @State private var afficherTabBar = true
+    @State private var montrerPageAuthentification = false
     
-    init(serviceEmplacements: DonneesEmplacementService) {
+    let onDeconnexion: () -> Void
+    
+    init(serviceEmplacements: DonneesEmplacementService, onDeconnexion: @escaping () -> Void) {
         self._activitesVM = StateObject(wrappedValue: ActivitesVM(serviceEmplacements: serviceEmplacements))
+        self.onDeconnexion = onDeconnexion
     }
 
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
-                Group {
-                    switch ongletSelectionne {
-                    case .accueil:
-                        AccueilVue()
-                    case .explorer:
-                        ExplorerVue(utilisateur: .constant(mockUtilisateur))
-                            .environmentObject(serviceEmplacements)
-                            .environmentObject(activitesVM)
-                    case .creer:
-                        Color.clear // ne sera jamais directement visible
-                    case .activites:
-                        ActivitesVue()
-                            .environmentObject(serviceEmplacements)
-                            .environmentObject(activitesVM)
-                    case .profil:
-                        ProfilVue()
-                    }
+                if session.estPret {
+                    contenuPrincipal
+                } else {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
-                TabBarPersonnalisee(
-                    ongletSelectionnee: $ongletSelectionne,
-                    estPresente: $estPresente
-                )
             }
             .ignoresSafeArea(.keyboard, edges: .bottom)
             .fullScreenCover(isPresented: $estPresente) {
@@ -50,6 +37,36 @@ struct VuePrincipale: View {
                     .environmentObject(serviceEmplacements)
             }
         }
+    }
+    
+    @ViewBuilder
+    private var contenuPrincipal: some View {
+        Group {
+            switch ongletSelectionne {
+            case .accueil:
+                AccueilVue()
+                    .environmentObject(activitesVM)
+                    .environmentObject(session)
+            case .explorer:
+                ExplorerVue(utilisateur: .constant(mockUtilisateur))
+                    .environmentObject(serviceEmplacements)
+                    .environmentObject(activitesVM)
+            case .creer:
+                Color.clear // ne sera jamais directement visible
+            case .activites:
+                ActivitesVue()
+                    .environmentObject(serviceEmplacements)
+                    .environmentObject(activitesVM)
+            case .profil:
+                ProfilVue(onDeconnexion: onDeconnexion)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        
+        TabBarPersonnalisee(
+            ongletSelectionnee: $ongletSelectionne,
+            estPresente: $estPresente
+        )
     }
 
     private var mockUtilisateur: Utilisateur {
@@ -67,6 +84,6 @@ struct VuePrincipale: View {
 
 
 #Preview {
-    VuePrincipale(serviceEmplacements: DonneesEmplacementService())
+    VuePrincipale(serviceEmplacements: DonneesEmplacementService(), onDeconnexion: { print("Non déconnecté") })
         .environmentObject(DonneesEmplacementService())
 }

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ProfilVue: View {
+    let onDeconnexion: () -> Void
+    
     @State private var username: String = "juando12"
     @State private var email: String = "juan.dominguez12@gmail.com"
     @State private var password: String = "********"
@@ -85,10 +87,17 @@ struct ProfilVue: View {
                     }
                     .padding(.horizontal)
                     
-                    Button(action: {
-                        // Action Log out
-                    }) {
-                        Text("Log out")
+                    Button {
+                        Task {
+                            do {
+                                try GestionnaireAuthentification.partage.deconnexion()
+                                onDeconnexion()
+                            } catch {
+                                print("Erreur déconnexion: \(error)")
+                            }
+                        }
+                    } label: {
+                        Text("log out".localizedCapitalized)
                             .foregroundColor(.red)
                             .bold()
                     }
@@ -123,6 +132,6 @@ struct ProfilVue: View {
     }
 }
 #Preview {
-    ProfilVue()
+    ProfilVue(onDeconnexion: { print("Non déconnecté") })
 }
 

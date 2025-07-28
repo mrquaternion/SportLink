@@ -28,7 +28,7 @@ struct ApplicationSportLink: App {
     
     var body: some Scene {
         WindowGroup {
-            VuePrincipale(serviceEmplacements: emplacementsVM)
+            EcranDemarrageVue()
                 .environmentObject(emplacementsVM)
                 .onAppear {
                     emplacementsVM.chargerDonnees()
