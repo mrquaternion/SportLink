@@ -25,11 +25,13 @@ struct ApplicationSportLink: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     @StateObject private var emplacementsVM = DonneesEmplacementService()
+    @StateObject var utilisateurConnecteVM = UtilisateurConnecteVM()
     
     var body: some Scene {
         WindowGroup {
             EcranDemarrageVue()
                 .environmentObject(emplacementsVM)
+                .environmentObject(utilisateurConnecteVM)
                 .onAppear {
                     emplacementsVM.chargerDonnees()
                 }

@@ -9,129 +9,136 @@ import SwiftUI
 
 struct ProfilVue: View {
     let onDeconnexion: () -> Void
-    
-    @State private var username: String = "juando12"
-    @State private var email: String = "juan.dominguez12@gmail.com"
-    @State private var password: String = "********"
-    
-    @State private var availability: [String: (Bool, Bool)] = [
-        "MON": (false, false),
-        "TUE": (false, false),
-        "WED": (false, false),
-        "THU": (false, false),
-        "FRI": (false, false),
-        "SAT": (false, false),
-        "SUN": (false, false)
-    ]
-    
-    let preferences = ["Soccer", "Badminton", "Volleyball"]
-    
-    var body: some View {
-        ZStack(alignment: .top) {
-            
-            // Rectangle rouge
-            Rectangle()
-                .fill(Color.red)
-                .frame(height: 125)
-                .ignoresSafeArea(edges: .top)
-            
-            ScrollView {
-                VStack(spacing: 20) {
-                    
-                    Image(systemName: "person.circle")
-                        .resizable()
-                        .frame(width: 120, height: 120)
-                        .background(Color.white)
-                        .clipShape(Circle())
-                   
 
-                    
-                    HStack {
-                        Text(username)
-                            .font(.title)
-                            .bold()
-                        Image(systemName: "pencil")
+    @EnvironmentObject var utilisateurVM: UtilisateurConnecteVM
+    @State private var montrerImagePicker = false
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Your Profile")
+                .font(.largeTitle.bold())
+                .padding(.top, 40)
+
+            Button(action: {
+                montrerImagePicker = true
+            }) {
+                if let image = utilisateurVM.photoUIImage {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 130, height: 130)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.gray, lineWidth: 2))
+                        .shadow(radius: 5)
+                } else {
+                    ZStack {
+                        Circle()
+                            .fill(Color(.systemGray5))
+                            .frame(width: 130, height: 130)
+                        Image(systemName: "camera.fill")
+                            .font(.system(size: 40))
+                            .foregroundColor(.gray)
                     }
-                    
-                    Divider()
-                    
-                    Group {
-                        Text("My information")
-                            .font(.headline)
-                        TextField("Email", text: $email)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                        SecureField("Password", text: $password)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                    }
-                    .padding(.horizontal)
-                    
-                    VStack(alignment: .leading) {
-                        Text("My availabilities (a partir d'ici c'est trash, ne pas tenir compte")
-                            .font(.headline)
-                        availabilityGrid
-                    }
-                    .padding(.horizontal)
-                    
-                    VStack(alignment: .leading) {
-                        Text("My preferences")
-                            .font(.headline)
-                        HStack {
-                            ForEach(preferences, id: \.self) { pref in
-                                Text(pref)
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 8)
-                                    .background(Color.gray.opacity(0.3))
-                                    .cornerRadius(8)
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                    
-                    Button {
-                        Task {
-                            do {
-                                try GestionnaireAuthentification.partage.deconnexion()
-                                onDeconnexion()
-                            } catch {
-                                print("Erreur déconnexion: \(error)")
-                            }
-                        }
-                    } label: {
-                        Text("log out".localizedCapitalized)
-                            .foregroundColor(.red)
-                            .bold()
-                    }
-                    .padding(.top, 20)
-                    
-                    Spacer()
                 }
-                .padding(.bottom, 40)
             }
+            .sheet(isPresented: $montrerImagePicker) {
+                // Tu peux ajouter l'ImagePicker ici plus tard si tu veux modifier la photo
+            }
+
+            Text(utilisateurVM.utilisateur?.nomUtilisateur ?? "Utilisateur")
+                .font(.title2)
+
+            // Affichage des sports favoris
+            if let sports = utilisateurVM.utilisateur?.sportsFavoris, !sports.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("My Favorite Sports")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top)
+
+                    LazyVStack(alignment: .leading, spacing: 8) {
+                        ForEach(grouperSports(sports), id: \.self) { ligne in
+                            HStack(spacing: 10) {
+                                ForEach(ligne, id: \.self) { sport in
+                                    TagSportStatiqueVue(sport: sport)
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal)
+            }
+
+            Button {
+                Task {
+                    do {
+                        try GestionnaireAuthentification.partage.deconnexion()
+                        onDeconnexion()
+                    } catch {
+                        print("Erreur déconnexion: \(error.localizedDescription)")
+                    }
+                }
+            } label: {
+                Text("Log out")
+                    .foregroundColor(.red)
+                    .bold()
+            }
+            .padding(.top, 20)
+
+            Spacer()
         }
-    }
-    
-    var availabilityGrid: some View {
-        VStack(alignment: .leading) {
-            ForEach(["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"], id: \.self) { day in
-                HStack {
-                    Text(day)
-                        .frame(width: 50, alignment: .leading)
-                    Toggle("AM", isOn: Binding(
-                        get: { availability[day]?.0 ?? false },
-                        set: { availability[day]?.0 = $0 }
-                    ))
-                    .labelsHidden()
-                    Toggle("PM", isOn: Binding(
-                        get: { availability[day]?.1 ?? false },
-                        set: { availability[day]?.1 = $0 }
-                    ))
-                    .labelsHidden()
-                }
-            }
+        .padding()
+        .task {
+            await utilisateurVM.chargerInfosUtilisateur()
         }
     }
 }
+
+// MARK: - Capsule sport statique
+
+struct TagSportStatiqueVue: View {
+    let sport: Sport
+
+    var body: some View {
+        Label {
+            Text(sport.nom.capitalized)
+        } icon: {
+            Image(systemName: sport.icone)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(
+            Capsule()
+                .fill(Color.red)
+        )
+        .foregroundColor(.white)
+    }
+}
+
+// MARK: - Regroupe les sports par ligne de 3
+
+func grouperSports(_ sports: [Sport], maxParLigne: Int = 3) -> [[Sport]] {
+    var lignes: [[Sport]] = []
+    var ligneActuelle: [Sport] = []
+
+    for sport in sports {
+        ligneActuelle.append(sport)
+        if ligneActuelle.count == maxParLigne {
+            lignes.append(ligneActuelle)
+            ligneActuelle = []
+        }
+    }
+
+    if !ligneActuelle.isEmpty {
+        lignes.append(ligneActuelle)
+    }
+
+    return lignes
+}
+
+/*
 #Preview {
     ProfilVue(onDeconnexion: { print("Non déconnecté") })
+        .environmentObject(UtilisateurConnecteVM())
 }
-
+*/
