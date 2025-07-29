@@ -13,7 +13,6 @@ import FirebaseFirestore
 class ActivitesOrganiseesVM: ObservableObject {
     let serviceActivites: ServiceActivites
     private let serviceEmplacements: DonneesEmplacementService
-    private let gestionnaireLocalisation = GestionnaireLocalisation.instance
     
     @Published var estEnChargement = false
     @Published var activiteSelectionnee: Activite?

@@ -8,75 +8,96 @@
 import SwiftUI
 
 struct AjoutPhotoProfilVue: View {
-    @ObservedObject var authVM: AuthentificationVM
-    let sportsChoisis: [String]
-    let disponibilites: [String: [(Date, Date)]]
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var vm: InscriptionVM
+    @Binding var etape: [EtapeSupplementaireInscription]
 
     @State private var image: UIImage?
     @State private var montrerPicker = false
 
     var body: some View {
-        VStack(spacing: 30) {
-            Text("Add a Profile Photo")
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding(.top, 40)
+        VStack(spacing: 60) {
+            enTete
 
             // Cercle de prévisualisation
-            Group {
-                if let image {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 180, height: 180)
-                        .clipShape(Circle())
-                        .shadow(radius: 6)
-                } else {
-                    Circle()
-                        .fill(Color.gray.opacity(0.2))
-                        .frame(width: 180, height: 180)
-                        .overlay(
-                            Image(systemName: "person.crop.circle.badge.plus")
-                                .font(.system(size: 50))
-                                .foregroundColor(.gray)
-                        )
+            VStack(spacing: 24) {
+                Group {
+                    if let image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 180, height: 180)
+                            .clipShape(Circle())
+                            
+                    } else {
+                        Circle()
+                            .fill(Color.gray.opacity(0.2))
+                            .frame(width: 180, height: 180)
+                            .overlay(
+                                Image(systemName: "person.crop.circle.badge.plus")
+                                    .font(.system(size: 50))
+                                    .foregroundColor(.gray)
+                            )
+                    }
                 }
-            }
-            .onTapGesture {
-                montrerPicker = true
-            }
+                .onTapGesture {
+                    montrerPicker = true
+                }
 
-            Text("Tap to choose a photo")
-                .foregroundColor(.gray)
+                Text("tap to choose a photo".localizedFirstCapitalized)
+                    .foregroundColor(.gray)
+            }
 
             Spacer()
-
-            Button("CONTINUE") {
-                // Enregistrer photo dans authVM ou passer à l'étape finale
-            }
-            .font(.system(size: 20, weight: .bold))
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.red)
-            .cornerRadius(30)
-            .padding(.horizontal, 50)
-            .padding(.bottom, 40)
         }
         .sheet(isPresented: $montrerPicker) {
             ImagePicker(image: $image)
         }
         .navigationBarBackButtonHidden(true)
+        .safeAreaInset(edge: .bottom) {
+            boutonContinuer
+        }
+    }
+    
+    @ViewBuilder
+    private var enTete: some View {
+        VStack {
+            HStack {
+                Button { dismiss() } label: {
+                    Image(systemName: "arrow.left")
+                        .font(.title2)
+                        .tint(.primary)
+                }
+                .frame(height: 30)
+                .padding()
+                Spacer()
+            }
+            HStack {
+                Text("add a profile photo".localizedCapitalized)
+                    .font(.title.weight(.bold))
+                    .padding(.horizontal)
+                Spacer()
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var boutonContinuer: some View {
+        Button("continue".localizedCapitalized) {
+            // Enregistrer photo dans authVM ou passer à l'étape finale
+            vm.photo = image
+            etape.append(.geolocalisation)
+        }
+        .font(.headline)
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color.red)
+        .foregroundColor(.white)
+        .cornerRadius(25)
+        .padding()
     }
 }
 
 #Preview {
-    AjoutPhotoProfilVue(
-        authVM: AuthentificationVM(),
-        sportsChoisis: ["soccer", "tennis"],
-        disponibilites: [
-            "Monday": [(Date(), Calendar.current.date(byAdding: .hour, value: 2, to: Date())!)],
-            "Wednesday": [(Date(), Calendar.current.date(byAdding: .hour, value: 1, to: Date())!)]
-        ]
-    )
+    AjoutPhotoProfilVue(vm: InscriptionVM(), etape: .constant([.photoProfil]))
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Utilisateur: Identifiable {
+struct Utilisateur: Identifiable, Decodable {
     var id: String { nomUtilisateur }
     
     let nomUtilisateur: String

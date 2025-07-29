@@ -33,7 +33,7 @@ struct TabBarPersonnalisee: View {
             Spacer()
             TabBarButton(
                 imageName: ongletSelectionnee == .activites ? "dashboard_fill" : "dashboard",
-                title: "Dashboard",
+                title: "Bookings",
                 isSelected: ongletSelectionnee == .activites
             ) { ongletSelectionnee = .activites }
             Spacer()

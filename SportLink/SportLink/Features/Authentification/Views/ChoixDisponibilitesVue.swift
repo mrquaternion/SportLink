@@ -12,206 +12,241 @@ let joursDeLaSemaine = [
     "Thursday", "Friday", "Saturday", "Sunday"
 ]
 
+enum JourDeLaSemaine: String, CaseIterable, Identifiable {
+    case lundi = "Monday",
+         mardi = "Tuesday",
+         mercredi = "Wednesday",
+         jeudi = "Thursday",
+         vendredi = "Friday",
+         samedi = "Saturday",
+         dimanche = "Sunday"
+    
+    var id: String { rawValue }
+    var nomLocalise: String { rawValue.localizedCapitalized }
+}
+
+struct CreneauHoraire: Identifiable, Equatable {
+    let id = UUID()
+    var debut: Date
+    var fin: Date
+    
+    func formate() -> String {
+        "\(debut.formatted(date: .omitted, time: .shortened)) - \(fin.formatted(date: .omitted, time: .shortened))"
+    }
+}
+
 struct ChoixDisponibilitesVue: View {
-    @ObservedObject var authVM: AuthentificationVM
-    let sportsChoisis: [String]
-
-    @State private var joursSelectionnes: Set<String> = []
-    @State private var disponibilites: [String: [(Date, Date)]] = [:]
-    @State private var overlayJourActif: (jour: String, index: Int)? = nil
-    @State private var allerAjoutPhoto = false
-
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var vm: InscriptionVM
+    @Binding var etape: [EtapeSupplementaireInscription]
+    
+    @State private var disponibilites: [JourDeLaSemaine: [CreneauHoraire]] = Dictionary(uniqueKeysWithValues: JourDeLaSemaine.allCases.map { ($0, []) })
+    @State private var creneauEditable: (jour: JourDeLaSemaine, creneau: CreneauHoraire)? = nil
+    
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    Text("Select Your Weekly Availability")
+        ScrollView {
+            VStack(spacing: 32) {
+                enTete
+                listeJournees
+            }
+        }
+        .frame(maxHeight: .infinity)
+        .overlay(overlay)
+        .navigationBarBackButtonHidden(true)
+        .safeAreaInset(edge: .bottom) {
+            boutonContinuer
+        }
+    }
+    
+    @ViewBuilder
+    private var enTete: some View {
+        VStack {
+            HStack {
+                Button { dismiss() } label: {
+                    Image(systemName: "arrow.left")
                         .font(.title2)
-                        .fontWeight(.bold)
-                        .padding(.top, 30)
-                        .padding(.horizontal)
+                        .tint(.primary)
+                }
+                .frame(height: 30)
+                .padding()
+                Spacer()
+            }
+            HStack {
+                Text("select your weekly availability".localizedCapitalized)
+                    .font(.title.weight(.bold))
+                    .padding(.horizontal)
+                Spacer()
+            }
+            Spacer()
+        }
+    }
+    
+    @ViewBuilder
+    private var listeJournees: some View {
+        LazyVStack(spacing: 20) {
+            ForEach(JourDeLaSemaine.allCases) { jour in
+                DisponibilitesJourRangee(
+                    jour: jour,
+                    creneaux: disponibilites[jour]!,
+                    toggle: { toggle(jour) },
+                    ajouterCreneau: { ajouterCreneau(to: jour) },
+                    editerCreneau: { index in
+                        creneauEditable = (jour, disponibilites[jour]![index])
+                    },
+                    nbDeSlots: disponibilites[jour]!.count
+                )
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    @ViewBuilder
+    private var boutonContinuer: some View {
+        Button {
+            // MARK: Modifier plus tard pour que la VM fasse la logique
+            let filled = disponibilites
+                .filter { !$0.value.isEmpty }
 
-                    ForEach(joursDeLaSemaine, id: \.self) { jour in
-                        VStack(spacing: 10) {
-                            Button {
-                                if joursSelectionnes.contains(jour) {
-                                    joursSelectionnes.remove(jour)
-                                    disponibilites.removeValue(forKey: jour)
-                                } else {
-                                    joursSelectionnes.insert(jour)
-                                    disponibilites[jour] = [
-                                        (Date(), Calendar.current.date(byAdding: .hour, value: 1, to: Date())!)
-                                    ]
-                                }
-                            } label: {
-                                HStack {
-                                    Text(jour)
-                                        .foregroundColor(.black)
-                                    Spacer()
-                                    Image(systemName: joursSelectionnes.contains(jour) ? "checkmark.square.fill" : "square")
-                                        .foregroundColor(.red)
-                                }
-                                .padding(.horizontal)
-                            }
+            guard !filled.isEmpty else {
+                // aucun créneau -> on ne fait rien (ou afficher une alerte)
+                return
+            }
 
-                            if let plages = disponibilites[jour], joursSelectionnes.contains(jour) {
-                                ForEach(Array(plages.enumerated()), id: \.offset) { index, plage in
-                                    Button {
-                                        overlayJourActif = (jour, index)
-                                    } label: {
-                                        BoiteAvecChevron {
-                                            Image(systemName: "clock")
-                                                .foregroundColor(.red)
-                                            Text("\(formater(plage.0)) to \(formater(plage.1))")
-                                                .foregroundColor(.black)
-                                        }
-                                    }
-                                    .padding(.horizontal)
-                                }
-
-                                Button {
-                                    disponibilites[jour, default: []].append(
-                                        (Date(), Calendar.current.date(byAdding: .hour, value: 1, to: Date())!)
-                                    )
-                                } label: {
-                                    HStack {
-                                        Image(systemName: "plus.circle.fill")
-                                            .foregroundColor(.red)
-                                        Text("Add time slot")
-                                            .foregroundColor(.red)
-                                    }
-                                    .padding(.horizontal)
-                                }
-                            }
-
-                            Divider()
-                        }
+            // 2) Construire le dictionnaire à donner à la VM
+            let backendDict = Dictionary(
+                uniqueKeysWithValues:
+                    filled.map { day, slots in
+                        (day.rawValue,slots.map { ($0.debut, $0.fin) })
                     }
+            )
 
-                    Spacer(minLength: 60) // pour ne pas que le scroll cache le bouton
-                }
-            }
-            
-            NavigationLink(
-                destination: AjoutPhotoProfilVue(
-                    authVM: authVM,
-                    sportsChoisis: sportsChoisis,
-                    disponibilites: disponibilites
-                ),
-                isActive: $allerAjoutPhoto
-            ) {
-                EmptyView()
-            }
-
-            // Bouton "Continue" fixé en bas
-            VStack(spacing: 0) {
-                Divider()
-                Button("Continue") {
-                    allerAjoutPhoto = true
-                }
-                .font(.system(size: 20, weight: .bold))
-                .foregroundColor(.white)
+            vm.disponibilites = backendDict
+            etape.append(.photoProfil)
+        } label: {
+            Text("Continue")
+                .font(.headline)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.red)
-                .cornerRadius(30)
-                .padding(.horizontal, 50)
-                .padding(.vertical, 10)
-            }
-            .background(.ultraThinMaterial)
+                .background(disponibilites.values.flatMap { $0 }.isEmpty ? Color.gray : Color.red)
+                .foregroundColor(.white)
+                .cornerRadius(25)
+                .padding()
         }
-        .overlay(overlayModale)
-        .navigationBarBackButtonHidden(true)
+    }
+    
+    private func toggle(_ jour: JourDeLaSemaine) {
+            if disponibilites[jour]!.isEmpty {
+                disponibilites[jour]! = [creneauParDefaut()]
+            } else {
+                disponibilites[jour]! = []
+            }
+        }
+
+    private func ajouterCreneau(to jour: JourDeLaSemaine) {
+        disponibilites[jour, default: []].append(creneauParDefaut())
     }
 
-    // Overlay modale pour une plage horaire
-    private var overlayModale: some View {
+    private func creneauParDefaut() -> CreneauHoraire {
+        let maintenant = Date()
+        let uneHeurePlusTard = Calendar.current.date(byAdding: .hour, value: 1, to: maintenant)!
+        return CreneauHoraire(debut: maintenant, fin: uneHeurePlusTard)
+    }
+
+    private var overlay: some View {
         Group {
-            if let (jour, index) = overlayJourActif,
-               disponibilites[jour]?.indices.contains(index) == true {
+            if let (jour, creneau) = creneauEditable,
+               let index = disponibilites[jour]?.firstIndex(of: creneau) {
                 FenetreModaleFlottante(estPresente: Binding(
-                    get: { overlayJourActif != nil },
-                    set: { if !$0 { overlayJourActif = nil } }
+                    get: { creneauEditable != nil },
+                    set: { if !$0 { creneauEditable = nil } }
                 )) {
-                    VStack(spacing: 20) {
-                        Text("Set time for \(jour)")
-                            .font(.headline)
-                            .padding(.top, 16)
-
-                        let bindingDebut = Binding<Date>(
-                            get: { disponibilites[jour]![index].0 },
-                            set: { disponibilites[jour]![index].0 = $0 }
-                        )
-                        let bindingFin = Binding<Date>(
-                            get: { disponibilites[jour]![index].1 },
-                            set: { disponibilites[jour]![index].1 = $0 }
-                        )
-
-                        VStack(spacing: 16) {
-                            VStack {
-                                Text("Start")
-                                DatePicker("", selection: bindingDebut, displayedComponents: .hourAndMinute)
-                                    .labelsHidden()
-                                    .datePickerStyle(.wheel)
-                                    .onChange(of: bindingDebut.wrappedValue) { newValue in
-                                        bindingDebut.wrappedValue = arrondirADateProche15Min(newValue)
-                                    }
-                            }
-
-                            VStack {
-                                Text("End")
-                                DatePicker("", selection: bindingFin, displayedComponents: .hourAndMinute)
-                                    .labelsHidden()
-                                    .datePickerStyle(.wheel)
-                                    .onChange(of: bindingFin.wrappedValue) { newValue in
-                                        bindingFin.wrappedValue = arrondirADateProche15Min(newValue)
-                                    }                            }
-                        }
-                        .padding(.bottom, 10)
-
-                        Divider()
-
-                        HStack(spacing: 0) {
-                            Button("Close") {
-                                overlayJourActif = nil
-                            }
-                            .frame(maxWidth: .infinity, maxHeight: 60)
-                            .foregroundColor(.primary)
-                            .fontWeight(.semibold)
-
-                            Divider().frame(width: 1, height: 60)
-
-                            Button("OK") {
-                                overlayJourActif = nil
-                            }
-                            .frame(maxWidth: .infinity, maxHeight: 60)
-                            .foregroundColor(Color("CouleurParDefaut"))
-                            .fontWeight(.semibold)
-                        }
-                    }
+                    CreneauHoraireEditeur(
+                        jour: jour,
+                        creneau: Binding(
+                            get: { disponibilites[jour]![index] },
+                            set: { disponibilites[jour]![index] = $0 }
+                        ),
+                        onSave: { creneauEditable = nil }
+                    )
                     .frame(width: 300)
                 }
             }
         }
     }
+}
 
-    // Formatter pour afficher les heures
-    func formater(_ date: Date) -> String {
-        date.formatted(date: .omitted, time: .shortened)
+struct DisponibilitesJourRangee: View {
+    let jour: JourDeLaSemaine
+    let creneaux: [CreneauHoraire]
+    let toggle: () -> Void
+    let ajouterCreneau: () -> Void
+    let editerCreneau: (_ index: Int) -> Void
+    let nbDeSlots: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button(action: toggle) {
+                HStack {
+                    Text(jour.nomLocalise).foregroundColor(.primary)
+                    Spacer()
+                    Image(systemName: creneaux.isEmpty ? "square" : "checkmark.square.fill")
+                        .foregroundColor(.red)
+                }
+            }
+
+            if !creneaux.isEmpty {
+                ForEach(Array(creneaux.enumerated()), id: \.element.id) { index, slot in
+                    Button(action: { editerCreneau(index) }) {
+                        HStack {
+                            Image(systemName: "clock").foregroundColor(.red)
+                            Text(slot.formate()).foregroundColor(.primary)
+                            Spacer()
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+                
+                if nbDeSlots < 3 {
+                    Button(action: ajouterCreneau) {
+                        HStack {
+                            Image(systemName: "plus.circle.fill").foregroundColor(.red)
+                            Text("Add time slot").foregroundColor(.red)
+                            Spacer()
+                        }
+                    }
+                }
+            }
+            Divider()
+        }
     }
-    func arrondirADateProche15Min(_ date: Date) -> Date {
-        let cal = Calendar.current
-        let components = cal.dateComponents([.hour, .minute], from: date)
-        let minute = components.minute ?? 0
-        let minuteArrondi = (minute + 7) / 15 * 15
-        return cal.date(bySettingHour: components.hour ?? 0, minute: minuteArrondi % 60, second: 0, of: date) ?? date
+}
+
+struct CreneauHoraireEditeur: View {
+    let jour: JourDeLaSemaine
+    @Binding var creneau: CreneauHoraire
+    let onSave: () -> Void
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("Set time for \(jour.nomLocalise)").font(.headline)
+            DatePicker("Start", selection: $creneau.debut, displayedComponents: .hourAndMinute)
+                .datePickerStyle(.wheel)
+            DatePicker("End", selection: $creneau.fin, displayedComponents: .hourAndMinute)
+                .datePickerStyle(.wheel)
+            Divider()
+            HStack {
+                Button("Cancel") { onSave() }
+                    .frame(maxWidth: .infinity)
+                Divider()
+                Button("OK") { onSave() }
+                    .frame(maxWidth: .infinity)
+            }
+            .padding(.vertical)
+        }
     }
 }
 
 #Preview {
-    ChoixDisponibilitesVue(
-        authVM: AuthentificationVM(),
-        sportsChoisis: ["soccer", "tennis", "basketball"]
-    )
+    ChoixDisponibilitesVue(vm: InscriptionVM(), etape: .constant([.choixDisponibilites]))
 }
 
