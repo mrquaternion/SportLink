@@ -36,12 +36,10 @@ struct DetailsInfrastructure: View {
             .padding(.top, 30)
         }
         .background(Color(.systemGroupedBackground))
-        .onAppear {
-            Task {
-                estEnChargement = true
-                await serviceActivites.fetchActivitesParInfrastructureEtDateAsync(infraId: infra.id, date: dateSelectionnee)
-                estEnChargement = false
-            }
+        .task {
+            estEnChargement = true
+            await serviceActivites.fetchActivitesParInfrastructureEtDateAsync(infraId: infra.id, date: dateSelectionnee)
+            estEnChargement = false
         }
     }
     

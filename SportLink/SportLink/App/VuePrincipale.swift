@@ -7,9 +7,9 @@ enum Onglets: Int {
 
 struct VuePrincipale: View {
     @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
+    @StateObject private var appVM = AppVM()
     @StateObject private var session = Session()
     @StateObject private var activitesVM: ActivitesVM
-    @State private var ongletSelectionne: Onglets = .accueil
     @State private var estPresente = false
     @State private var afficherTabBar = true
     @State private var montrerPageAuthentification = false
@@ -42,7 +42,7 @@ struct VuePrincipale: View {
     @ViewBuilder
     private var contenuPrincipal: some View {
         Group {
-            switch ongletSelectionne {
+            switch appVM.ongletSelectionne {
             case .accueil:
                 AccueilVue()
                     .environmentObject(activitesVM)
@@ -51,20 +51,23 @@ struct VuePrincipale: View {
                 ExplorerVue(utilisateur: .constant(mockUtilisateur))
                     .environmentObject(serviceEmplacements)
                     .environmentObject(activitesVM)
+                    .environmentObject(appVM)
             case .creer:
                 Color.clear // ne sera jamais directement visible
             case .activites:
                 ActivitesVue()
                     .environmentObject(serviceEmplacements)
                     .environmentObject(activitesVM)
+                    .environmentObject(appVM)
             case .profil:
                 ProfilVue(onDeconnexion: onDeconnexion)
+                    .environmentObject(session)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
         TabBarPersonnalisee(
-            ongletSelectionnee: $ongletSelectionne,
+            ongletSelectionnee: $appVM.ongletSelectionne,
             estPresente: $estPresente
         )
     }

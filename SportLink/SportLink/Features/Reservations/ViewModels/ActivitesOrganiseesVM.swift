@@ -23,10 +23,16 @@ class ActivitesOrganiseesVM: ObservableObject {
         self.serviceEmplacements = serviceEmplacements
     }
     
-    func chargerActivitesParOrganisateur(organisateurId: String) async {
+    func fetchActivitesParOrganisateur() async {
         estEnChargement = true
-        await serviceActivites.fetchActivitesParOrganisateur(organisateurId: organisateurId)
-        self.activites = serviceActivites.activites
+        do {
+            let utilisateur = try GestionnaireAuthentification.partage.obtenirUtilisateurAuthentifier()
+            let uid = utilisateur.uid
+            await serviceActivites.fetchActivitesParOrganisateur(organisateurId: uid)
+            self.activites = serviceActivites.activites
+        } catch {
+            print("Erreur lors de l'obtention de l'utilisateur : \(error)")
+        }
         estEnChargement = false
     }
     

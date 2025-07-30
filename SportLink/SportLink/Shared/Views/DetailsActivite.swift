@@ -12,12 +12,13 @@ struct DetailsActivite: View {
     // MARK: Variables
     @EnvironmentObject var activitesVM: ActivitesVM
     @Environment(\.dismiss) var dismiss
+    @StateObject private var serviceUtilisateurs = ServiceUtilisateurs()
     @State private var opaciteEnTete: CGFloat = 0
     @State private var montrerDialogueParametres = false
     @State private var montrerVueEdition = false
     @State private var estFavoris = false // Temporaire
-    @Binding var activite: Activite
     @State private var refreshID = UUID()
+    @Binding var activite: Activite
     
     // MARK: Body
     var body: some View {
@@ -28,7 +29,7 @@ struct DetailsActivite: View {
             
             ScrollView {
                 EffetParallax(opaciteEnTete: $opaciteEnTete, sportDeActivite: Sport.depuisNom(activite.sport))
-                Details(estFavoris: $estFavoris, activite: activite)
+                Details(serviceUtilisateurs: serviceUtilisateurs, estFavoris: $estFavoris, activite: activite)
             }
             .id(refreshID)
             .ignoresSafeArea()
@@ -180,9 +181,12 @@ struct Details: View {
     @Environment(\.cacherBoutonJoin) var cacherBoutonJoin
     @Environment(\.cacherBoutonEditable) var cacherBoutonEditable
     @StateObject private var recherchePOI = RecherchePOIVM()
+    @ObservedObject var serviceUtilisateurs: ServiceUtilisateurs
     @State private var montrerDialogueAjouterCalendrier = false
     @State private var montrerConfirmationRoute = false
     @State private var itemRouteMap: MKMapItem?
+    @State private var nomOrganisateur: String?
+    @State private var photoOrganisateur: UIImage?
     @Binding var estFavoris: Bool
     var activite: Activite
     let couleurDeFondDistance = Color(red: 0.784, green: 0.231, blue: 0.216)
@@ -214,7 +218,7 @@ struct Details: View {
                 // Entête
                 enTeteFeuilleModale
                 VStack(spacing: 20) {
-                    calendrierEtDescription
+                    calendrierEtDescriptionEtUtilisateurs
                     carteInteractive
                     boutonOuvrirRouteDansMaps
                     boutonRejoindre
@@ -262,7 +266,7 @@ struct Details: View {
     }
     
     @ViewBuilder
-    private var calendrierEtDescription: some View {
+    private var calendrierEtDescriptionEtUtilisateurs: some View {
         Divider()
         // Date
         HStack(alignment: .center) {
@@ -297,6 +301,9 @@ struct Details: View {
             Divider().padding(.top, -6)
         }
         
+        // Utilisateurs
+        utilisateurs
+        
         // Description
         VStack(alignment: .leading, spacing: 8) {
             Text("Description")
@@ -311,6 +318,37 @@ struct Details: View {
                 cornerRadius: 12
             )
             .frame(minHeight: 100, maxHeight: 500) // ne pas changer la largeur
+        }
+    }
+    
+    @ViewBuilder
+    private var utilisateurs: some View {
+        // Organisateur
+        HStack {
+            Text("Organizer:")
+                .font(.headline)
+                .foregroundColor(.primary)
+            if let photo = photoOrganisateur {
+                Image(uiImage: photo)
+                    .resizable()
+                    .frame(width: 34, height: 34)
+                    .clipShape(Circle())
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .frame(width: 34, height: 34)
+                    .foregroundStyle(Color.gray)
+            }
+            if let nom = nomOrganisateur {
+                Text(nom)
+                    .font(.subheadline)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .task {
+            let (nom, image) = await serviceUtilisateurs.fetchInfoUtilisateur(pour: activite.organisateurId.valeur)
+            nomOrganisateur = nom
+            photoOrganisateur = image
         }
     }
     

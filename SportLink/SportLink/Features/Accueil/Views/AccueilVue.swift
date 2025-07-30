@@ -85,6 +85,7 @@ struct AccueilVue: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 165)
                         .clipShape(.circle)
+                        .foregroundStyle(Color.gray)
                 }
                 .buttonStyle(.plain)
                 

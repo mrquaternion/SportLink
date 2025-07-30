@@ -27,7 +27,7 @@ struct CreerActiviteVue: View {
     @State private var nbParticipantsSelectionTemporaire: Int? = 0
     @State private var permettreInvitationsSelectionTemporaire: Bool = true
     @State private var overlayActif: ActiveOverlay = .none
-    @State private var sportChoisis: Set<String> = [Sport.soccer.nom.capitalized]
+    @State private var sportChoisis: Set<String> = [Sport.soccer.nomPourAffichage.capitalized]
     @State private var montrerAlerteChevauchement = false
     
     private let titreLimite = 30
@@ -92,7 +92,7 @@ struct CreerActiviteVue: View {
         VStack(spacing: 20) {
             BoutonOptionOverlay(
                 icon: vm.sportSelectionne.icone,
-                text: vm.sportSelectionne.nom.capitalized,
+                text: vm.sportSelectionne.nomPourAffichage.capitalized,
                 action: { overlayActif = .sport }
             )
             
@@ -328,7 +328,7 @@ struct CreerActiviteVue: View {
                                 } label: {
                                     HStack {
                                         Image(systemName: sport.icone)
-                                        Text(sport.nom.capitalized)
+                                        Text(sport.nomPourAffichage.capitalized)
                                         Spacer()
                                     }
                                     .foregroundColor(sportSelectionTemporaire == sport ? Color("CouleurParDefaut") : .black)
@@ -367,7 +367,7 @@ struct CreerActiviteVue: View {
                         Button(action: {
                           if let sportConfirme = sportSelectionTemporaire {
                               vm.sportSelectionne = sportConfirme
-                              sportChoisis = [sportConfirme.nom.capitalized]
+                              sportChoisis = [sportConfirme.nomPourAffichage.capitalized]
                           }
                           overlayActif = .none
                         }) {

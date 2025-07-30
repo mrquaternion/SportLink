@@ -122,7 +122,7 @@ struct CarteVue: UIViewRepresentable {
         if !filtresSelectionnes.contains("All") {
             infrasFiltrees = infras.filter { infra in
                 infra.sport.contains { sport in
-                    filtresSelectionnes.contains(sport.nom.capitalized)
+                    filtresSelectionnes.contains(sport.nomPourJSONDecoding.capitalized)
                 }
             }
         } else {

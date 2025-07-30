@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum Tab: String, CaseIterable {
+enum SousOnglets: String, CaseIterable {
     case organise = "Hosting"
     case participe = "Going"
     case favoris = "Bookmarked"
@@ -16,7 +16,7 @@ enum Tab: String, CaseIterable {
 struct ActivitesVue: View {
     @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
     @EnvironmentObject var activitesVM: ActivitesVM
-    @StateObject private var contexte = TabControllerContext()
+    @EnvironmentObject var appVM: AppVM
     
     @Namespace var line
 
@@ -30,16 +30,16 @@ struct ActivitesVue: View {
                         .padding(.top, 10)
                     
                     HStack {
-                        ForEach(Tab.allCases, id: \.self) { tab in
+                        ForEach(SousOnglets.allCases, id: \.self) { tab in
                             VStack {
                                 Button {
                                     withAnimation {
-                                        contexte.selectionnee = tab
+                                        appVM.sousOngletSelectionne = tab
                                     }
                                 } label: {
                                     Text(tab.rawValue)
                                         .font(.headline)
-                                        .foregroundColor(contexte.selectionnee == tab ? .primary : .gray)
+                                        .foregroundColor(appVM.sousOngletSelectionne == tab ? .primary : .gray)
                                 }
                                 .frame(maxWidth: .infinity)
                                 
@@ -48,7 +48,7 @@ struct ActivitesVue: View {
                                         .frame(height: 1)
                                         .opacity(0)
                                     
-                                    if contexte.selectionnee == tab {
+                                    if appVM.sousOngletSelectionne == tab {
                                         Rectangle().fill(Color("CouleurParDefaut"))
                                             .frame(height: 1)
                                             .matchedGeometryEffect(id: "tab", in: line)
@@ -62,26 +62,27 @@ struct ActivitesVue: View {
                 }
                 
                 ZStack {
-                    if contexte.trigger == .organise {
+                    if appVM.trigger == .organise {
                         ActivitesOrganiseesVue(serviceEmplacements: serviceEmplacements)
                             .environmentObject(activitesVM)
                             .transition(.asymmetric(
-                                insertion: contexte.aInserer,
-                                removal: contexte.aDegager
+                                insertion: appVM.aInserer,
+                                removal: appVM.aDegager
                             ))
                     }
-                    if contexte.trigger == .participe  {
-                        ActivitesInscritesVue()
+                    if appVM.trigger == .participe  {
+                        ActivitesInscritesVue(serviceEmplacements: serviceEmplacements)
+                            .environmentObject(activitesVM)
                             .transition(.asymmetric(
-                                insertion: contexte.aInserer,
-                                removal: contexte.aDegager
+                                insertion: appVM.aInserer,
+                                removal: appVM.aDegager
                             ))
                     }
-                    if contexte.trigger == .favoris {
+                    if appVM.trigger == .favoris {
                         ActivitesFavoritesVue()
                             .transition(.asymmetric(
-                                insertion: contexte.aInserer,
-                                removal: contexte.aDegager
+                                insertion: appVM.aInserer,
+                                removal: appVM.aDegager
                             ))
                     }
                 }
@@ -92,38 +93,10 @@ struct ActivitesVue: View {
     }
 }
 
-final class TabControllerContext: ObservableObject {
-    @Published var selectionnee: Tab = .organise {
-        didSet {
-            guard selectionnee != antecedent else { return }
-            // decide insertion/removal based on rawValue
-            aInserer = selectionnee.rawValue > antecedent.rawValue
-                ? .move(edge: .leading)
-                : .move(edge: .trailing)
-            aDegager = selectionnee.rawValue > antecedent.rawValue
-                ? .move(edge: .trailing)
-                : .move(edge: .leading)
-            
-            // animate trigger change
-            withAnimation {
-                trigger = selectionnee
-                antecedent = selectionnee
-            }
-        }
-    }
-    
-    @Published var trigger: Tab = .organise
-    private(set) var antecedent: Tab = .organise
-    
-    var aInserer: AnyTransition = .move(edge: .leading)
-    var aDegager:   AnyTransition = .move(edge: .trailing)
-}
-
 #Preview {
     ActivitesVue()
         .environmentObject(DonneesEmplacementService())
         .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
-        .environmentObject(TabControllerContext())
 }
 
 

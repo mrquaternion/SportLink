@@ -31,6 +31,8 @@ final class ConnexionVM: ObservableObject {
             
         } catch {
             print("Échec de la connexion : \(error.localizedDescription)")
+            courrielErreur = "Incorrect username or password. Please check your login details and try again."
+            motDePasseErreur = courrielErreur
             return .nonAuthentifie
         }
     }

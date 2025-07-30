@@ -180,7 +180,7 @@ struct CoequipierRangee: View {
                 .frame(width: 130, height: 70, alignment: .leading)
                 .padding(.leading)
                 
-                Text(info.dernierSportJoue.nom.capitalized)
+                Text(info.dernierSportJoue.nomPourJSONDecoding.capitalized)
                     .frame(width: 110, height: 70)
                     .font(.system(size: 15))
                 

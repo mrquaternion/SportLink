@@ -45,14 +45,14 @@ struct BoiteFiltrage: View {
                 ForEach(Sport.allCases, id: \.self) { sport in
                     HStack {
                         Button {
-                            if vm.sportsChoisis.contains(sport.nom) { vm.sportsChoisis.remove(sport.nom) }
-                            else { vm.sportsChoisis.insert(sport.nom) }
+                            if vm.sportsChoisis.contains(sport.nomPourJSONDecoding) { vm.sportsChoisis.remove(sport.nomPourJSONDecoding) }
+                            else { vm.sportsChoisis.insert(sport.nomPourJSONDecoding) }
                         } label: {
                             HStack {
                                 Image(systemName: sport.icone)
-                                Text(sport.nom.capitalized)
+                                Text(sport.nomPourJSONDecoding.capitalized)
                                 Spacer()
-                                Image(systemName: vm.sportsChoisis.contains(sport.nom) ? "checkmark.square.fill" : "square")
+                                Image(systemName: vm.sportsChoisis.contains(sport.nomPourJSONDecoding) ? "checkmark.square.fill" : "square")
                             }
                             .foregroundColor(.black)
                         }

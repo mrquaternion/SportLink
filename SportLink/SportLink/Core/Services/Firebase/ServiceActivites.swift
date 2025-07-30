@@ -30,20 +30,14 @@ class ServiceActivites: ObservableObject {
                 .whereField("date.debut", isGreaterThanOrEqualTo: timestampMinuit) // éviter de fetch les activiteé passées
                 .getDocuments()
             
-            let dtos = try requeteSnapshot.documents.map { document in
-                try document.data(as: ActiviteDTO.self)
-            }
-
-            let activitesConverties = dtos.map { $0.versActivite() }
-            
-            // Assigner un ID localement
-            let activites = activitesConverties.map { activite in
-                var activiteMutable = activite
-                activiteMutable.id = UUID().uuidString
-                return activiteMutable
+            let activitesConverties = try requeteSnapshot.documents.map { doc in
+                let dto = try doc.data(as: ActiviteDTO.self)
+                var activite = dto.versActivite()
+                activite.id = doc.documentID
+                return activite
             }
             
-            self.activites = activites
+            self.activites = activitesConverties
         } catch {
             print("Erreur lors de la récupération des activités : \(error)")
         }
@@ -57,15 +51,8 @@ class ServiceActivites: ObservableObject {
         let activitesFiltrees = activitesConverties
             .filter { calendrier.isDate($0.date.debut, inSameDayAs: date) }
             .sorted { $0.date.debut < $1.date.debut }
-        
-        // Assigner un ID localement
-        let activites = activitesFiltrees.map { activite in
-            var activiteMutable = activite
-            activiteMutable.id = UUID().uuidString
-            return activiteMutable
-        }
 
-        self.activites = activites
+        self.activites = activitesFiltrees
     }
     
     func fetchActivitesParInfrastructure(infraId: String) async -> [Activite] {
@@ -76,11 +63,13 @@ class ServiceActivites: ObservableObject {
                 .whereField("date.debut", isGreaterThanOrEqualTo: timestampMinuit)
                 .getDocuments()
 
-            let dtos = try requeteSnapshot.documents.map { document in
-                try document.data(as: ActiviteDTO.self)
+            let activitesConverties = try requeteSnapshot.documents.map { doc in
+                let dto = try doc.data(as: ActiviteDTO.self)
+                var activite = dto.versActivite()
+                activite.id = doc.documentID
+                return activite
             }
-
-            let activitesConverties = dtos.map { $0.versActivite() }
+            
             
             return activitesConverties
         } catch {
@@ -116,6 +105,26 @@ class ServiceActivites: ObservableObject {
         }
     }
     
+    func fetchActivitesParParticpant(participantId: String) async {
+        do {
+            let requeteSnapshot = try await Firestore.firestore()
+                .collection("activites")
+                .whereField("participants", arrayContains: participantId)
+                .getDocuments()
+            
+            let activitesConverties = try requeteSnapshot.documents.map { doc in
+                let dto = try doc.data(as: ActiviteDTO.self)
+                var activite = dto.versActivite()
+                activite.id = doc.documentID
+                return activite
+            }
+            
+            self.activites = activitesConverties
+        } catch {
+            print("Erreur Going : \(error)")
+        }
+    }
+    
     func sauvegarderActiviteAsync(activite: Activite) async {
         let dto = activite.versDTO()
         do {
@@ -128,7 +137,23 @@ class ServiceActivites: ObservableObject {
         }
     }
     
-    // Modifier le titre de l'activité
+    func updateParticipants(dans aid: String, pour uid: String, ajouter: Bool) async throws {
+        let requeteSnapshot = Firestore.firestore()
+            .collection("activites")
+            .document(aid)
+        
+        if ajouter {
+            try await requeteSnapshot.updateData([
+                "participants": FieldValue.arrayUnion([uid])
+            ])
+        } else {
+            try await requeteSnapshot.updateData([
+                "participants": FieldValue.arrayRemove([uid])
+            ])
+        }
+    }
+    
+    // MARK: A UPDATE AVEC LE NOUVEAU ID FETCHED
     func modifierTitreActivite(idActivite: String, nouveauTitre: String, completion: @escaping (Error?) -> Void) {
         let reference = Firestore.firestore().collection("activites").document(idActivite)
         
@@ -157,4 +182,5 @@ class ServiceActivites: ObservableObject {
                 completion(doc.documentID, nil)
             }
     }
+    
 }

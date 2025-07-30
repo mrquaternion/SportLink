@@ -14,20 +14,34 @@ enum Sport: String, Decodable, CaseIterable {
     case tennis
     case football
     case volleyball
-    case baseball
     case rugby
+    case baseball
     case pingpong
     case petanque
     
-    var nom: String {
+    var nomPourJSONDecoding: String {
         switch self {
         case .soccer: return "soccer"
         case .basketball: return "basketball"
         case .tennis: return "tennis"
         case .football: return "football"
         case .volleyball: return "volleyball"
-        case .baseball: return "balle"
         case .rugby: return "rugby"
+        case .baseball: return "balle"
+        case .pingpong: return "ping-pong"
+        case .petanque: return "pétanque"
+        }
+    }
+    
+    var nomPourAffichage: String {
+        switch self {
+        case .soccer: return "soccer"
+        case .basketball: return "basketball"
+        case .tennis: return "tennis"
+        case .football: return "football"
+        case .volleyball: return "volleyball"
+        case .rugby: return "rugby"
+        case .baseball: return "baseball"
         case .pingpong: return "ping-pong"
         case .petanque: return "pétanque"
         }
@@ -80,6 +94,6 @@ enum Sport: String, Decodable, CaseIterable {
 
 extension Sport {
     static func depuisNom(_ nom: String) -> Sport {
-        return Sport.allCases.first { $0.nom == nom }!
+        return Sport.allCases.first { $0.nomPourJSONDecoding == nom }!
     }
 }

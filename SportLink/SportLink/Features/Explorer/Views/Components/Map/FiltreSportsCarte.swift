@@ -10,7 +10,7 @@ import SwiftUI
 struct FiltreSportsCarte: View {
     @State var afficherFiltrage: Bool = false
     @Binding var filtresSelectionnes: Set<String>
-    private let options: [(Sport?, String)] = [(nil, "All")] + Sport.allCases.map { ($0, $0.nom.capitalized) }
+    private let options: [(Sport?, String)] = [(nil, "All")] + Sport.allCases.map { ($0, $0.nomPourAffichage.capitalized) }
     private let couleurDeFond = Color(red: 0.97, green: 0.97, blue: 0.97)
     let espacementDroite: CGFloat = 12
     let cercleDim: CGFloat = 30

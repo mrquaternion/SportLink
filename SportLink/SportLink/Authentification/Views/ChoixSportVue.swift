@@ -18,7 +18,7 @@ struct ChoixSportVue: View {
     let onComplete: () -> Void
     @State private var etape: [EtapeSupplementaireInscription] = []
 
-    @State private var lignesDeSports: [[String]] = []
+    @State private var lignesDeSports: [[Sport]] = []
 
     var body: some View {
         NavigationStack(path: $etape) {
@@ -56,7 +56,7 @@ struct ChoixSportVue: View {
                 .padding()
             }
             HStack {
-                Text("select your preferred sports".localizedCapitalized)
+                Text("select your favourites sports".localizedCapitalized)
                     .font(.title.weight(.bold))
                 Spacer()
             }
@@ -93,18 +93,18 @@ struct ChoixSportVue: View {
 
     // MARK: - Calcul dynamique des lignes de tags
     private func recalculerLignes() {
-        let tousLesSports = Sport.allCases.map { $0.nom }
+        let tousLesSports = Sport.allCases
         let largeurDisponible = UIScreen.main.bounds.width - 48
-        let espacement: CGFloat = 10
+        let espacement: CGFloat = 8
         let largeurIcone: CGFloat = 24
         let margeInterne: CGFloat = 24
 
-        var nouvellesLignes: [[String]] = [[]]
+        var nouvellesLignes: [[Sport]] = [[]]
         var largeurCourante: CGFloat = 0
 
         let police = UIFont.systemFont(ofSize: 17)
         for sport in tousLesSports {
-            let label = sport.capitalized
+            let label = sport.nomPourAffichage.capitalized
             let largeurTexte = (label as NSString).size(withAttributes: [.font: police]).width
             let largeurCapsule = largeurTexte + largeurIcone + margeInterne
 
@@ -116,22 +116,41 @@ struct ChoixSportVue: View {
                 largeurCourante += largeurCapsule + espacement
             }
         }
+   
         lignesDeSports = nouvellesLignes
+    }
+}
+
+extension Array {
+    mutating func deplacer(de source: Int, vers destination: Int) {
+        guard source != destination,
+              indices.contains(source),
+              indices.contains(destination) else { return }
+        
+        let element = remove(at: source)
+        insert(element, at: destination)
+    }
+    
+    mutating func deplacer(_ element: Element, versIndex nouvelIndex: Int) where Element: Equatable {
+        guard let indexActuel = firstIndex(of: element),
+              indices.contains(nouvelIndex) else { return }
+        
+        deplacer(de: indexActuel, vers: nouvelIndex)
     }
 }
 
 // Vue représentant un tag pour un sport individuel
 struct TagSportVue: View {
     @ObservedObject var vm: InscriptionVM
-    let sport: String
+    let sport: Sport
 
-    private var estSelectionne: Bool { vm.sportsFavoris.contains(sport) }
+    private var estSelectionne: Bool { vm.sportsFavoris.contains(sport.rawValue) }
 
     var body: some View {
         Label {
-            Text(sport.capitalized)
+            Text(sport.nomPourAffichage.capitalized)
         } icon: {
-            Image(systemName: Sport.depuisNom(sport).icone)
+            Image(systemName: sport.icone)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
@@ -148,9 +167,9 @@ struct TagSportVue: View {
     // Bascule la sélection du sport
     private func basculerSelection() {
         if estSelectionne {
-            vm.sportsFavoris.removeAll { $0 == sport }
+            vm.sportsFavoris.removeAll { $0 == sport.rawValue }
         } else {
-            vm.sportsFavoris.append(sport)
+            vm.sportsFavoris.append(sport.rawValue)
         }
     }
 }

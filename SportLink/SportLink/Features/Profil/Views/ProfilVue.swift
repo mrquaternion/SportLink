@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ProfilVue: View {
-    let onDeconnexion: () -> Void
-
+    @EnvironmentObject var session: Session
     @EnvironmentObject var utilisateurVM: UtilisateurConnecteVM
     @State private var montrerImagePicker = false
-
+    
+    let onDeconnexion: () -> Void
+    
     var body: some View {
         VStack(spacing: 0) {
-            
             Text("Your Profile")
                 .font(.headline)
                 .foregroundColor(.primary)
@@ -26,144 +26,25 @@ struct ProfilVue: View {
             
             ScrollView {
                 VStack(spacing: 20) {
+                    // Photo
+                    photoProfil
 
-                    ZStack(alignment: .bottomTrailing) {
-                        Button(action: {
-                            montrerImagePicker = true
-                        }) {
-                            if let image = utilisateurVM.photoUIImage {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 130, height: 130)
-                                    .clipShape(Circle())
-                                    .overlay(Circle().stroke(Color.gray, lineWidth: 2))
-                                    .shadow(radius: 5)
-                            } else {
-                                ZStack {
-                                    Circle()
-                                        .fill(Color(.systemGray5))
-                                        .frame(width: 130, height: 130)
-                                    Image(systemName: "camera.fill")
-                                        .font(.system(size: 40))
-                                        .foregroundColor(.gray)
-                                }
-                            }
-                        }
-                        .sheet(isPresented: $montrerImagePicker) {
-                            // Tu peux ajouter l'ImagePicker ici plus tard si tu veux modifier la photo
-                        }
-
-                        Image(systemName: "pencil.circle.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(.blue)
-                            .background(Color.white.clipShape(Circle()))
-                            .offset(x: -4, y: -4)
-                    }
-                    .frame(width: 130, height: 130)
-                    
+                    // Nom d'utilisateur
                     Text(utilisateurVM.utilisateur?.nomUtilisateur ?? "Utilisateur")
                         .font(.title2)
                     
-                    // MARK: - Disponibilités
-                    if let disponibilites = utilisateurVM.utilisateur?.disponibilites {
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Text("Weekly Availabilities")
-                                    .font(.headline)
-                                Spacer()
-                                Button(action: {}) {
-                                    Text("Modify")
-                                        .foregroundColor(.blue)
-                                        .font(.subheadline)
-                                }
-                            }
-                            .padding(.top)
-                            
-                            ForEach(JourDeLaSemaine.allCases) { jour in
-                                let creneaux = disponibilites[jour.numeroDansLaSemaine] ?? []
-                                
-                                if !creneaux.isEmpty {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(jour.rawValue.capitalized(with: .current))
-                                            .font(.subheadline)
-                                            .bold()
-                                        
-                                        ForEach(creneaux, id: \.self) { range in
-                                            HStack {
-                                                Image(systemName: "clock")
-                                                    .foregroundColor(.red)
-                                                Text(range)
-                                                    .font(.body)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-                    }
+                    // Dispos
+                    disponibilites
+                    
                     Divider()
                         .background(Color.gray.opacity(0.4))
                         .padding(.horizontal)
                     
-                    // MARK: - Sports favoris
-                    if let sportsFavoris = utilisateurVM.utilisateur?.sportsFavoris {
-                        let tousLesSports = Sport.allCases
-                        let sportsNonFavoris = tousLesSports.filter { sport in
-                            !sportsFavoris.contains(where: { $0.nom == sport.nom })
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 16) {
-                            Text("My Favorite Sports")
-                                .font(.headline)
-                            
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 10) {
-                                    ForEach(sportsFavoris, id: \.self) { sport in
-                                        TagSportStatiqueVue(sport: sport)
-                                    }
-                                }
-                                .padding(.vertical, 4)
-                            }
-                            
-                            if !sportsNonFavoris.isEmpty {
-                                Text("Other Sports")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                                
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 10) {
-                                        ForEach(sportsNonFavoris, id: \.self) { sport in
-                                            TagSportGriseVue(sport: sport)
-                                        }
-                                    }
-                                    .padding(.vertical, 4)
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                    
-                    
-                    Button {
-                        Task {
-                            do {
-                                try GestionnaireAuthentification.partage.deconnexion()
-                                onDeconnexion()
-                            } catch {
-                                print("Erreur déconnexion: \(error.localizedDescription)")
-                            }
-                        }
-                    } label: {
-                        Text("Log out")
-                            .foregroundColor(.red)
-                            .bold()
-                    }
-                    .padding(.top, 20)
-                    .padding(.bottom, 20)
+                    // Sports favoris
+                    sportsFavoris
+     
+                    // Log Out
+                    boutonDeconnexion
                     
                     Spacer()
                 }
@@ -174,45 +55,167 @@ struct ProfilVue: View {
             }
         }
     }
+    
+    @ViewBuilder
+    private var boutonDeconnexion: some View {
+        Button {
+            Task {
+                do {
+                    try GestionnaireAuthentification.partage.deconnexion()
+                    onDeconnexion()
+                } catch {
+                    print("Erreur déconnexion: \(error.localizedDescription)")
+                }
+            }
+        } label: {
+            Text("Log out")
+                .foregroundColor(.red)
+                .bold()
+        }
+        .padding(.top, 20)
+        .padding(.bottom, 20)
+    }
+    
+    @ViewBuilder
+    private var photoProfil: some View {
+        ZStack(alignment: .bottomTrailing) {
+            Button(action: {
+                montrerImagePicker = true
+            }) {
+                session.avatar
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 130, height: 130)
+                    .clipShape(Circle())
+                    .foregroundStyle(Color.gray)
+            }
+            .sheet(isPresented: $montrerImagePicker) {
+                // Tu peux ajouter l'ImagePicker ici plus tard si tu veux modifier la photo
+            }
+            
+            Image(systemName: "pencil.circle.fill")
+                .resizable()
+                .frame(width: 28, height: 28)
+                .foregroundColor(.blue)
+                .background(Color.white.clipShape(Circle()))
+                .offset(x: -4, y: -4)
+        }
+        .frame(width: 130, height: 130)
+    }
+    
+    @ViewBuilder
+    private var disponibilites: some View {
+        if let disponibilites = utilisateurVM.utilisateur?.disponibilites {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("Weekly Availabilities")
+                        .font(.headline)
+                    Spacer()
+                    Button(action: {}) {
+                        Text("Modify")
+                            .foregroundColor(.blue)
+                            .font(.subheadline)
+                    }
+                }
+                .padding(.top)
+                
+                ForEach(JourDeLaSemaine.allCases) { jour in
+                    let creneaux = disponibilites[jour.numeroDansLaSemaine] ?? []
+                    
+                    if !creneaux.isEmpty {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(jour.rawValue.capitalized(with: .current))
+                                .font(.subheadline)
+                                .bold()
+                            
+                            ForEach(creneaux, id: \.self) { range in
+                                HStack {
+                                    Image(systemName: "clock")
+                                        .foregroundColor(.red)
+                                    Text(range)
+                                        .font(.body)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal)
+        }
+    }
+    
+    @ViewBuilder
+    private var sportsFavoris: some View {
+        if let sportsFavoris = utilisateurVM.utilisateur?.sportsFavoris {
+            let tousLesSports = Sport.allCases
+            let sportsNonFavoris = tousLesSports.filter { sport in
+                !sportsFavoris.contains(where: { $0.nomPourAffichage == sport.nomPourAffichage })
+            }
+            
+            VStack(alignment: .leading, spacing: 16) {
+                Text("My Favorite Sports")
+                    .font(.headline)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(sportsFavoris, id: \.self) { sport in
+                            CelluleSportVue(sport: sport, style: Color.red, estContour: false)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+                
+                if !sportsNonFavoris.isEmpty {
+                    Text("Other Sports")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            ForEach(sportsNonFavoris, id: \.self) { sport in
+                                CelluleSportVue(sport: sport, style: Color.gray.opacity(0.4), estContour: true)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+            }
+            .padding(.horizontal)
+        }
+    }
 }
 
 // MARK: - Capsule sport statique
 
-struct TagSportStatiqueVue: View {
+struct CelluleSportVue<C: ShapeStyle>: View {
     let sport: Sport
+    let style: C
+    let estContour: Bool
 
     var body: some View {
         Label {
-            Text(sport.nom.capitalized)
+            Text(sport.nomPourAffichage.capitalized)
         } icon: {
             Image(systemName: sport.icone)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .background(
-            Capsule()
-                .fill(Color.red)
-        )
-        .foregroundColor(.white)
+        .modifier(StyleCellule(style: style, bordure: estContour))
+        .foregroundColor(estContour ? .gray : .white)
     }
 }
 
-struct TagSportGriseVue: View {
-    let sport: Sport
-
-    var body: some View {
-        Label {
-            Text(sport.nom.capitalized)
-        } icon: {
-            Image(systemName: sport.icone)
+struct StyleCellule<C: ShapeStyle>: ViewModifier {
+    let style: C
+    let bordure: Bool
+    
+    func body(content: Content) -> some View {
+        if bordure {
+            content.background(Capsule().stroke(style, lineWidth: 1))
+        } else {
+            content.background(Capsule().fill(style))
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(
-            Capsule()
-                .stroke(Color.gray.opacity(0.4), lineWidth: 1)
-        )
-        .foregroundColor(.gray)
     }
 }
 

@@ -12,9 +12,10 @@ struct RangeeActivite: View {
     // MARK: Variables et propriétés calculées
     @EnvironmentObject var vm: ExplorerListeVM
     @EnvironmentObject var activitesVM: ActivitesVM
+    @EnvironmentObject var appVM: AppVM
     @Environment(\.cacherBoutonJoin) private var cacherBoutonJoin
     @Environment(\.dateEtendue) private var dateEtendue
-    
+    @StateObject private var serviceActivites = ServiceActivites()
     @State private var estFavoris = false
     @Binding var afficherInfo: Bool
 
@@ -162,7 +163,22 @@ struct RangeeActivite: View {
                             .frame(width: 1, height: 50)
 
                         Button {
-                            // Logique ici
+                            Task {
+                                do {
+                                    let utilisateur = try GestionnaireAuthentification.partage.obtenirUtilisateurAuthentifier()
+                                    try await serviceActivites.updateParticipants(
+                                        dans: activite.id!,
+                                        pour: utilisateur.uid,
+                                        ajouter: true
+                                    )
+                        
+                                    appVM.ongletSelectionne = .activites
+                                    appVM.trigger = .participe
+                                    appVM.sousOngletSelectionne = .participe
+                                } catch {
+                                    print("Erreur lors de la mise à jour \(error)")
+                                }
+                            }
                         } label: {
                             Text("Join")
                                 .frame(maxWidth: .infinity)
@@ -209,9 +225,9 @@ struct RangeeActivite: View {
         let service = DonneesEmplacementService()
         service.chargerDonnees()
         return ExplorerListeVM(
-            serviceEmplacements: DonneesEmplacementService(),
-            serviceActivites: ServiceActivites()
+            serviceEmplacements: DonneesEmplacementService(), serviceActivites: ServiceActivites()
         )
     }())
     .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
+    .environmentObject(AppVM())
 }

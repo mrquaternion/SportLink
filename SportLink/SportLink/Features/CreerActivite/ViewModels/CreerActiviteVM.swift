@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import MapKit
 
+@MainActor
 class CreerActiviteVM: ObservableObject {
     private let serviceActivites: ServiceActivites
     private let serviceEmplacements: DonneesEmplacementService
@@ -226,23 +227,32 @@ class CreerActiviteVM: ObservableObject {
                                       second: 0,
                                       of: dateSelectionnee) ?? dateDebut.addingTimeInterval(3600)
         let interval = DateInterval(start: dateDebut, end: dateFin)
+        guard let infra = infraChoisie else {
+            print("Aucune infrastructure sélectionnée")
+            return
+        }
         
         // Créer l’activité
-        let nvActivite = Activite(
-            titre: titre,
-            organisateurId: UtilisateurID(valeur: "mockID"), // remplace par le bon ID utilisateur
-            infraId: infraChoisie!.id, // unwrappable a cause de la logiuque dans la vue
-            sport: sportSelectionne,
-            date: interval,
-            nbJoueursRecherches: nbParticipants, // unwrappable a cause de la logique dans la vue
-            participants: [],
-            description: description,
-            statut: .ouvert,
-            invitationsOuvertes: permettreInvitations, // unwrappable a cause de la logiuque dans la vue
-            messages: []
-        )
-        
-        await serviceActivites.sauvegarderActiviteAsync(activite: nvActivite)
+        do {
+            let utilisateur = try await GestionnaireAuthentification.partage.obtenirUtilisateurAuthentifier()
+            let nvActivite = Activite(
+                titre: titre,
+                organisateurId: UtilisateurID(valeur: utilisateur.uid), // remplace par le bon ID utilisateur
+                infraId: infra.id, // unwrappable a cause de la logiuque dans la vue
+                sport: sportSelectionne,
+                date: interval,
+                nbJoueursRecherches: nbParticipants, // unwrappable a cause de la logique dans la vue
+                participants: [],
+                description: description,
+                statut: .ouvert,
+                invitationsOuvertes: permettreInvitations, // unwrappable a cause de la logiuque dans la vue
+                messages: []
+            )
+            
+            await serviceActivites.sauvegarderActiviteAsync(activite: nvActivite)
+        } catch {
+            print("Erreur lors de l'enregistrement de l'activité : \(error)")
+        }
     }
     
     func existeActivitesDejaCreer() async -> Bool {

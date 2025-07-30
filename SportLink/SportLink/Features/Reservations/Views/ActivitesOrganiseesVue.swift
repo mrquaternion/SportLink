@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct ActivitesOrganiseesVue: View {
-
     @EnvironmentObject var activitesVM: ActivitesVM
-    
     @StateObject private var vm: ActivitesOrganiseesVM
     
     @State private var activiteAffichantInfo: Activite.ID? = nil
@@ -25,8 +23,8 @@ struct ActivitesOrganiseesVue: View {
 
     var body: some View {
         ScrollView { sectionActivites }
-            .task { await vm.chargerActivitesParOrganisateur(organisateurId: "mockID") }
-            .refreshable { await vm.chargerActivitesParOrganisateur(organisateurId: "mockID") }
+            .task { await vm.fetchActivitesParOrganisateur() }
+            .refreshable { await vm.fetchActivitesParOrganisateur() }
             .onTapGesture {
                 if activiteAffichantInfo != nil {
                     withAnimation { activiteAffichantInfo = nil }

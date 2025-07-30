@@ -42,12 +42,13 @@ struct AuthentificationVue: View {
                 // Bouton inscription
                 HStack {
                     Text("don't have an account?".localizedFirstCapitalized)
+                        .font(.subheadline)
                     Button {
                         chemin.append(.inscription)
                     } label: {
                         Text("register".localizedCapitalized)
+                            .font(.subheadline.weight(.bold))
                             .foregroundColor(.red)
-                            .bold()
                     }
                 }
                 .font(.footnote)
@@ -67,9 +68,8 @@ struct AuthentificationVue: View {
             }
             .fullScreenCover(isPresented: $montrerChoixSport) {
                 ChoixSportVue(vm: inscriptionVM, onComplete: {
-                    // Handle when the sport selection flow is complete
                     montrerChoixSport = false
-                    // You might want to navigate to the main app here
+                    onEtatChange(.authentifie) // ICI on rentre dans l'appli directement
                 })
             }
         }
@@ -91,11 +91,11 @@ struct AuthentificationVue: View {
     @ViewBuilder
     private var formulaire: some View {
         VStack(spacing: 22) {
-            VStack(spacing: 4) {
+            VStack(alignment: .leading, spacing: 4) {
                 ChampSimple(texte: $connexionVM.courriel, placeholder: "email".localizedCapitalized, erreur: $connexionVM.courrielErreur).autocorrectionDisabled(true)
                 Text(connexionVM.courrielErreur ?? " ").foregroundStyle(.red).font(.caption)
             }
-            VStack(spacing: 4) {
+            VStack(alignment: .leading, spacing: 4) {
                 ChampAvecEye(texte: $connexionVM.motDePasse, placeholder: "password".localizedCapitalized, estVisible: $motDePasseVisible, erreur: $connexionVM.motDePasseErreur).autocorrectionDisabled(true)
                 Text(connexionVM.motDePasseErreur ?? " ").foregroundStyle(.red).font(.caption)
             }
@@ -130,7 +130,7 @@ struct AuthentificationVue: View {
             // Action
         } label: {
             Text("forgot password?".localizedFirstCapitalized)
-                .font(.footnote)
+                .font(.subheadline)
         }
         .padding(.top, 8)
     }

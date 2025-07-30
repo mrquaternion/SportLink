@@ -37,6 +37,7 @@ final class InscriptionVM: ObservableObject {
             return true
         } catch {
             print("Échec de l'inscription : \(error.localizedDescription)")
+            courrielErreur = "this email is already in use".localizedFirstCapitalized
             return false
         }
     }

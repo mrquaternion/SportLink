@@ -111,6 +111,17 @@ class ExplorerListeVM: ObservableObject {
         resultat = resultat.filter {
             calendrier.isDate($0.date.debut, inSameDayAs: date)
         }
+        
+        // Filtrage par implicaiton (participant ou organisateur)
+        do {
+            let utilisateur = try GestionnaireAuthentification.partage.obtenirUtilisateurAuthentifier()
+            let uid = UtilisateurID(valeur: utilisateur.uid)
+            resultat = resultat.filter { activite in
+                activite.organisateurId != uid && !activite.participants.contains(uid)
+            }
+        } catch {
+            print("Impossible de filtrer par l'utilisateur courant : \(error)")
+        }
 
         return resultat
     }

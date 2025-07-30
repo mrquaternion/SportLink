@@ -106,7 +106,7 @@ struct Activite: Identifiable, Codable {
         self.titre = titre
         self.organisateurId = organisateurId
         self.infraId = infraId
-        self.sport = sport.nom
+        self.sport = sport.nomPourJSONDecoding
         self.date = PlageHoraire(debut: date.start, fin: date.end)
         self.nbJoueursRecherches = nbJoueursRecherches
         self.participants = participants

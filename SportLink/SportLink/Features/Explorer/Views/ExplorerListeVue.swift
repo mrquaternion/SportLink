@@ -9,15 +9,13 @@ import SwiftUI
 
 struct ExplorerListeVue: View {
     @EnvironmentObject var activitesVM: ActivitesVM
-    
+    @EnvironmentObject var appVM: AppVM
     @StateObject private var vm: ExplorerListeVM
-    
-    @Binding var utilisateur: Utilisateur
-    
     @FocusState private var estEnTrainDeChercher: Bool
-    
     @State private var afficherFiltreOverlay = false
     @State private var activiteAffichantInfo: Activite.ID? = nil
+    
+    @Binding var utilisateur: Utilisateur
     
     init(
         utilisateur: Binding<Utilisateur>,
@@ -55,7 +53,7 @@ struct ExplorerListeVue: View {
                     }
                     .padding(.horizontal, 20)
                     .contentShape(Rectangle())
-
+                    
                     ScrollView { sectionActivites }
                         .animation(.easeInOut, value: afficherFiltreOverlay)
                         .task { await vm.chargerActivites() }
@@ -63,6 +61,7 @@ struct ExplorerListeVue: View {
                         .navigationDestination(for: Activite.self) { activite in
                             DetailsActivite(activite: .constant(activite))
                                 .environmentObject(activitesVM) // navigationDestination brise la chaine des environemments donc on doit le redonner
+                                .environmentObject(appVM)
                                 .cacherBoutonEditable()
                         }
                 }
@@ -159,4 +158,5 @@ struct ExplorerListeVue: View {
         serviceEmplacements: DonneesEmplacementService()
     )
     .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
+    .environmentObject(AppVM())
 }
