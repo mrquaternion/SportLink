@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+
+enum EtatAuthentification {
+    case chargement
+    case nonAuthentifie
+    case authentifie
+}
+
 struct EcranDemarrageVue: View {
     @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
     @State private var etatAuthentification: EtatAuthentification = .chargement

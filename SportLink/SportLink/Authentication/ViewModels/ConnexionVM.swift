@@ -37,6 +37,11 @@ final class ConnexionVM: ObservableObject {
         }
     }
     
+    func resetChampsApresChangementDeVue() {
+        courriel = ""
+        motDePasse = ""
+    }
+    
     private func verifierChampsDeTexte() -> Bool {
         courrielErreur = nil
         motDePasseErreur = nil

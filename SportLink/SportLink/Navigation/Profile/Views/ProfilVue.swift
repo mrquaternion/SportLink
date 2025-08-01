@@ -68,7 +68,7 @@ struct ProfilVue: View {
                 }
             }
         } label: {
-            Text("Log out")
+            Text("Sign Out")
                 .foregroundColor(.red)
                 .bold()
         }

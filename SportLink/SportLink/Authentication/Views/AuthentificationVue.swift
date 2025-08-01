@@ -45,6 +45,7 @@ struct AuthentificationVue: View {
                         .font(.subheadline)
                     Button {
                         chemin.append(.inscription)
+                        connexionVM.resetChampsApresChangementDeVue()
                     } label: {
                         Text("register".localizedCapitalized)
                             .font(.subheadline.weight(.bold))
@@ -92,11 +93,14 @@ struct AuthentificationVue: View {
     private var formulaire: some View {
         VStack(spacing: 22) {
             VStack(alignment: .leading, spacing: 4) {
-                ChampSimple(texte: $connexionVM.courriel, placeholder: "email".localizedCapitalized, erreur: $connexionVM.courrielErreur).autocorrectionDisabled(true)
+                ChampSimple(texte: $connexionVM.courriel, placeholder: "email".localizedCapitalized, erreur: $connexionVM.courrielErreur)
+                    .autocorrectionDisabled(true)
                 Text(connexionVM.courrielErreur ?? " ").foregroundStyle(.red).font(.caption)
             }
+  
             VStack(alignment: .leading, spacing: 4) {
-                ChampAvecEye(texte: $connexionVM.motDePasse, placeholder: "password".localizedCapitalized, estVisible: $motDePasseVisible, erreur: $connexionVM.motDePasseErreur).autocorrectionDisabled(true)
+                ChampAvecEye(texte: $connexionVM.motDePasse, placeholder: "password".localizedCapitalized, estVisible: $motDePasseVisible, erreur: $connexionVM.motDePasseErreur)
+                    .autocorrectionDisabled(true)
                 Text(connexionVM.motDePasseErreur ?? " ").foregroundStyle(.red).font(.caption)
             }
         }
@@ -150,12 +154,6 @@ extension GestionnaireAuthentification {
             return .nonAuthentifie
         }
     }
-}
-
-enum EtatAuthentification {
-    case chargement
-    case nonAuthentifie
-    case authentifie
 }
 
 #Preview {

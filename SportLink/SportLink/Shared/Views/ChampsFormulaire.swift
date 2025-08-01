@@ -17,6 +17,7 @@ struct ChampSimple: View {
             .autocapitalization(.none)
             .padding()
             .background(RoundedRectangle(cornerRadius: 10).stroke(erreur != nil ? Color.red : Color.gray.opacity(0.6)))
+            .accessibilityIdentifier("champDeTexte")
     }
 }
 
@@ -30,8 +31,10 @@ struct ChampAvecEye: View {
         HStack {
             if estVisible {
                 TextField(placeholder, text: $texte)
+                    .accessibilityIdentifier("champAvecOeilDesactive")
             } else {
                 SecureField(placeholder, text: $texte)
+                    .accessibilityIdentifier("champAvecOeilActive")
             }
             Button {
                 estVisible.toggle()
@@ -39,6 +42,7 @@ struct ChampAvecEye: View {
                 Image(systemName: estVisible ? "eye" : "eye.slash")
                     .foregroundColor(.gray)
             }
+            .accessibilityIdentifier("basculerVisibiliteMDP")
         }
         .autocapitalization(.none)
         .padding()
@@ -56,6 +60,7 @@ struct ChampAvecIconeInfo: View {
             Image(systemName: "info.circle")
                 .foregroundColor(.black)
             TextField(placeholder, text: $texte)
+                .accessibilityIdentifier("champDeTexte")
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 10).stroke(erreur != nil ? Color.red : Color.gray.opacity(0.6)))
@@ -74,8 +79,10 @@ struct ChampAvecEyeAvecIconeInfo: View {
                 .foregroundColor(.black)
             if estVisible {
                 TextField(placeholder, text: $texte)
+                    .accessibilityIdentifier("champAvecOeilDesactive")
             } else {
-                SecureField(placeholder, text: $texte).autocorrectionDisabled(true)
+                SecureField(placeholder, text: $texte)
+                    .accessibilityIdentifier("champAvecOeilActive")
             }
             Button {
                 estVisible.toggle()
@@ -83,6 +90,7 @@ struct ChampAvecEyeAvecIconeInfo: View {
                 Image(systemName: estVisible ? "eye" : "eye.slash")
                     .foregroundColor(.gray)
             }
+            .accessibilityIdentifier("basculerVisibiliteMDP")
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 10).stroke(erreur != nil ? Color.red : Color.gray.opacity(0.6)))

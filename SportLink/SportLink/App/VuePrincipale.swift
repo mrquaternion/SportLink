@@ -35,6 +35,7 @@ struct VuePrincipale: View {
             .fullScreenCover(isPresented: $estPresente) {
                 CreerActiviteVue(serviceEmplacements: serviceEmplacements)
                     .environmentObject(serviceEmplacements)
+                    .environmentObject(appVM)
             }
         }
     }

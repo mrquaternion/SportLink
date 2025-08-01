@@ -42,6 +42,13 @@ final class InscriptionVM: ObservableObject {
         }
     }
     
+    func resetChampsApresChangementDeVue() {
+        nomUtilisateur = ""
+        courriel = ""
+        motDePasse = ""
+        motDePasseConfirme = ""
+    }
+    
     func resetErreurs() {
         nomUtilisateurErreur = nil
         courrielErreur = nil

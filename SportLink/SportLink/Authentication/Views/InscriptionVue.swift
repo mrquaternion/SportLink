@@ -50,7 +50,10 @@ struct InscriptionVue: View {
     @ViewBuilder
     private var boutonRetour: some View {
         HStack {
-            Button(action: { dismiss() }) {
+            Button {
+                dismiss()
+                vm.resetChampsApresChangementDeVue()
+            } label: {
                 Image(systemName: "arrow.left")
                     .font(.system(size: 30))
                     .padding()
@@ -90,7 +93,8 @@ struct InscriptionVue: View {
                     texte: $vm.nomUtilisateur,
                     placeholder: "username *".localizedCapitalized,
                     erreur: $vm.nomUtilisateurErreur
-                ).autocorrectionDisabled(true)
+                )
+                .autocorrectionDisabled(true)
                 Text(vm.nomUtilisateurErreur ?? " ").foregroundStyle(.red).font(.caption)
             }
             VStack(alignment: .leading, spacing: 4) {
@@ -98,7 +102,8 @@ struct InscriptionVue: View {
                     texte: $vm.courriel,
                     placeholder: "email *".localizedCapitalized,
                     erreur: $vm.courrielErreur
-                ).autocorrectionDisabled(true)
+                )
+                .autocorrectionDisabled(true)
                 Text(vm.courrielErreur ?? " ").foregroundStyle(.red).font(.caption)
             }
             VStack(alignment: .leading, spacing: 4) {
@@ -107,7 +112,8 @@ struct InscriptionVue: View {
                     placeholder: "password *".localizedCapitalized,
                     estVisible: $motDePasseVisible,
                     erreur: $vm.motDePasseErreur
-                ).autocorrectionDisabled(true)
+                )
+                .autocorrectionDisabled(true)
                 Text(vm.motDePasseErreur ?? " ").foregroundStyle(.red).font(.caption)
             }
             VStack(alignment: .leading, spacing: 4) {
@@ -116,7 +122,8 @@ struct InscriptionVue: View {
                     placeholder: "confirm password".localizedFirstCapitalized,
                     estVisible: $motDePasseConfirmeVisible,
                     erreur: $vm.motDePasseConfirmeeErreur
-                ).autocorrectionDisabled(true)
+                )
+                .autocorrectionDisabled(true)
                 Text(vm.motDePasseConfirmeeErreur ?? " ").foregroundStyle(.red).font(.caption)
             }
         }

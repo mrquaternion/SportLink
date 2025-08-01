@@ -21,6 +21,7 @@ struct TripleDates: Equatable {
 
 struct CreerActiviteVue: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var appVM: AppVM
     @StateObject var vm: CreerActiviteVM
     
     @State private var sportSelectionTemporaire: Sport? = .soccer
@@ -84,7 +85,7 @@ struct CreerActiviteVue: View {
         }
         .padding(.horizontal)
         .padding(.top, 40)
-        .navigationTitle("Create an activity")
+        .navigationTitle("create an activity".localizedFirstCapitalized)
         .navigationBarTitleDisplayMode(.inline)
     }
     
@@ -196,12 +197,15 @@ struct CreerActiviteVue: View {
                 } else {
                     await vm.creerActivite()
                     dismiss()
+                    appVM.ongletSelectionne = .activites
+                    appVM.trigger = .organise
+                    appVM.sousOngletSelectionne = .organise
                 }
             }
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "checkmark.circle.fill")
-                Text("Create")
+                Text("create".localizedCapitalized)
                     .font(.title3)
                     .fontWeight(.semibold)
             }
@@ -696,5 +700,6 @@ struct BoutonOptionOverlay: View {
 #Preview {
     CreerActiviteVue(serviceEmplacements: DonneesEmplacementService())
         .environmentObject(DonneesEmplacementService())
+        .environmentObject(AppVM())
 }
 
