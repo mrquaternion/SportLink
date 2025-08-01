@@ -75,32 +75,47 @@ struct AccueilVue: View {
     
     @ViewBuilder
     private var zoneStatistiques: some View {
-        ZStack {
-            VStack(spacing: 10) {
+        VStack {
+            ZStack {
                 NavigationLink {
                     StatistiquesVue()
                 } label: {
                     session.avatar
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 165)
+                        .scaledToFit()
+                        .frame(height: 175)
                         .clipShape(.circle)
-                        .foregroundStyle(Color.gray)
+                        .foregroundStyle(Color.red.gradient)
                 }
                 .buttonStyle(.plain)
                 
-                Text("level 5: intermediate".localizedCapitalized)
-                    .font(.subheadline.weight(.light))
+                let hauteur: CGFloat = 220
+                BarreDeProgres(
+                    nombreDePoints: $nombreDePoints,
+                    seuilDuNiveau: $seuilDuNiveau,
+                    sport: .tennis,
+                    epaisseurBarreGrise: 6,
+                    longueurDash: 2,
+                    dashGap: 11,
+                    hauteurRectangleOverlay: hauteur + 32
+                )
+                .frame(height: hauteur)
+                .shadow(color: Color.gray.opacity(0.4), radius: 10)
             }
+            .padding(.bottom)
             
-            BarreDeProgres(
-                nombreDePoints: $nombreDePoints,
-                seuilDuNiveau: $seuilDuNiveau,
-                sport: .soccer,
-                epaisseurBarre: 16,
-                ajustement: (x: -5, y: 27)
-            )
-            .frame(height: 200)
+            
+            VStack(spacing: 6) {
+                Text("level 5: tennis".localizedCapitalized)
+                    .font(.title2.weight(.bold))
+                (
+                    Text("this is your most played sport. ".localizedFirstCapitalized) +
+                    Text("click on the image to see more.".localizedFirstCapitalized)
+                )
+                .font(.system(size: 15, weight: .light))
+                .multilineTextAlignment(.center)
+            }
+            .frame(width: UIScreen.main.bounds.width * 0.7)
             .padding(.bottom, 24)
         }
     }

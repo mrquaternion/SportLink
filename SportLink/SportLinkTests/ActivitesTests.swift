@@ -2,7 +2,7 @@
 //  ActiviteTests.swift
 //  SportLinkTests
 //
-//  Created by AI Assistant on 2025-07-31.
+//  Created by Mathias La Rochelle on 2025-07-31.
 //
 
 import Testing
@@ -10,7 +10,7 @@ import Foundation
 @testable import SportLink
 
 struct ActivitesTests {
-    @Test("Activite to DTO conversion works correctly")
+    @Test("Conversion d'objet Activite vers objet DTO fonctionne")
     func activiteVersDTO() {
         let activite = creerMockActivite()
         let dto = activite.versDTO()

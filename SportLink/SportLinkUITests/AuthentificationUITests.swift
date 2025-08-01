@@ -2,7 +2,7 @@
 //  AuthenticationUITests.swift
 //  SportLinkUITests
 //
-//  Created by AI Assistant on 2025-07-31.
+//  Created by Mathias La Rochelle on 2025-07-31.
 //
 
 import XCTest

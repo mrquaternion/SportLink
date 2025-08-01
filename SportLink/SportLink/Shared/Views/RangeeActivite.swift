@@ -172,9 +172,11 @@ struct RangeeActivite: View {
                                         ajouter: true
                                     )
                         
-                                    appVM.ongletSelectionne = .activites
-                                    appVM.trigger = .participe
-                                    appVM.sousOngletSelectionne = .participe
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                        appVM.ongletSelectionne = .activites
+                                        appVM.trigger = .participe
+                                        appVM.sousOngletSelectionne = .participe
+                                    }
                                 } catch {
                                     print("Erreur lors de la mise à jour \(error)")
                                 }

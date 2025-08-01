@@ -21,11 +21,12 @@ struct ActivitesRecommandees: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             titre
-            VStack {
+            VStack(spacing: 14) {
                 ForEach(session.activitesRecommandees, id: \.id) { activite in
                     ActiviteRangee(activite: activite)
                 }
             }
+            .padding()
             .frame(maxWidth: .infinity)
             .background(Color.white)
             .mask(RoundedRectangle(cornerRadius: 20))
@@ -68,12 +69,14 @@ struct ActiviteRangee: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            Text(Sport.depuisNom(activite.sport).emoji)
-                .font(.system(size: 35))
+            Image(systemName: Sport.depuisNom(activite.sport).icone)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 28)
                 
-            VStack(spacing: 2) {
+            VStack(spacing: 4) {
                 HStack {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 4.5) {
                         Text(activite.sport.capitalized)
                             .font(.system(size: 18))
                             .fontWeight(.bold)
@@ -81,15 +84,25 @@ struct ActiviteRangee: View {
                         Text(nomDuParc)
                             .lineLimit(1)
                             .truncationMode(.tail)
-                            .font(.caption2)
+                            .font(.caption)
                     }
                     
                     Spacer()
+                    
+                    // Bouton favoris
+                    Image(systemName: "bookmark")
+                        .font(.system(size: 17))
+                        .foregroundStyle(.black)
+                        .padding(8)
+                        .background(Circle().stroke(Color.gray, lineWidth: 1))
+                        .clipShape(Circle())
+                        .onTapGesture {
+                            // Logique ici
+                        }
                 }
                   
                 HStack(alignment: .top) {
                     Text(activitesVM.obtenirDistanceDeUtilisateur(pour: activite))
-                        .italic()
                         .font(.caption2)
                     
                     Spacer()
@@ -101,16 +114,17 @@ struct ActiviteRangee: View {
             }
         }
         .padding(.horizontal, 20)
-        .frame(width: 360, height: 80)
-        .overlay(
+        .padding(.vertical, 10)
+        .foregroundStyle(.black)
+        .background(
             RoundedRectangle(cornerRadius: 13.52371)
                 .stroke(Color(red: 0.89, green: 0.89, blue: 0.89), lineWidth: 0.7)
         )
-        .foregroundStyle(.black)
     }
 }
 
 #Preview {
     ActivitesRecommandees(serviceEmplacements: DonneesEmplacementService())
         .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
+        .environmentObject(Session())
 }

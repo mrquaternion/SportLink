@@ -25,7 +25,7 @@ struct AuthDonneesResultatModele {
 
 @MainActor
 class Session: ObservableObject {
-    @Published var avatar: Image = Image(systemName: "person.circle.fill")
+    @Published var avatar: Image = Image(systemName: "person.crop.circle.fill")
     @Published var activitesRecommandees: [Activite] = []
     @Published var estPret: Bool = false
     

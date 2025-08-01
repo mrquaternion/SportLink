@@ -196,10 +196,12 @@ struct CreerActiviteVue: View {
                     montrerAlerteChevauchement = true
                 } else {
                     await vm.creerActivite()
-                    dismiss()
-                    appVM.ongletSelectionne = .activites
-                    appVM.trigger = .organise
-                    appVM.sousOngletSelectionne = .organise
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        dismiss()
+                        appVM.ongletSelectionne = .activites
+                        appVM.trigger = .organise
+                        appVM.sousOngletSelectionne = .organise
+                    }
                 }
             }
         } label: {

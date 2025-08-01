@@ -61,7 +61,6 @@ struct AuthentificationVue: View {
                 switch route {
                 case .inscription:
                     InscriptionVue(vm: inscriptionVM, onInscriptionComplete: {
-                        // When inscription is complete, dismiss the inscription view and show ChoixSportVue
                         chemin.removeAll()
                         montrerChoixSport = true
                     })

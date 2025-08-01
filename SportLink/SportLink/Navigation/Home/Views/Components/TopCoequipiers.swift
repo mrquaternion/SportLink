@@ -70,7 +70,7 @@ struct TopCoequipiers: View {
         // Catégories
         VStack(alignment: .leading) {
             HStack {
-                Text("#").frame(width: 65)
+                Text("#").frame(width: 60)
                 Text("Player").frame(width: 130)
                 Text("Sport played").frame(width: 110)
                 Text("").frame(width: 30)
@@ -80,7 +80,7 @@ struct TopCoequipiers: View {
         .font(.callout.weight(.semibold))
         .padding(.top)
     }
-
+    
     @ViewBuilder
     private var carrousel: some View {
         CarouselView(
@@ -89,10 +89,13 @@ struct TopCoequipiers: View {
         ) {
             ForEach(0..<pagesTotales, id: \.self) { pageIndex in
                 VStack(spacing: 0) {
+                    Divider()
                     ForEach(pageIndex * lignesParPage ..< min((pageIndex + 1) * lignesParPage, coequipiers.count), id: \.self) { i in
+                      
                         CoequipierRangee(info: coequipiers[i])
+                        Divider()
                     }
-                    // fill empty rows
+                    // Remplir les lignes pleines
                     let pleines = min(lignesParPage, coequipiers.count - pageIndex * lignesParPage)
                     ForEach(0..<lignesParPage - pleines, id: \.self) { _ in
                         HStack(spacing: 0) {
@@ -114,7 +117,7 @@ struct TopCoequipiers: View {
         HStack(spacing: 22) {
             Button {
                 withAnimation(.spring(duration: 0.7)) {
-                    page = max(page - 1, 0)
+                    page = max(page - 1,    0)
                 }
             } label: {
                 Image(systemName: "chevron.left")
@@ -136,7 +139,7 @@ struct TopCoequipiers: View {
         .font(.system(size: 22))
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
-        .tint(Color("CouleurParDefaut"))
+        .tint(Color.red.gradient)
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .shadow(color: .black.opacity(0.15), radius: 2)
@@ -172,7 +175,7 @@ struct CoequipierRangee: View {
                     Image(info.prenom)
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 28, height: 28)
+                        .frame(width: 32, height: 32)
                         .clipShape(.circle)
                     Text(info.prenom)
                         .font(.system(size: 14))

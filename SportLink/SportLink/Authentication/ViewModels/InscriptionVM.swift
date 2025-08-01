@@ -21,13 +21,12 @@ final class InscriptionVM: ObservableObject {
     @Published var disponibilites: [String: [(Date, Date)]] = [:]
     @Published var photo: UIImage? = nil
 
-    
+    // Erreurs
     @Published var nomUtilisateurErreur: String? = nil
     @Published var courrielErreur: String? = nil
     @Published var motDePasseErreur: String? = nil
     @Published var motDePasseConfirmeeErreur: String? = nil
-    
-    // Firebase Auth
+
     func inscriptionFirebase() async -> Bool {
         guard verifierChampsDeTexte() else { return false }
         
@@ -57,10 +56,7 @@ final class InscriptionVM: ObservableObject {
     }
     
     private func verifierChampsDeTexte() -> Bool {
-        nomUtilisateurErreur = nil
-        courrielErreur = nil
-        motDePasseErreur = nil
-        motDePasseConfirmeeErreur = nil
+        resetErreurs()
         
         // Nom utilisateur
         if nomUtilisateur.isEmpty {
