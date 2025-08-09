@@ -5,28 +5,28 @@ Pour visualiser le fichier `.puml` dans le répertoire `diagrams/`, vous devez a
 Arborescence approximative des dossiers :
 ```plaintext
 SportLink/
-      ├── AppEntry/
-      |
-      ├── Authentication/
-      |
-      ├── Core/
-      |   ├── Extensions/
-      |   ├── Models/
-      |   └── Services/
-      |       ├── Firebase/
-      |       └── Local/
-      |
-      ├── Navigation/
-      |   ├── Home/
-      |   ├── Discover/
-      |   ├── Create/
-      |   ├── Bookings/
-      |   └── Profile/
-      |   
-      ├── Resources/
-      |   ├── Assets/
-      |   ├── Configuration/
-      |   └── Data/
-      |
-      └── Shared/
+├── AppEntry/
+|
+├── Authentication/
+|
+├── Core/
+|   ├── Extensions/
+|   ├── Models/
+|   └── Services/
+|       ├── Firebase/
+|       └── Local/
+|
+├── Navigation/
+|   ├── Home/
+|   ├── Discover/
+|   ├── Create/
+|   ├── Bookings/
+|   └── Profile/
+|   
+├── Resources/
+|   ├── Assets/
+|   ├── Configuration/
+|   └── Data/
+|
+└── Shared/
 ```
