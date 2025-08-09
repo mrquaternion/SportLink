@@ -5,45 +5,28 @@ Pour visualiser le fichier `.puml` dans le répertoire `diagrams/`, vous devez a
 Arborescence approximative des dossiers :
 ```plaintext
 SportLink/
-├── App/
-|   └── SportLinkApp.swift
-|
-├── Fonctionnalitees/
-|   ├── Accueil/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   ├── Explorer/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   ├── Creer/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   ├── Activites/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   └── Profile/
-|       ├── VuesModeles/
-|       └── Sousvues/
-|
-├── ModelesPartagees/
-|   ├── Utilisateur.swift
-|   ├── Activite.swift
-|   ├── Discussion.swift
-|   └── Emplacement.swift
-|
-├── ComposantesUI/
-|   ├── Boutons/
-|   ├── Icones/
-|   └── Cartes/
-|
-├── Services/
-|   ├── Geolocalisation/
-│   |   └── ServiceEmplacement.swift
-|   ├── Authentification/
-│   |   └── ServiceUtilisateur.swift
-|   └── Reseau/
-│       └── APIClient.swift
-|
-└── Ressources/
-    └── Actifs/
+      ├── AppEntry/
+      |
+      ├── Authentication/
+      |
+      ├── Core/
+      |   ├── Extensions/
+      |   ├── Models/
+      |   └── Services/
+      |       ├── Firebase/
+      |       └── Local/
+      |
+      ├── Navigation/
+      |   ├── Home/
+      |   ├── Discover/
+      |   ├── Create/
+      |   ├── Bookings/
+      |   └── Profile/
+      |   
+      ├── Resources/
+      |   ├── Assets/
+      |   ├── Configuration/
+      |   └── Data/
+      |
+      └── Shared/
 ```
