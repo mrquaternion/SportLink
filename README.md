@@ -5,45 +5,28 @@ Pour visualiser le fichier `.puml` dans le répertoire `diagrams/`, vous devez a
 Arborescence approximative des dossiers :
 ```plaintext
 SportLink/
-├── App/
-|   └── SportLinkApp.swift
+├── AppEntry/
 |
-├── Fonctionnalitees/
-|   ├── Accueil/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   ├── Explorer/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   ├── Creer/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   ├── Activites/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   └── Profile/
-|       ├── VuesModeles/
-|       └── Sousvues/
+├── Authentication/
 |
-├── ModelesPartagees/
-|   ├── Utilisateur.swift
-|   ├── Activite.swift
-|   ├── Discussion.swift
-|   └── Emplacement.swift
+├── Core/
+|   ├── Extensions/
+|   ├── Models/
+|   └── Services/
+|       ├── Firebase/
+|       └── Local/
 |
-├── ComposantesUI/
-|   ├── Boutons/
-|   ├── Icones/
-|   └── Cartes/
+├── Navigation/
+|   ├── Home/
+|   ├── Discover/
+|   ├── Create/
+|   ├── Bookings/
+|   └── Profile/
+|   
+├── Resources/
+|   ├── Assets/
+|   ├── Configuration/
+|   └── Data/
 |
-├── Services/
-|   ├── Geolocalisation/
-│   |   └── ServiceEmplacement.swift
-|   ├── Authentification/
-│   |   └── ServiceUtilisateur.swift
-|   └── Reseau/
-│       └── APIClient.swift
-|
-└── Ressources/
-    └── Actifs/
+└── Shared/
 ```
