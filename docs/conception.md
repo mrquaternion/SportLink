@@ -29,10 +29,6 @@ SportLink/
 └── Shared/
 ```
 
-## Architecture du système
-
-![Modèle C4](./diagrams/out/modelec4.png "Modèle C4")
-
 ## Choix technologiques
 Nous avons opté pour un développement **natif iOS en Swift**, pour :
 
@@ -47,8 +43,12 @@ Nous avons opté pour un développement **natif iOS en Swift**, pour :
 - Utilisation de `Firebase` pour le backend, plus exactement `Cloud Firestore`
 
 ## Modèles et diagrammes
-Nous avons décidé de ne pas mettre les sous vues dans le diagramme, car nous pensons qu'il deviendrait trop grossier avec toutes les classes qui n'ont pas nécessairement d'attributs ou de méthodes pertinentes.
+Voici notre diagramme UML :
 ![Diagramme de classe UML](./diagrams/out/SportLink.svg "Diagramme de classe UML")
+
+## Architecture du système
+Voici notre diagramme notre modèle C4 :
+![Modèle C4](./diagrams/out/modelec4.png "Modèle C4")
 
 ## Modèle de données
 Voici le modèle de données style NoSQL qui réflète les *entités métiers*. C'est ainsi que les données seront stockées dans Firebase.
@@ -56,13 +56,13 @@ Voici le modèle de données style NoSQL qui réflète les *entités métiers*. 
 ```txt
 utilisateurs    (collection)
 └── {utilisateurId}
-    ├── nomUtilisateur        : "mimi123"
-    ├── courriel              : "michel@example.com"
-    ├── photoProfil           : "https://..."
-    ├── disponibilites        : ["lundi_AM", "lundi_PM", "mardi_AM"] 
-    ├── sportsFavoris         : ["Soccer", "Tennis"]                         
-    ├── favorisActivites      : ["eventId4","eventId9"]              
-    └── partenairesRecents    : [                                    
+    ├── nomUtilisateur      
+    ├── courriel              
+    ├── photoProfil           
+    ├── disponibilites        
+    ├── sportsFavoris                            
+    ├── favorisActivites               
+    └── partenairesRecents    :                                  
     │     { utilisateurId: "autreId",
     │       sport: "Soccer",
     │       dernierResultat: +10 }
@@ -74,15 +74,14 @@ utilisateurs    (collection)
 activites    (collection)
 ├── {activiteId}
     ├── organisateurId : "utilisateurId"
-    ├── sport : "Basketball"
-    ├── date : "2025-06-12T17:00"
-    ├── duree : "02:00"
+    ├── titre
+    ├── sport 
+    ├── date
+    ├── indraID
+    ├── descritpion
     ├── nbJoueursRecherches : 6
-    ├── participants : [utilisateurId1, utilisateurId2]
     ├── statut : "ouvert" | "complet" | "annule"
-    ├── emplacement : emplacementId
-    ├── invitationsOuvertes : true 
-    └── messages : [messageId1, messagesId2, ...]
+    └── invitationsOuvertes
 ```
 
 ### `messages`
