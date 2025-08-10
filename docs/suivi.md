@@ -222,6 +222,8 @@
     - Optimiser les requêtes Firebase pour réduire le temps de chargement des activités.
     - Commencer la mise en page et l’intégration de la page Home.
 
+    
+
 --- 
 
 ## Semaine 11 (13-19 juillet)
