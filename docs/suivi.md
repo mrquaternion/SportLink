@@ -204,23 +204,23 @@
 ## Semaine 10 (6-12 juillet)
 
 ??? note “Étapes faites”
-	- [x] Développement du mode Vue liste et Vue carte de la page Activités.
-	- [x] Ajout de la possibilité de voir les activités organisées, celles auxquelles l’utilisateur participe, et celles enregistrées pour plus tard.
-	- [x] Début de l’intégration de la page Profil avec affichage des informations de base (nom, photo, sports favoris, disponibilités).
+    - [x] Développement du mode Vue liste et Vue carte de la page Activités.
+    - [x] Ajout de la possibilité de voir les activités organisées, celles auxquelles l’utilisateur participe, et celles enregistrées pour plus tard.
+    - [x] Début de l’intégration de la page Profil avec affichage des informations de base (nom, photo, sports favoris, disponibilités).
 
 !!! info “Notes”
-	- Les deux modes d’affichage (liste et carte) sont désormais fonctionnels sur la page Activités, avec un filtrage par sport et par date similaire à celui de la page Explorer.
-	- L’affichage des activités auxquelles l’utilisateur participe reprend le design de celles qu’il organise, mais sans les options de modification.
-	- Sur la page Profil, l’intégration a débuté avec une photo de profil modifiable et des sections préparées pour les sports favoris et les disponibilités, qui seront reliées à la base de données lors d’une prochaine étape.
+    - Les deux modes d’affichage (liste et carte) sont désormais fonctionnels sur la page Activités, avec un filtrage par sport et par date similaire à celui de la page Explorer.
+    - L’affichage des activités auxquelles l’utilisateur participe reprend le design de celles qu’il organise, mais sans les options de modification.
+    - Sur la page Profil, l’intégration a débuté avec une photo de profil modifiable et des sections préparées pour les sports favoris et les disponibilités, qui seront reliées à la base de données lors d’une prochaine étape.
 
 !!! warning “Difficultés rencontrées”
-	- Quelques lenteurs ont été observées lors du chargement initial des activités lorsque la base de données contient un volume important d’entrées.
-	- La synchronisation en temps réel des données de profil avec Firebase n’est pas encore stable, ce qui provoque parfois un affichage obsolète après modification.
+    - Quelques lenteurs ont été observées lors du chargement initial des activités lorsque la base de données contient un volume important d’entrées.
+    - La synchronisation en temps réel des données de profil avec Firebase n’est pas encore stable, ce qui provoque parfois un affichage obsolète après modification.
 
 !!! abstract “Prochaines étapes”
-	- Finaliser la page Profil avec édition des sports favoris et des disponibilités.
-	- Optimiser les requêtes Firebase pour réduire le temps de chargement des activités.
-	- Commencer la mise en page et l’intégration de la page Home.
+    - Finaliser la page Profil avec édition des sports favoris et des disponibilités.
+    - Optimiser les requêtes Firebase pour réduire le temps de chargement des activités.
+    - Commencer la mise en page et l’intégration de la page Home.
 
 --- 
 
