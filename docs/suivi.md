@@ -201,33 +201,94 @@
 
 ---
 
-## Semaine 10 (6-12 juillet)
+## Semaine 10 (6-12 juillet)..
 
-??? note “Étapes faites”
-    - [x] Développement du mode Vue liste et Vue carte de la page Activités.
-    - [x] Ajout de la possibilité de voir les activités organisées, celles auxquelles l’utilisateur participe, et celles enregistrées pour plus tard.
-    - [x] Début de l’intégration de la page Profil avec affichage des informations de base (nom, photo, sports favoris, disponibilités).
+??? note "Étapes faites"
+    - [x] La vue de la page *Activités* est terminée
+    - [x] Une logique de vérification a été trouvé pour s'assurer qu'un même évènement ne puisse pas être créé pour un même créneau horaire, au même endroit et sur la même infrastructure.
 
-!!! info “Notes”
-    - Les deux modes d’affichage (liste et carte) sont désormais fonctionnels sur la page Activités, avec un filtrage par sport et par date similaire à celui de la page Explorer.
-    - L’affichage des activités auxquelles l’utilisateur participe reprend le design de celles qu’il organise, mais sans les options de modification.
-    - Sur la page Profil, l’intégration a débuté avec une photo de profil modifiable et des sections préparées pour les sports favoris et les disponibilités, qui seront reliées à la base de données lors d’une prochaine étape.
 
-!!! warning “Difficultés rencontrées”
-    - Quelques lenteurs ont été observées lors du chargement initial des activités lorsque la base de données contient un volume important d’entrées.
-    - La synchronisation en temps réel des données de profil avec Firebase n’est pas encore stable, ce qui provoque parfois un affichage obsolète après modification.
+!!! info "Notes"
+    - La vue *Activités* doit être dveloppé pour intégrer une vue de modification pour les activité organisée
+    - L’affichage des activités auxquelles l’utilisateur participe ou enregistre reprend le design de celles qu’il organise, mais sans les options de modification.
+    - La vue *Profil* n'a pas été fait
 
-!!! abstract “Prochaines étapes”
-    - Finaliser la page Profil avec édition des sports favoris et des disponibilités.
-    - Optimiser les requêtes Firebase pour réduire le temps de chargement des activités.
-    - Commencer la mise en page et l’intégration de la page Home.
+!!! warning "Difficultés rencontrées"
+    - Nous avons eu certaine difficulté ou niveau de l'enregistrement d'une activité créer dans la base de donnée Firebase et ensuite l'affiché dans la section activité organisées. Nous n'avons eu la chance ni le temps de mettre davantage de temps sur le problème cette semaine, mais nous ne pensons que cela sera un gros obstacle.
 
-    
+!!! abstract "Prochaines étapes"
+    - Développer le mode vue de la page *Activités* au niveau de la modification.
+    - Régler la logique d'enregistrement des données avec Firebase
+    - Faire la vue "liste" de mode *Explorer*
+    - Développer le mode vue de la page *Profil* (si le temps le permet).
+    - Faire la vue *Home* (si le temps le permet)
+
+
 
 --- 
 
 ## Semaine 11 (13-19 juillet)
 
+??? note "Étapes faites"
+    - [x] La vue de la page *Activités* est pour faire une modification est terminée
+    - [x] Nous piuvons maintenant, afficher les activités organisées d'un utilisateur fictif dans la section des activités organisées
+
+
+!!! info "Notes"
+    - Même si on peut maintenat faire afficher les activités organisées, il faut implémenter aussi la logique de modification pour qu'elle puisse se syncroniser avec la base de données.
+    - L’affichage des activités auxquelles l’utilisateur participe ou enregistre reprend le design de celles qu’il organise, mais sans les options de modification.
+    - La vue *Profil* n'a pas été fait
+    - La vue liste du mode *Explorer* est presque que terminée
+
+!!! warning "Difficultés rencontrées"
+    - Nous devons apporter une réflexion sur qu'est qui sera les filtre des recherches dans le mode *Explorer* et ce dans le mode carte et le mode liste. Comment l'afficher et quels filtres utilisés.
+    - Nous n'avons pas eu le temps de toucher à la vue de la page *Profil* et la vue de la page *Home*
+
+!!! abstract "Prochaines étapes"
+    - Finir la vue liste du mode *Explorer*
+    - Modifier les vue de la carte et de la liste du mode *Explorer* pour intégrer les filtres de recherche
+    - Faire en sorte que de sycroniser les modifications des activités organisées avec la base de données.
+    - Développer la vue de la page *Profil* (si le temps le permet).
+    - Faire la vue *Home* (si le temps le permet)
+
+---
+
 ## Semaine 12 (20-26 juillet)
 
+??? note "Étapes faites"
+    - [x] La vue *Explorer* est complètement terminé
+    - [x] La modification d'une activité est maintenant possible.
+
+
+!!! info "Notes"
+    - Il faudra ajouter les vues des activités enregistrées et participées. Elles seront très semblables à ceux oragnaisées.
+
+!!! warning "Difficultés rencontrées"
+    - Nous tentons maintenant d'implémenter les fonctionnalités de connexion et de création de compte. Nous allons devoir lire quelques documentations afin de bien construire la logique et pour bien la syncroniser avec notre base de données.
+    - Nous n'avons pas eu le temps de toucher à la vue de la page *Profil* et la vue de la page *Home*. La page *Profil* pourrait être abandonné pour la remise du rapport. 
+
+!!! abstract "Prochaines étapes"
+    - Implémenter les logiques de connexion et de création 
+    - Une fois la logique de connexion implémentée, faire en sorte d'afficher pour l'utilisateur les activités, organisé, participé et enregistré.
+     - Faire la vue *Home*
+    - Développer la vue de la page *Profil* (si le temps le permet)
+
+---
+
 ## Semaine 13 (27 juillet au 2 août)
+
+??? note "Étapes faites"
+    - [x] L'implémentation des logiques de connexion et de création 
+    - [x] L'utilisateur connectée peut maintenant voir ses activités organisée et les activitées auquelles il participe.
+    - [x] La vue *Home* est complété
+    - [x] La vue *Profil* est complété
+
+
+!!! info "Notes"
+    - Les seules choses qui manqueraient avant la 2e foire sont, les activitées enregistrés, pouvoir modifier le profil et une page *Home* fonctionnelle et intéractive
+
+!!! warning "Difficultés rencontrées"
+    - Il nous manque du temps pour finaliser l'affichage des activités enregistrées. 
+
+!!! abstract "Prochaines étapes"
+    - Faire la foire et le rapport!
