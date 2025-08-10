@@ -2,6 +2,7 @@
 
 ## Plan de test
 Le plan de test comprenait trois volets :
+
 - Tests unitaires et fonctionnels réalisés avec le framework XCTest, couvrant la conversion d’objets, le calcul de distances, l’initialisation des ViewModels, ainsi que la validation des parcours critiques (création de compte, connexion valide ou invalide). Un test de performance a également été ajouté pour mesurer la réactivité de l’application face à des événements rapides.
 - Tests de performance évaluant la consommation de ressources (CPU, RAM) lors d’animations, de changements de vues et de la génération de cartes.
 - Tests d’utilisabilité menés auprès de trois utilisateurs cibles, dans un contexte semi-contrôlé, sur deux tâches principales (Créer un compte et Créer une activité), avec collecte de données quantitatives (nombre de clics, temps, erreurs) et qualitatives (commentaires).à
