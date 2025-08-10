@@ -1,36 +1,31 @@
 //
-//  File.swift
+//  ActivitesFavoritesVM.swift
 //  SportLink
 //
-//  Created by Mathias La Rochelle on 2025-07-30.
+//  Created by Mathias La Rochelle on 2025-08-10.
 //
 
 import SwiftUI
 
 @MainActor
-class ActivitesInscritesVM: ObservableObject {
+class ActivitesFavoritesVM: ObservableObject {
     let serviceActivites: ServiceActivites
     private let serviceEmplacements: DonneesEmplacementService
+    private let serviceUtilisateurConnecte: UtilisateurConnecteVM
     
     @Published var estEnChargement = false
     @Published var activiteSelectionnee: Activite?
     @Published private(set) var activites: [Activite] = []
     
-    init(serviceActivites: ServiceActivites, serviceEmplacements: DonneesEmplacementService) {
+    init(serviceActivites: ServiceActivites, serviceEmplacements: DonneesEmplacementService, serviceUtilisateurConnecte: UtilisateurConnecteVM) {
         self.serviceActivites = serviceActivites
         self.serviceEmplacements = serviceEmplacements
+        self.serviceUtilisateurConnecte = serviceUtilisateurConnecte
     }
     
-    func fetchActivitesInscrites() async {
+    func fetchActivitesFavorites() async {
         estEnChargement = true
-        do {
-            let utilisateur = try GestionnaireAuthentification.partage.obtenirUtilisateurAuthentifier()
-            let uid = utilisateur.uid
-            await serviceActivites.fetchActivitesParParticpant(participantId: uid)
-            self.activites = serviceActivites.activites
-        } catch {
-            print("Erreur lors de l'obtention de l'utilisateur : \(error)")
-        }
+        
         estEnChargement = false
     }
     

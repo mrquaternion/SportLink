@@ -7,8 +7,9 @@ enum Onglets: Int {
 
 struct VuePrincipale: View {
     @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
+    @EnvironmentObject var utilisateurConnecteVM: UtilisateurConnecteVM
     @StateObject private var appVM = AppVM()
-    @StateObject private var session = Session()
+    @StateObject private var session: Session
     @StateObject private var activitesVM: ActivitesVM
     @State private var estPresente = false
     @State private var afficherTabBar = true
@@ -16,8 +17,9 @@ struct VuePrincipale: View {
     
     let onDeconnexion: () -> Void
     
-    init(serviceEmplacements: DonneesEmplacementService, onDeconnexion: @escaping () -> Void) {
+    init(serviceEmplacements: DonneesEmplacementService, utilisateurConnecteVM: UtilisateurConnecteVM, onDeconnexion: @escaping () -> Void) {
         self._activitesVM = StateObject(wrappedValue: ActivitesVM(serviceEmplacements: serviceEmplacements))
+        self._session = StateObject(wrappedValue: Session(serviceEmplacements: serviceEmplacements, utilisateurConnecteVM: utilisateurConnecteVM))
         self.onDeconnexion = onDeconnexion
     }
 
@@ -88,6 +90,7 @@ struct VuePrincipale: View {
 
 
 #Preview {
-    VuePrincipale(serviceEmplacements: DonneesEmplacementService(), onDeconnexion: { print("Non déconnecté") })
+    VuePrincipale(serviceEmplacements: DonneesEmplacementService(), utilisateurConnecteVM: UtilisateurConnecteVM(), onDeconnexion: { print("Non déconnecté") })
         .environmentObject(DonneesEmplacementService())
+        .environmentObject(UtilisateurConnecteVM())
 }

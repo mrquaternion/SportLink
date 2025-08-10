@@ -7,6 +7,7 @@
 
 import Foundation
 import MapKit
+import SwiftUI
 
 @MainActor
 class ActivitesVM: ObservableObject {
@@ -219,5 +220,23 @@ class ActivitesVM: ObservableObject {
         
         let jourDuMois = jourDuMoisFormat.string(from: date)
         return "\(jourDeSemaine), \(jourDuMois)"
+    }
+    
+    func obtenirPhotoEtNomParticipants(participantIds: [UtilisateurID], serviceUtilisateurs: ServiceUtilisateurs) async -> [(Image, String)] {
+        var nomTrieesParNbCharacteres: [(Image, String)] = []
+     
+        for uid in participantIds {
+            let (nomOpt, uiImageOpt) = await serviceUtilisateurs.fetchInfoUtilisateur(pour: uid.valeur)
+            let image = uiImageOpt.map { Image(uiImage: $0) } ?? Image(systemName: "person.crop.circle.fill")
+            let nom = nomOpt?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false ? nomOpt! : "Inconnu"
+            nomTrieesParNbCharacteres.append((image, nom))
+        }
+        
+        return nomTrieesParNbCharacteres.sorted { $0.1.count < $1.1.count }
+    }
+    
+    
+    func chercherSiActiviteEstEnFavoris(pour activite: Activite) -> Bool {
+        return true
     }
 }

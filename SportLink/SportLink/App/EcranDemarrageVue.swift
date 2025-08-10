@@ -16,6 +16,7 @@ enum EtatAuthentification {
 
 struct EcranDemarrageVue: View {
     @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
+    @EnvironmentObject var utilisateurConnecteVM: UtilisateurConnecteVM
     @State private var etatAuthentification: EtatAuthentification = .chargement
 
     var body: some View {
@@ -30,6 +31,7 @@ struct EcranDemarrageVue: View {
             case .authentifie:
                 VuePrincipale(
                     serviceEmplacements: serviceEmplacements,
+                    utilisateurConnecteVM: utilisateurConnecteVM,
                     onDeconnexion: {
                         etatAuthentification = .nonAuthentifie
                     }

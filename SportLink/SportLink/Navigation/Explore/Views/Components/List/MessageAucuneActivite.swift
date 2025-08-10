@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct MessageAucuneActivite: View {
+    let texte: String
+    
     var body: some View {
         VStack(alignment: .center, spacing: 12) {
             Image(systemName: "figure.run")
                 .font(.system(size: 60))
-            Text("No activity has been organized \n for the selected settings")
+            Text(texte.localizedFirstCapitalized)
                 .font(.title2)
                 .multilineTextAlignment(.center)
         }
@@ -21,5 +23,5 @@ struct MessageAucuneActivite: View {
 }
 
 #Preview {
-    MessageAucuneActivite()
+    MessageAucuneActivite(texte: "no activity has been organized \n for the selected settings")
 }

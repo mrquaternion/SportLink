@@ -24,50 +24,6 @@ struct AuthDonneesResultatModele {
 }
 
 @MainActor
-class Session: ObservableObject {
-    @Published var avatar: Image = Image(systemName: "person.crop.circle.fill")
-    @Published var activitesRecommandees: [Activite] = []
-    @Published var estPret: Bool = false
-    
-    init() {
-        Task {
-            if let avatarUIImage = try? await GestionnaireAuthentification.partage.telechargerPhoto() {
-                await MainActor.run {
-                    self.avatar = Image(uiImage: avatarUIImage)
-                }
-            }
-            await fetchActivitesRecommandes()
-            estPret = true
-        }
-    }
-    
-    func fetchActivitesRecommandes() async {
-        do {
-            let requeteSnapshot = try await Firestore.firestore()
-                .collection("activites")
-                .getDocuments()
-            
-            let dtos = try requeteSnapshot.documents.map { document in
-                try document.data(as: ActiviteDTO.self)
-            }
-
-            let activitesConverties = dtos.map { $0.versActivite() }
-            
-            // Assigner un ID localement
-            let activites = activitesConverties.map { activite in
-                var activiteMutable = activite
-                activiteMutable.id = UUID().uuidString
-                return activiteMutable
-            }
-            
-            self.activitesRecommandees = Array(activites.prefix(3))
-        } catch {
-            print("Erreur lors de la récupération des activités : \(error)")
-        }
-    }
-}
-
-@MainActor
 final class GestionnaireAuthentification {
     static let partage = GestionnaireAuthentification()
     private init() { }
@@ -113,7 +69,8 @@ final class GestionnaireAuthentification {
             "nomUtilisateur": nomUtilisateur,
             "sportsFavoris": sports,
             "disponibilites": disposFormatees,
-            "photoUrl": photoUrl ?? ""
+            "photoUrl": photoUrl ?? "",
+            "activitesFavorites": []
         ]
         
         try await Firestore.firestore().collection("utilisateurs").document(uid).setData(donnees)

@@ -27,6 +27,7 @@ struct TopCoequipiers: View {
 
     let lignesParPage = 5
     @State private var page = 0
+    @State private var montrerPopover = false
 
     var pagesTotales: Int {
         (coequipiers.count + lignesParPage - 1) / lignesParPage
@@ -56,12 +57,31 @@ struct TopCoequipiers: View {
             Text("Top teammates")
                 .font(.title2.weight(.semibold))
             Spacer()
-            Image(systemName: "info.circle")
-                .foregroundStyle(.secondary)
-                .padding(.top, 3)
-                .onTapGesture {
-                    // Afficher message info
+            Button {
+                self.montrerPopover = true
+            } label: {
+                Image(systemName: "info.circle")
+                    .padding(.top, 3)
+            }
+            .foregroundStyle(.secondary)
+            .popover(isPresented: $montrerPopover, attachmentAnchor: .point(.bottomTrailing), arrowEdge: .top) {
+                VStack(alignment: .leading) {
+                    (
+                        Text("#").font(.callout.weight(.medium)) +
+                        Text(": number of times you played with this player")
+                            .font(.subheadline)
+                    )
+                    
+                    (
+                        Text("Last sport").font(.callout.weight(.medium)) +
+                        Text(": last sport played by this player")
+                            .font(.subheadline)
+                    )
                 }
+                .frame(width: 350)
+                .padding(10)
+                .presentationCompactAdaptation(.popover)
+            }
         }
     }
     
@@ -72,7 +92,7 @@ struct TopCoequipiers: View {
             HStack {
                 Text("#").frame(width: 60)
                 Text("Player").frame(width: 130)
-                Text("Sport played").frame(width: 110)
+                Text("Last sport").frame(width: 110)
                 Text("").frame(width: 30)
             }
             Divider()
@@ -175,7 +195,7 @@ struct CoequipierRangee: View {
                     Image(info.prenom)
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 32, height: 32)
+                        .frame(width: 34, height: 34)
                         .clipShape(.circle)
                     Text(info.prenom)
                         .font(.system(size: 14))

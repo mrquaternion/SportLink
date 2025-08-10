@@ -110,6 +110,7 @@ class ServiceActivites: ObservableObject {
             let requeteSnapshot = try await Firestore.firestore()
                 .collection("activites")
                 .whereField("participants", arrayContains: participantId)
+                .whereField("date.debut", isGreaterThanOrEqualTo: timestampMinuit) // on peut instorer une archive plus tard
                 .getDocuments()
             
             let activitesConverties = try requeteSnapshot.documents.map { doc in

@@ -24,7 +24,7 @@ struct AccueilVue: View {
                     .padding(.top, 90)
                 
                 Group {
-                    ActivitesRecommandees(serviceEmplacements: serviceEmplacements)
+                    ActivitesRecommandees()
                         .padding(.bottom)
                     
                     TopCoequipiers()
@@ -125,5 +125,5 @@ struct AccueilVue: View {
     AccueilVue()
         .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
         .environmentObject(DonneesEmplacementService())
-        .environmentObject(Session())
+        .environmentObject(Session(serviceEmplacements: DonneesEmplacementService(), utilisateurConnecteVM: UtilisateurConnecteVM()))
 }

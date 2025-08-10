@@ -43,6 +43,7 @@ class ActivitesOrganiseesVM: ObservableObject {
             print("Activité avec ID \(idActivite) non trouvée localement.")
         }
     }
+    
     func bindingActivite(id: String) -> Binding<Activite>? {
         guard let index = activites.firstIndex(where: { $0.id == id }) else { return nil }
         return Binding(

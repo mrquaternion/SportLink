@@ -9,21 +9,24 @@ import SwiftUI
 
 struct ActivitesRecommandees: View {
     @EnvironmentObject var session: Session
-    @StateObject private var vm: ActivitesRecommandeesVM
-    
-    init(serviceEmplacements: DonneesEmplacementService) {
-        self._vm = StateObject(wrappedValue: ActivitesRecommandeesVM(
-            serviceActivites: ServiceActivites(),
-            serviceEmplacements: serviceEmplacements
-        ))
-    }
+    @State private var montrerPopover = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             titre
             VStack(spacing: 14) {
-                ForEach(session.activitesRecommandees, id: \.id) { activite in
-                    ActiviteRangee(activite: activite)
+                if session.activitesRecommandees.isEmpty {
+                    ContentUnavailableView(
+                        "No recommanded activites",
+                        systemImage: "bookmark.slash",
+                        description: Text("Add favorite sports or adjust your disponibilities.")
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 20)
+                } else {
+                    ForEach(session.activitesRecommandees) { activite in
+                        ActiviteRangee(activite: activite)
+                    }
                 }
             }
             .padding()
@@ -40,12 +43,21 @@ struct ActivitesRecommandees: View {
             Text("recommanded activites".localizedFirstCapitalized)
                 .font(.title2.weight(.semibold))
             Spacer()
-            Image(systemName: "info.circle")
-                .foregroundStyle(.secondary)
-                .padding(.top, 3)
-                .onTapGesture {
-                    // Afficher message info
-                }
+            Button {
+                self.montrerPopover = true
+            } label: {
+                Image(systemName: "info.circle")
+                    .padding(.top, 3)
+            }
+            .foregroundStyle(.secondary)
+            .popover(isPresented: $montrerPopover, attachmentAnchor: .point(.bottomTrailing), arrowEdge: .top) {
+                Text("Your recommended activites are based on your region, your favourite sports and your availabilities.")
+                    .font(.subheadline)
+                    .frame(width: 350)
+                    .padding(.horizontal)
+                    .padding(.vertical, 10)
+                    .presentationCompactAdaptation(.popover)
+            }
         }
     }
 }
@@ -54,6 +66,8 @@ struct ActiviteRangee: View {
     // MARK: Variables et propriétés calculées
     @EnvironmentObject var activitesVM: ActivitesVM
     let activite: Activite
+    @State private var estFavoris = false
+    @State private var estAppuyee = false
     
     private var nomDuParc: String {
            let (_, parcOpt) = activitesVM.obtenirInfraEtParc(infraId: activite.infraId)
@@ -68,63 +82,77 @@ struct ActiviteRangee: View {
        }
     
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: Sport.depuisNom(activite.sport).icone)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 28)
+        BoutonGestureScrollView(
+            actionAppui: {
+                withAnimation { estAppuyee = true }
+            },
+            tempsAppuiLong: 0,
+            actionAppuiLong: {},
+            actionFin: {
+                withAnimation { estAppuyee = false }
                 
-            VStack(spacing: 4) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4.5) {
-                        Text(activite.sport.capitalized)
-                            .font(.system(size: 18))
-                            .fontWeight(.bold)
-                        
-                        Text(nomDuParc)
-                            .lineLimit(1)
-                            .truncationMode(.tail)
-                            .font(.caption)
-                    }
+            },
+            actionRelachement: {
+                print("Navigation vers les détails de l'activité \(activite.titre)")
+            }
+        ) {
+            HStack(spacing: 12) {
+                Image(systemName: Sport.depuisNom(activite.sport).icone)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 28)
                     
-                    Spacer()
-                    
-                    // Bouton favoris
-                    Image(systemName: "bookmark")
-                        .font(.system(size: 17))
-                        .foregroundStyle(.black)
-                        .padding(8)
-                        .background(Circle().stroke(Color.gray, lineWidth: 1))
-                        .clipShape(Circle())
-                        .onTapGesture {
-                            // Logique ici
+                VStack(spacing: 4) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(activite.sport.capitalized)
+                                .font(.system(size: 18))
+                                .fontWeight(.bold)
+                            
+                            Text(nomDuParc)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
+                                .font(.caption)
                         }
-                }
-                  
-                HStack(alignment: .top) {
-                    Text(activitesVM.obtenirDistanceDeUtilisateur(pour: activite))
-                        .font(.caption2)
-                    
-                    Spacer()
-                    
-                    Text(composantesDate)
-                        .font(.system(size: 11))
-                        .fontWeight(.semibold)
+                        
+                        Spacer()
+                        
+                        // Bouton favoris
+                        Image(systemName: "bookmark")
+                            .symbolVariant(estFavoris ? .fill : .none)
+                            .font(.system(size: 17))
+                            .foregroundStyle(estFavoris ? .red : .black)
+                            .padding(8)
+                            .background(.ultraThickMaterial)
+                            .clipShape(Circle())
+                            .onTapGesture { estFavoris.toggle() }
+                    }
+                      
+                    HStack(alignment: .top) {
+                        Text(activitesVM.obtenirDistanceDeUtilisateur(pour: activite))
+                            .font(.caption2)
+                        
+                        Spacer()
+                        
+                        Text(composantesDate)
+                            .font(.system(size: 11))
+                            .fontWeight(.semibold)
+                    }
                 }
             }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10)
+            .foregroundStyle(.black)
+            .background(
+                RoundedRectangle(cornerRadius: 13.52371)
+                    .fill(estAppuyee ? Color(.systemGray6) : .white)
+                    .stroke(Color(red: 0.89, green: 0.89, blue: 0.89), lineWidth: 0.7)
+            )
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 10)
-        .foregroundStyle(.black)
-        .background(
-            RoundedRectangle(cornerRadius: 13.52371)
-                .stroke(Color(red: 0.89, green: 0.89, blue: 0.89), lineWidth: 0.7)
-        )
     }
 }
 
 #Preview {
-    ActivitesRecommandees(serviceEmplacements: DonneesEmplacementService())
-        .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
-        .environmentObject(Session())
+    ActivitesRecommandees()
+        .environmentObject(Session(serviceEmplacements: DonneesEmplacementService(), utilisateurConnecteVM: UtilisateurConnecteVM()))
 }

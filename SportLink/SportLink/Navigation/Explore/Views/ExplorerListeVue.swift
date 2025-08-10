@@ -131,7 +131,8 @@ struct ExplorerListeVue: View {
                 GeometryReader { geometry in
                     VStack {
                         Spacer()
-                        MessageAucuneActivite()
+                        let texte = "no activities are available for the selected settings"
+                        MessageAucuneActivite(texte: texte)
                         Spacer()
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)

@@ -17,6 +17,7 @@ struct ActivitesVue: View {
     @EnvironmentObject var serviceEmplacements: DonneesEmplacementService
     @EnvironmentObject var activitesVM: ActivitesVM
     @EnvironmentObject var appVM: AppVM
+    @EnvironmentObject var utilisateurConnecteVM: UtilisateurConnecteVM
     
     @Namespace var line
 
@@ -79,7 +80,7 @@ struct ActivitesVue: View {
                             ))
                     }
                     if appVM.trigger == .favoris {
-                        ActivitesFavoritesVue()
+                        ActivitesFavoritesVue(serviceEmplacements: serviceEmplacements, utilisateurConnecteVM: utilisateurConnecteVM)
                             .transition(.asymmetric(
                                 insertion: appVM.aInserer,
                                 removal: appVM.aDegager
@@ -97,6 +98,7 @@ struct ActivitesVue: View {
     ActivitesVue()
         .environmentObject(DonneesEmplacementService())
         .environmentObject(ActivitesVM(serviceEmplacements: DonneesEmplacementService()))
+        .environmentObject(UtilisateurConnecteVM())
 }
 
 

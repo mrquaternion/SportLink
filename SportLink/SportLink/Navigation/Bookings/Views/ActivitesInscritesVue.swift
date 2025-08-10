@@ -9,12 +9,11 @@ import SwiftUI
 
 struct ActivitesInscritesVue: View {
     @EnvironmentObject var activitesVM: ActivitesVM
-    @StateObject private var activitesInscritesVM: ActivitesInscritesVM
+    @StateObject private var vm: ActivitesInscritesVM
     @State private var activiteAffichantInfo: Activite.ID? = nil
-    @State private var activiteSelectionnee: Activite? = nil
     
     init(serviceEmplacements: DonneesEmplacementService) {
-        self._activitesInscritesVM = StateObject(wrappedValue: ActivitesInscritesVM(
+        self._vm = StateObject(wrappedValue: ActivitesInscritesVM(
             serviceActivites: ServiceActivites(),
             serviceEmplacements: serviceEmplacements
         ))
@@ -23,47 +22,74 @@ struct ActivitesInscritesVue: View {
     var body: some View {
         ScrollView { sectionActivites }
             .task {
-                if activitesInscritesVM.activites.isEmpty {
-                    print("we are refetching")
-                    await activitesInscritesVM.fetchActivitesInscrites()
+                if vm.activites.isEmpty {
+                    await vm.fetchActivitesInscrites()
                 }
             }
-            .refreshable { await activitesInscritesVM.fetchActivitesInscrites() }
+            .refreshable { await vm.fetchActivitesInscrites() }
             .onTapGesture {
                 if activiteAffichantInfo != nil {
                     withAnimation { activiteAffichantInfo = nil }
                 }
             }
             .navigationDestination(for: Activite.self) { activite in
-                if let binding = activitesInscritesVM.bindingActivite(id: activite.id!) {
+                if let binding = vm.bindingActivite(id: activite.id!) {
                     DetailsActivite(activite: binding)
                         .environmentObject(activitesVM)
-                        .environmentObject(activitesInscritesVM)
+                        .environmentObject(vm)
                         .cacherBoutonEditable()
                         .cacherBoutonJoin()
                 }
             }
     }
     
+    @ViewBuilder
     var sectionActivites: some View {
-        LazyVStack(spacing: 20) {
-            ForEach(activitesInscritesVM.activites) { activite in
-                RangeeActivite(
-                    afficherInfo: Binding(
-                        get: { activiteAffichantInfo == activite.id },
-                        set: { newValue in
-                            activiteAffichantInfo = newValue ? activite.id : nil
-                        }
-                    ),
-                    activite: activite
-                )
-                .cacherBoutonJoin()
-                .dateEtendue()
+        Group {
+            if vm.estEnChargement {
+                GeometryReader { geometry in
+                    VStack {
+                        Spacer()
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .progressViewStyle(CircularProgressViewStyle())
+                        Spacer()
+                    }
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                }
+                .frame(minHeight: 650)
+            } else if !vm.activites.isEmpty {
+                LazyVStack(spacing: 20) {
+                    ForEach(vm.activites) { activite in
+                        RangeeActivite(
+                            afficherInfo: Binding(
+                                get: { activiteAffichantInfo == activite.id },
+                                set: { newValue in
+                                    activiteAffichantInfo = newValue ? activite.id : nil
+                                }
+                            ),
+                            activite: activite
+                        )
+                        .cacherBoutonJoin()
+                        .dateEtendue()
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 70) // faire de la place par rapport a le tabbar
+                .padding(.top, 20) // faire de la place par rapport a l'onglet
+            } else {
+                GeometryReader { geometry in
+                    VStack {
+                        Spacer()
+                        let texte = "you are not attending any \n activities yet"
+                        MessageAucuneActivite(texte: texte)
+                        Spacer()
+                    }
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                }
+                .frame(minHeight: 650)
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 70) // faire de la place par rapport a le tabbar
-        .padding(.top, 20) // faire de la place par rapport a l'onglet
     }
 }
 

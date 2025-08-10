@@ -34,6 +34,9 @@ struct ApplicationSportLink: App {
                 .environmentObject(utilisateurConnecteVM)
                 .onAppear {
                     emplacementsVM.chargerDonnees()
+                    Task {
+                        await utilisateurConnecteVM.chargerInfosUtilisateur()
+                    }
                 }
         }
     }

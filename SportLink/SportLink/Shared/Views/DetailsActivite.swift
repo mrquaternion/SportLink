@@ -45,7 +45,7 @@ struct DetailsActivite: View {
                 refreshID = UUID() 
             }
         }
-        .onChange(of: activite) { _ in
+        .onChange(of: activite) { _, _ in
             refreshID = UUID()
         }
         .navigationBarBackButtonHidden(true)
@@ -321,6 +321,10 @@ struct Details: View {
         }
     }
     
+    @State private var etendre = false
+    @State private var angleRotationChevron: Double = 0
+    @State private var participantsInfo: [(Image, String)] = []
+    @Namespace private var animationNamespace
     @ViewBuilder
     private var utilisateurs: some View {
         // Organisateur
@@ -334,7 +338,7 @@ struct Details: View {
                     .frame(width: 34, height: 34)
                     .clipShape(Circle())
             } else {
-                Image(systemName: "person.circle.fill")
+                Image(systemName: "person.crop.circle.fill")
                     .resizable()
                     .frame(width: 34, height: 34)
                     .foregroundStyle(Color.gray)
@@ -349,6 +353,55 @@ struct Details: View {
             let (nom, image) = await serviceUtilisateurs.fetchInfoUtilisateur(pour: activite.organisateurId.valeur)
             nomOrganisateur = nom
             photoOrganisateur = image
+        }
+        let colonne = [GridItem(.adaptive(minimum: 80, maximum: 130), spacing: 8)]
+        VStack(alignment: .leading) {
+            Text("Participants: ")
+                .font(.headline)
+                .foregroundColor(.primary)
+            VStack {
+                LazyVGrid(columns: colonne, alignment: .leading, spacing: 8) {
+                    ForEach(participantsInfo, id: \.1) { participant in // les usernames sont uniques
+                        HStack {
+                            participant.0
+                                .resizable()
+                                .frame(width: 34, height: 34)
+                                .foregroundStyle(Color.gray)
+                                .clipShape(Circle())
+                            Text(participant.1)
+                                .font(.subheadline)
+                        }
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 12)
+                        .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray6)))
+                    }
+                }
+                .frame(height: etendre ? nil : 50, alignment: .top)
+                .clipped()
+                
+                Spacer()
+                HStack {
+                    Spacer()
+                    HStack {
+                        Image(systemName: "chevron.up")
+                            .rotationEffect(Angle(degrees: etendre ? 180 : 0))
+                        
+                        Text(!etendre ? "see more".localizedFirstCapitalized : "see less".localizedFirstCapitalized)
+                    }
+                    .font(.subheadline)
+                    .onTapGesture { etendre.toggle() }
+                    Spacer()
+                }
+            }
+            .padding(10)
+            .frame(maxWidth: .infinity, minHeight: 90)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(.gray, lineWidth: 1)
+            )
+            .task {
+                self.participantsInfo = await activitesVM.obtenirPhotoEtNomParticipants(participantIds: activite.participants, serviceUtilisateurs: serviceUtilisateurs)
+            }
         }
     }
     

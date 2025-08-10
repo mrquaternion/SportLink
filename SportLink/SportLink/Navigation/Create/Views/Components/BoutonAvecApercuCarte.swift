@@ -8,6 +8,7 @@
 import SwiftUI
 import MapKit
 
+
 struct BoutonAvecApercuCarte: View {
     private let vm: CreerActiviteVM
     
@@ -45,11 +46,22 @@ struct BoutonAvecApercuCarte: View {
         .onTapGesture { montrerCarte = true }
         .sheet(isPresented: $montrerCarte) {
             NavigationView {
-                // Carte
-                CarteSelectionInfrastructure(
-                    sportChoisis: $sportChoisis,
-                    infraChoisie: $infraChoisie
-                )
+                VStack(alignment: .leading, spacing: 14) {
+                    (
+                        Text("Please select an infrastructure marker. ".localizedFirstCapitalized) +
+                        Text("you can leave once the marker animation is done.".localizedFirstCapitalized)
+                    )
+                    .font(.subheadline.weight(.light))
+                    .padding([.top, .horizontal])
+                    VStack(spacing: 0) {
+                        Divider()
+                        // Carte
+                        CarteSelectionInfrastructure(
+                            sportChoisis: $sportChoisis,
+                            infraChoisie: $infraChoisie
+                        )
+                    }
+                }
                 .navigationTitle("Select a marker")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -58,15 +70,18 @@ struct BoutonAvecApercuCarte: View {
                             montrerCarte = false
                         }
                         .fontWeight(.medium)
-                        .foregroundStyle(Color("CouleurParDefaut"))
+                        .foregroundStyle(Color.red)
                     }
                 }
                 .toolbarBackground(Color(.systemBackground), for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
+                
             }
             .presentationDetents([.large])
             .presentationCornerRadius(24)
+            .interactiveDismissDisabled(true)
         }
+       
     }
 }
 
@@ -76,5 +91,10 @@ struct BoutonAvecApercuCarte: View {
         sportChoisis: .constant(["All"]),
         infraChoisie: .constant(nil)
     )
+    .environmentObject({
+        let s = DonneesEmplacementService()
+        s.chargerDonnees()
+        return s
+    }())
 }
 

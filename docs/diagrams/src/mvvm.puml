@@ -1,107 +1,293 @@
-@startuml SportLink
-
-class Utilisateur {
-  - id : UUID
-  - nomUtilisateur : String
-  - courriel : String
-  - sportsFavoris : List<Sport>
-  - disponibilites : List<String>
-  - photoProfil : String
-}
-class AuthVueModele {
-    - courriel : String
-    - motDePasse : String
-    - estEnChargement : Boolean
-    + inscrire(courriel : String, nomUtilisateur : String, motDePasse : String) : Boolean
-    + connecter(courriel : String, motDePasse : String) : Utilisateur
-    + mettreAJourMDP(courriel : String) : void
-}
-class ProfilUtilisateurVueModele {
-  - utilisateur : Utilisateur
-  - estEnChargement : Boolean
-  + modifierMotDePasse(nouveauMotDePasse : String) : void
-  + chargerUtilisateur() : void
-  + modifierProfil(sportsFavoris : List<Sport>, disponibilites : List<String>, photoProfil : String) : void
-  + changerPhotoProfil(nouvellePhoto : String) : void
-}
-AuthVueModele --> Utilisateur
-ProfilUtilisateurVueModele --* Utilisateur
-
-'------------------------------------------------------'
-'---------------------- ACTIVITE ----------------------'
-'------------------------------------------------------'
-abstract class Activite {
-  - id : UUID
-  - sport : Sport
-  - intervalleDate : DateInterval
-  - placesDisponibles : Integer
-  - emplacement : Emplacement
-  - complet : Boolean
-  - messages : List<Message>
-  - invitationsOuvertes : Boolean
-}
-class CreationActiviteVueModele {
-  - activite : Activite
-  - estEnChargement : Boolean
-  + creerActivite(mode : ModeUtilisateur, date : Date, sport : Sport, places : Integer, debut : String, fin : String, lieu : String) : Task<Activite>
-}
-class DetailActiviteVueModele {
-  - activite       : Activite
-  - estEnChargement      : Boolean
-  + participer() : Task<Utilisateur>
-  + supprimerActivite() : Task<Void>
-  + annulerParticipation() : Task<Void>
-  + modifierActivite(nouvellesInfos: Activite) : Task<Activite>
-}
-DetailActiviteVueModele --> Activite
-CreationActiviteVueModele --> Utilisateur
-CreationActiviteVueModele --> Activite
-
-'------------------------------------------------------'
-'--------------------- EMPLACEMENT --------------------'
-'------------------------------------------------------'
-class Emplacement {
-  - nomEmplacement : String
-  - coordonnees : CLLocationCoordinate2D
-  - sportsDisponibles : List<String>
-  - heuresOuvertures : String 
-}
-Activite o-- Emplacement
-Activite *-- Message
-
-'------------------------------------------------------'
-'---------------------- MESSAGE -----------------------'
-'------------------------------------------------------'
-class Message {
-  - id : UUID
-  - contenu : String
-  - envoyeA : Date
-  - expediteur : Utilisateur
-}
-class ConversationVueModele {
-  - activite : Activite
-  - messages : List<Message>
-  - estEnChargement : Boolean
-  + obtenirMessages() : Task<List<Message>>
-  + envoyerMessage(texte: String) : Task<Message>
-}
-ConversationVueModele --* Message
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+set namespaceSeparator none
 
 
-'-------------------- ENUM --------------------'
-enum Sport {
-  Basketball
-  Soccer
-  Volleyball
-  Baseball
-  Tennis 
-  Badminton
-  Pickleball
-  Waterpolo
-  Football
-  Rugby
-  Ultimate
-  Hockey
+class "ActiviteDTO" as ActiviteDTO << (S, SkyBlue) struct >> { 
+  ~id : String?
+  ~titre : String
+  ~organisateurId : String
+  ~infraId : String
+  ~sport : String
+  ~date : PlageHoraire
+  ~nbJoueursRecherches : Int
+  ~participants : [String]
+  ~description : String
+  ~statut : Int
+  ~invitationsOuvertes : Bool
+  ~messages : [String] 
 }
-
+class "Utilisateur" as Utilisateur << (S, SkyBlue) struct >> { 
+  ~id : String
+  ~nomUtilisateur : String
+  ~courriel : String
+  ~photoProfil : String
+  ~disponibilites : [Int : [String]]
+  ~sportsFavoris : [Sport]
+  ~activitesFavoris : [ActiviteID]
+  ~partenairesRecents : [UtilisateurID] 
+}
+class "Message" as Message << (S, SkyBlue) struct >> { 
+  ~id
+  ~auteurId : UtilisateurID
+  ~contenu : String
+  ~timestamp : Date 
+}
+class "Parc" as Parc << (S, SkyBlue) struct >> { 
+  ~id
+  ~index : String
+  ~nom : String?
+  ~limites : [CLLocationCoordinate2D]
+  ~idsInfra : [String] 
+}
+class "Infrastructure" as Infrastructure << (S, SkyBlue) struct >> { 
+  ~id : String
+  ~indexParc : String
+  ~coordonnees : CLLocationCoordinate2D
+  ~sport : [Sport] 
+}
+class "StatutActivite" as StatutActivite << (E, LightSteelBlue) enum >> { 
+  ~ouvert
+  ~complet
+  ~annulee
+  ~strVal : String
+  ~couleur : UIColor 
+}
+class "PlageHoraire" as PlageHoraire << (S, SkyBlue) struct >> { 
+  ~debut : Date
+  ~fin : Date
+  ~interval : DateInterval
+  ~affichage : (String, String, String) 
+}
+class "Activite" as Activite << (S, SkyBlue) struct >> { 
+  ~id : String?
+  ~titre : String
+  ~organisateurId : UtilisateurID
+  ~infraId : String
+  ~sport : String
+  ~date : PlageHoraire
+  ~nbJoueursRecherches : Int
+  ~participants : [UtilisateurID]
+  ~description : String
+  ~statut : StatutActivite
+  ~invitationsOuvertes : Bool
+  ~messages : [MessageID]
+  ~init(titre:organisateurId:infraId:sport:date:nbJoueursRecherches:participants:description:statut:invitationsOuvertes:messages:) 
+}
+class "Sport" as Sport << (E, LightSteelBlue) enum >> { 
+  ~soccer
+  ~basketball
+  ~tennis
+  ~football
+  ~volleyball
+  ~rugby
+  ~baseball
+  ~pingpong
+  ~petanque
+  ~nomPourJSONDecoding : String
+  ~nomPourAffichage : String
+  ~icone : String
+  ~emoji : String
+  ~arriereplan : String 
+}
+class "DonneesEmplacementService" as DonneesEmplacementService << (C, DarkSeaGreen) >> { 
+  ~infrastructures : [Infrastructure]
+  ~parcs : [Parc]
+  ~chargerDonnees()
+  -obtenirSport(chaine:) 
+}
+class "GestionnaireLocalisation" as GestionnaireLocalisation << (C, DarkSeaGreen) >> { 
+  ~{static} instance
+  -gestionnaire
+  -continuation : CheckedContinuation<CLLocation, Error>?
+  ~location : CLLocation?
+  ~init()
+  ~verifierAutorisation()
+  ~positionActuelle : CLLocation
+  ~locationManager(_:didUpdateLocations:)
+  ~locationManager(_:didFailWithError:) 
+}
+class "ServiceUtilisateurs" as ServiceUtilisateurs << (C, DarkSeaGreen) >> { 
+  ~fetchInfoUtilisateur(pour:) 
+}
+class "Session" as Session << (C, DarkSeaGreen) >> { 
+  ~avatar : Image
+  ~activitesRecommandees : [Activite]
+  ~estPret : Bool
+  ~init()
+  ~fetchActivitesRecommandes() 
+}
+class "GestionnaireAuthentification" as GestionnaireAuthentification << (C, DarkSeaGreen) >> { 
+  ~{static} partage
+  -init()
+  ~creerUtilisateur(courriel:motDePasse:)
+  ~obtenirUtilisateurAuthentifier()
+  ~enregistrerProfil(nomUtilisateur:sports:disponibilites:photo:)
+  -chargerPhoto(image:pour:)
+  ~telechargerPhoto()
+  ~deconnexion() 
+  ~connecterUtilisateur(courriel:motDePasse:)
+  ~verifierEtatAuthentification() 
+}
+class "ServiceActivites" as ServiceActivites << (C, DarkSeaGreen) >> { 
+  ~activites : [Activite]
+  ~timestampMinuit : Timestamp
+  ~init()
+  ~fetchTousActivites()
+  ~fetchActivitesParInfrastructureEtDateAsync(infraId:date:)
+  ~fetchActivitesParInfrastructure(infraId:)
+  ~fetchActivitesParOrganisateur(organisateurId:)
+  ~fetchActivitesParParticpant(participantId:)
+  ~sauvegarderActiviteAsync(activite:)
+  ~updateParticipants(dans:pour:ajouter:)
+  ~modifierTitreActivite(idActivite:nouveauTitre:completion:)
+  ~recupererIdActiviteParInfraId(_:completion:) 
+}
+class "ApplicationSportLink" as ApplicationSportLink << (S, SkyBlue) struct >> { 
+  ~delegate
+  -emplacementsVM
+  ~utilisateurConnecteVM
+  ~body : some Scene 
+}
+class "AppVM" as AppVM << (C, DarkSeaGreen) >> { 
+  ~ongletSelectionne : Onglets
+  ~sousOngletSelectionne : SousOnglets
+  ~trigger : SousOnglets
+  ~antecedent : SousOnglets
+  ~aInserer : AnyTransition
+  ~aDegager : AnyTransition 
+}
+class "ActivitesRecommandeesVM" as ActivitesRecommandeesVM << (C, DarkSeaGreen) >> { 
+  ~serviceActivites : ServiceActivites
+  -serviceEmplacements : DonneesEmplacementService
+  ~estEnChargement
+  ~activites : [Activite]
+  ~init(serviceActivites:serviceEmplacements:)
+  ~chargerActivitesParPreference(organisateurId:) 
+}
+class "ActivitesInscritesVM" as ActivitesInscritesVM << (C, DarkSeaGreen) >> { 
+  ~serviceActivites : ServiceActivites
+  -serviceEmplacements : DonneesEmplacementService
+  ~estEnChargement
+  ~activiteSelectionnee : Activite?
+  ~activites : [Activite]
+  ~init(serviceActivites:serviceEmplacements:)
+  ~fetchActivitesInscrites()
+  ~bindingActivite(id:) 
+}
+class "ActivitesOrganiseesVM" as ActivitesOrganiseesVM << (C, DarkSeaGreen) >> { 
+  ~serviceActivites : ServiceActivites
+  -serviceEmplacements : DonneesEmplacementService
+  ~estEnChargement
+  ~activiteSelectionnee : Activite?
+  ~activites : [Activite]
+  ~init(serviceActivites:serviceEmplacements:)
+  ~fetchActivitesParOrganisateur()
+  ~mettreAJourTitreLocalement(idActivite:nouveauTitre:)
+  ~bindingActivite(id:)
+  ~mettreAJourDateLocalement(idActivite:nouvelleDate:)
+  ~mettreAJourNbJoueursRecherchesLocalement(idActivite:nb:)
+  ~mettreAJourAutorisationInvitationsLocalement(idActivite:autorise:)
+  ~mettreAJourDescriptionLocalement(idActivite:nouvelleDescription:) 
+}
+class "ExplorerListeVM" as ExplorerListeVM << (C, DarkSeaGreen) >> { 
+  -serviceActivites : ServiceActivites
+  -serviceEmplacements : DonneesEmplacementService
+  -gestionnaireLocalisation
+  ~estEnChargement
+  ~optionTri : OptionTri
+  ~texteDeRecherche : String
+  ~dateAFiltree : Date
+  ~sportsChoisis : Set<String>
+  ~activites : [Activite]
+  ~activitesTriees : [Activite]
+  ~dateMin : Date
+  ~dateMax : Date
+  ~init(serviceEmplacements:serviceActivites:)
+  ~chargerActivites()
+  ~ajouterSubscribers()
+  -chercherFiltrerEtTrier(option:texte:date:sports:activites:)
+  -chercher(pour:activites:)
+  -filtrer(par:pour:activites:)
+  -trier(par:activites:)
+  -calculerDistance(activite:)
+  -{static} configurerDatesInitiales() 
+}
+class "UtilisateurConnecteVM" as UtilisateurConnecteVM << (C, DarkSeaGreen) >> { 
+  ~utilisateur : Utilisateur?
+  ~photoUIImage : UIImage?
+  ~chargerInfosUtilisateur()
+  -{static} jourEnInt(_:) 
+}
+class "CreerActiviteVM" as CreerActiviteVM << (C, DarkSeaGreen) >> { 
+  -serviceActivites : ServiceActivites
+  -serviceEmplacements : DonneesEmplacementService
+  -gestionnaireLocalisation : GestionnaireLocalisation
+  ~imageApercu : UIImage?
+  ~titre : String
+  ~sportSelectionne : Sport
+  ~dateSelectionnee : Date
+  ~tempsDebut : Date
+  ~tempsFin : Date
+  ~dateSelectionneeSelectionTemporaire : Date?
+  ~tempsDebutSelectionTemporaire : Date?
+  ~tempsFinSelectionTemporaire : Date?
+  ~nbParticipants : Int
+  ~description : String
+  ~permettreInvitations : Bool
+  ~infraChoisie : Infrastructure?
+  ~dateMin : Date
+  ~dateMax : Date
+  -locParDefaut
+  ~init(serviceActivites:serviceEmplacements:)
+  ~genererApercu()
+  ~creerActivite()
+  ~existeActivitesDejaCreer()
+  ~obtenirDistanceDeUtilisateur(pour:)
+  ~dateEnString : String
+  ~debutDuTempsEnString : String
+  ~finDuTempsEnString : String
+  ~texteParticipants : String
+  ~texteInvitations : String 
+}
+class "ActivitesVM" as ActivitesVM << (C, DarkSeaGreen) >> { 
+  -serviceEmplacements : DonneesEmplacementService
+  -gestionnaireLocalisation
+  ~imageApercu : UIImage?
+  ~init(serviceEmplacements:)
+  ~obtenirDistanceDeUtilisateur(pour:)
+  ~obtenirInfraEtParc(infraId:)
+  ~genererApercu(infraId:)
+  ~dateAAffichee(_:) 
+}
+class "InscriptionVM" as InscriptionVM << (C, DarkSeaGreen) >> { 
+  ~courriel
+  ~motDePasse
+  ~motDePasseConfirme
+  ~nomUtilisateur
+  ~sportsFavoris : [String]
+  ~disponibilites : [String: [(Date, Date)]]
+  ~photo : UIImage?
+  ~nomUtilisateurErreur : String?
+  ~courrielErreur : String?
+  ~motDePasseErreur : String?
+  ~motDePasseConfirmeeErreur : String?
+  ~inscriptionFirebase()
+  ~resetChampsApresChangementDeVue()
+  ~resetErreurs()
+  -verifierChampsDeTexte()
+  ~enregistrementProfil() 
+}
+class "ConnexionVM" as ConnexionVM << (C, DarkSeaGreen) >> { 
+  ~courriel : String
+  ~motDePasse : String
+  ~courrielErreur : String?
+  ~motDePasseErreur : String?
+  ~connexionFirebase()
+  ~resetChampsApresChangementDeVue()
+  -verifierChampsDeTexte() 
+}
 @enduml

@@ -135,7 +135,7 @@ struct CreerActiviteVue: View {
             )
             
             BoutonOptionOverlay(
-                icon: "envelope.open",
+                icon: vm.permettreInvitations ? "figure.child.and.lock.open.fill" : "figure.child.and.lock.fill",
                 text: vm.texteInvitations,
                 action: { overlayActif = .invites }
             )

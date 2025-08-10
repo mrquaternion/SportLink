@@ -13,6 +13,7 @@
 		628E05402DED1EF700FBED91 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 628E053F2DED1EF700FBED91 /* FirebaseAuth */; };
 		628E05422DED1EF700FBED91 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 628E05412DED1EF700FBED91 /* FirebaseFirestore */; };
 		628E05442DED1EF700FBED91 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 628E05432DED1EF700FBED91 /* FirebaseStorage */; };
+		62B7E7002E3D4267004CDFA8 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 62B7E6FF2E3D4267004CDFA8 /* SwiftUIIntrospect */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62B7E7002E3D4267004CDFA8 /* SwiftUIIntrospect in Frameworks */,
 				628E053E2DED1EF700FBED91 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				628E05442DED1EF700FBED91 /* FirebaseStorage in Frameworks */,
 				628E05402DED1EF700FBED91 /* FirebaseAuth in Frameworks */,
@@ -148,6 +150,7 @@
 				628E05432DED1EF700FBED91 /* FirebaseStorage */,
 				6269D67C2E306B75003B6AE9 /* CropViewController */,
 				62579FC72E315851003CAF5A /* VTabView */,
+				62B7E6FF2E3D4267004CDFA8 /* SwiftUIIntrospect */,
 			);
 			productName = SportLink;
 			productReference = 628E05102DED1B7600FBED91 /* SportLink.app */;
@@ -235,6 +238,7 @@
 				628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				6269D67B2E306B75003B6AE9 /* XCRemoteSwiftPackageReference "TOCropViewController" */,
 				62EE0F562E3157C900A27EC9 /* XCRemoteSwiftPackageReference "swiftui-vertical-tab-view" */,
+				62B7E6FE2E3D4267004CDFA8 /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 628E05112DED1B7600FBED91 /* Products */;
@@ -447,7 +451,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -481,7 +485,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -623,6 +627,14 @@
 				minimumVersion = 11.13.0;
 			};
 		};
+		62B7E6FE2E3D4267004CDFA8 /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/swiftui-introspect";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
 		62EE0F562E3157C900A27EC9 /* XCRemoteSwiftPackageReference "swiftui-vertical-tab-view" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-vertical-tab-view.git";
@@ -663,6 +675,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 628E053C2DED1EF700FBED91 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		62B7E6FF2E3D4267004CDFA8 /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 62B7E6FE2E3D4267004CDFA8 /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
+			productName = SwiftUIIntrospect;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

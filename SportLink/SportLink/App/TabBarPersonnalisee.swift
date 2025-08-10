@@ -39,7 +39,7 @@ struct TabBarPersonnalisee: View {
             Spacer()
             TabBarButton(
                 imageName: ongletSelectionnee == .profil ? "profile_fill" : "profile",
-                title: "Profil",
+                title: "Profile",
                 isSelected: ongletSelectionnee == .profil
             ) { ongletSelectionnee = .profil }
         }

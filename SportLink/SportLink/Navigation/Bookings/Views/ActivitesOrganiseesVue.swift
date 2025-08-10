@@ -42,25 +42,52 @@ struct ActivitesOrganiseesVue: View {
     }
     
     var sectionActivites: some View {
-        LazyVStack(spacing: 20) {
-            ForEach(vm.activites) { activite in
-                RangeeActivite(
-                    afficherInfo: Binding(
-                        get: { activiteAffichantInfo == activite.id },
-                        set: { newValue in
-                            activiteAffichantInfo = newValue ? activite.id : nil
-                        }
-                    ),
-                    activite: activite
-                )
-                .cacherBoutonJoin()
-                .dateEtendue()
+        Group {
+            if vm.estEnChargement {
+                GeometryReader { geometry in
+                    VStack {
+                        Spacer()
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .progressViewStyle(CircularProgressViewStyle())
+                        Spacer()
+                    }
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                }
+                .frame(minHeight: 650)
+            } else if !vm.activites.isEmpty {
+                LazyVStack(spacing: 20) {
+                    ForEach(vm.activites) { activite in
+                        RangeeActivite(
+                            afficherInfo: Binding(
+                                get: { activiteAffichantInfo == activite.id },
+                                set: { newValue in
+                                    activiteAffichantInfo = newValue ? activite.id : nil
+                                }
+                            ),
+                            activite: activite
+                        )
+                        .cacherBoutonJoin()
+                        .dateEtendue()
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 70) // faire de la place par rapport a le tabbar
+                .padding(.top, 20) // faire de la place par rapport a l'onglet
+            } else {
+                GeometryReader { geometry in
+                    VStack {
+                        Spacer()
+                        let texte = "you have not planned any \n activities yet"
+                        MessageAucuneActivite(texte: texte)
+                        Spacer()
+                    }
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                }
+                .frame(minHeight: 650)
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 70) // faire de la place par rapport a le tabbar
-        .padding(.top, 20) // faire de la place par rapport a l'onglet
-    }
+    }   
 }
 
 #Preview {
