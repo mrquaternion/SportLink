@@ -29,6 +29,10 @@ SportLink/
 └── Shared/
 ```
 
+## Architecture du système
+
+![Modèle C4](./diagrams/out/modelec4.png "Modèle C4")
+
 ## Choix technologiques
 Nous avons opté pour un développement **natif iOS en Swift**, pour :
 
