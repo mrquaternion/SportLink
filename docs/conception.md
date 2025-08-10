@@ -52,28 +52,12 @@ Voici notre diagramme notre modèle C4 :
 
 ## Modèle de données
 Voici le modèle de données style NoSQL qui réflète les *entités métiers*. C'est ainsi que les données seront stockées dans Firebase.
-### `utilisateurs`
-```txt
-utilisateurs    (collection)
-└── {utilisateurId}
-    ├── nomUtilisateur      
-    ├── courriel              
-    ├── photoProfil           
-    ├── disponibilites        
-    ├── sportsFavoris                            
-    ├── favorisActivites               
-    └── partenairesRecents    :                                  
-    │     { utilisateurId: "autreId",
-    │       sport: "Soccer",
-    │       dernierResultat: +10 }
-    │   ]
-```
 
 ### `activites`
 ```txt
 activites    (collection)
 ├── {activiteId}
-    ├── organisateurId : "utilisateurId"
+    ├── organisateurId
     ├── titre
     ├── sport 
     ├── date
@@ -82,6 +66,15 @@ activites    (collection)
     ├── nbJoueursRecherches : 6
     ├── statut : "ouvert" | "complet" | "annule"
     └── invitationsOuvertes
+```
+### `utilisateurs`
+```txt
+utilisateurs    (collection)
+└── {utilisateurId}
+    ├── nomUtilisateur               
+    ├── photoUrl         
+    ├── disponibilites        
+    └── sportsFavoris                                                                  
 ```
 
 ### `messages`
@@ -92,18 +85,6 @@ messages    (collection)
     ├── contenu : "Salut !",
     └── timestamp : "2025-05-31T12:10:00"
 ```
-
-### `emplacements`
-```txt
-emplacements    (collection)
-└── {emplacementId}
-    ├── nomEmplacement    : "Parc Jean-Drapeau"
-    ├── latitude          : 45.508
-    ├── longitude         : -73.554
-    ├── sportsDisponibles : ["Basketball", "Soccer"]
-    └── heuresOuvertures  : "08:00-22:00"
-```
-
 
 ## Prototype
 La maquette Figma se trouve [ici](https://www.figma.com/design/N0QDEh5Shuht6eS3dpvKTB/SportLink?node-id=0-1&t=CBkQlTjm84oNgfAk-1).
