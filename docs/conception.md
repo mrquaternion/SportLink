@@ -1,6 +1,6 @@
 # Conception
 
-## Architecture
+## Architecture simplifiée
 ```plaintext
 SportLink/
 ├── AppEntry/
@@ -63,8 +63,8 @@ activites    (collection)
     ├── date
     ├── indraID
     ├── descritpion
-    ├── nbJoueursRecherches : 6
-    ├── statut : "ouvert" | "complet" | "annule"
+    ├── nbJoueursRecherches
+    ├── statut
     └── invitationsOuvertes
 ```
 ### `utilisateurs`
@@ -81,9 +81,9 @@ utilisateurs    (collection)
 ```txt
 messages    (collection)
 └── {messageId}
-    ├── auteurId : "utilisateurId1",
-    ├── contenu : "Salut !",
-    └── timestamp : "2025-05-31T12:10:00"
+    ├── auteurId
+    ├── contenu 
+    └── timestamp 
 ```
 
 ## Prototype
