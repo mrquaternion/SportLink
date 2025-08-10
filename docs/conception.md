@@ -3,53 +3,30 @@
 ## Architecture
 ```plaintext
 SportLink/
-├── App/
-|   ├── SportLinkApp.swift
-|   └── EtatApp.swift
+├── AppEntry/
 |
-├── Fonctionnalitees/
-|   ├── Accueil/
-|   |   ├── Vues/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   ├── Explorer/
-|   |   ├── Vues/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   ├── Creer/
-|   |   ├── Vues/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   ├── Activites/
-|   |   ├── Vues/
-|   |   ├── VuesModeles/
-|   |   └── Sousvues/
-│   └── Profil/
-|       ├── Vues/
-|       ├── VuesModeles/
-|       └── Sousvues/
+├── Authentication/
 |
-├── ModelesPartagees/
-|   ├── Utilisateur.swift
-|   ├── Activite.swift
-|   ├── Message.swift
-|   └── Emplacement.swift
+├── Core/
+|   ├── Extensions/
+|   ├── Models/
+|   └── Services/
+|       ├── Firebase/
+|       └── Local/
 |
-├── ComposantesUI/
-|   ├── Boutons/
-|   ├── Icones/
-|   └── Cartes/
+├── Navigation/
+|   ├── Home/
+|   ├── Discover/
+|   ├── Create/
+|   ├── Bookings/
+|   └── Profile/
+|   
+├── Resources/
+|   ├── Assets/
+|   ├── Configuration/
+|   └── Data/
 |
-├── Services/
-|   ├── Geolocalisation/
-│   |   └── ServiceEmplacement.swift
-|   ├── Authentification/
-│   |   └── ServiceUtilisateur.swift
-|   └── Reseau/
-│       └── APIClient.swift
-|
-└── Ressources/
-    └── Actifs/
+└── Shared/
 ```
 
 ## Choix technologiques
